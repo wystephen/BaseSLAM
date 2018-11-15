@@ -66,7 +66,7 @@ namespace BaseSLAM {
 		 * @return nullptr if index not exist.
 		 */
 		T *get_data(long i) const {
-			std::cout << image_number_ << std::endl;
+//			std::cout << image_number_ << std::endl;
 
 			if (i < image_number_) {
 				return data_set_[i];

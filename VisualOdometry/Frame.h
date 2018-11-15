@@ -28,6 +28,7 @@ namespace BaseSLAM {
 
 
 		std::vector<cv::KeyPoint> left_feature_points_, right_feature_points_;// key points (or feature points)
+		cv::Mat left_descriptors_, right_descriptors_;
 
 		Frame(StereoCamera *cam_ptr, StereoINSData *data_ptr, int index) {
 			idx_ = index;
