@@ -27,13 +27,20 @@ namespace BaseSLAM {
 
 		std::vector<cv::KeyPoint> left_feature_points_,right_feature_points_;// key points (or feature points)
 
+		Frame(StereoCamera * cam_ptr, StereoINSData * data_ptr, int index){
+			idx_ = index;
+			cam_ptr_ = cam_ptr;
+			data_ptr_ = data_ptr;
+			time_stampe_ = data_ptr->global_timestamp_;
+
+		}
 
 
 
+		bool CalculateKeyPoints(){
 
 
-
-
+		}
 
 	};
 }

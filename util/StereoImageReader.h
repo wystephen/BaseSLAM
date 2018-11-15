@@ -137,8 +137,8 @@ namespace BaseSLAM {
 					data_set_.push_back(data);
 					image_number_ = data_set_.size();
 
-					std::cout << data->left_img_->size() << "-<>-" << data->right_img_->size() << std::endl;
-					std::cout << "size" << data_set_.size() << std::endl;
+//					std::cout << data->left_img_->size() << "-<>-" << data->right_img_->size() << std::endl;
+//					std::cout << "size" << data_set_.size() << std::endl;
 
 
 				}
