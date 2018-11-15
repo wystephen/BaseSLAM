@@ -3,8 +3,31 @@ project(BaseSLAM)
 
 set(CMAKE_CXX_STANDARD 11)
 
+# CCACHE
+find_program(CCACHE_FOUND ccache)
+if (CCACHE_FOUND)
+	set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+	set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif (CCACHE_FOUND)
+
+
+find_package(Eigen3 REQUIRED)
+
+
+
+#GTSAM
+find_package(GTSAM REQUIRED) # Uses installed package
+include_directories(${GTSAM_INCLUDE_DIR})
+set(GTSAM_LIBRARIES gtsam)   # TODO: automatic search libs
+
+
+
 find_package(OpenCV REQUIRED)
+
 include_directories(${OpenCV_INCLUDE_DIRS}
+					${GTSAM_INCLUDE_DIR}
+					${Boost_INCLUDE_DIRS}
+
 					./)
 #add_executable( DisplayImage DisplayImage.cpp )
 #target_link_libraries( DisplayImage ${OpenCV_LIBS} )

@@ -1,3 +1,4 @@
 %yaml 1.0
 
 Base.feature_number: 1000
+Base.local_window_size: 10000
