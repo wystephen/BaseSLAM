@@ -49,7 +49,8 @@ namespace BaseSLAM {
 //		cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(400);
 //		cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(5);
 //		cv::Ptr<cv::ORB> detector = cv::ORB::create(10000);
-		cv::Ptr<cv::xfeatures2d::SIFT> detector= cv::xfeatures2d::SIFT::create(10000);
+//		cv::Ptr<cv::xfeatures2d::SIFT> detector= cv::xfeatures2d::SIFT::create(10000);
+		cv::Ptr<cv::AKAZE> detector = cv::AKAZE::create();
 
 		VOSimple(StereoCamera *cam_ptr) {
 
@@ -92,7 +93,7 @@ namespace BaseSLAM {
 				cv::Mat right_keypoint_img(*(tframe->data_ptr_->right_img_));
 
 				std::vector<cv::DMatch> left_matches, right_matches;
-				cv::BFMatcher matcher(cv::NORM_L2);
+				cv::BFMatcher matcher(cv::NORM_L2SQR);
 
 				matcher.match(latest_frame->left_descriptors_, tframe->left_descriptors_, left_matches);
 				matcher.match(latest_frame->right_descriptors_, tframe->right_descriptors_, right_matches);
