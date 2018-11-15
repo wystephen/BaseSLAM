@@ -29,10 +29,19 @@
 #include <util/StereoImageReader.h>
 #include <VisualOdometry/StereoCamera.h>
 
+#include <VisualOdometry/VOSimple.h>
+
 int main() {
 
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
 	stereo_camera_ptr->print("camera");
+
+	BaseSLAM::VOSimple vo(stereo_camera_ptr);
+
+
+
+
+
 
 
 	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
@@ -55,6 +64,7 @@ int main() {
 //		cv::imshow("show left",*(data->left_img_));
 //		cv::imshow("show right", *(data->right_img_));
 //		std::cout << " after imshow" << std::endl;
+		vo.addNewFrame(data);
 
 		cv::waitKey(110);
 		std::cout << "index :" << i << std::endl;
