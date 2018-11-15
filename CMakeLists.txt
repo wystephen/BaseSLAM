@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
 project(BaseSLAM)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_BUILD_TOOL Release)
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
+
+
 
 # CCACHE
 find_program(CCACHE_FOUND ccache)
@@ -11,7 +17,7 @@ if (CCACHE_FOUND)
 endif (CCACHE_FOUND)
 
 
-find_package(Eigen3 REQUIRED COMPONENTS filesystem system)
+find_package(Eigen3 REQUIRED )
 
 
 
@@ -21,7 +27,8 @@ find_package(GTSAM REQUIRED) # Uses installed package
 include_directories(${GTSAM_INCLUDE_DIR})
 set(GTSAM_LIBRARIES gtsam)   # TODO: automatic search libs
 
-find_package(Boost REQUIRED)
+#BOOST
+find_package(Boost REQUIRED COMPONENTS filesystem system)
 
 
 find_package(OpenCV REQUIRED)
@@ -56,7 +63,7 @@ target_link_libraries(StereoSparseTracking ${OpenCV_LIBS})
 
 
 add_executable(camera_config_server_tester tester/StereoCameraTest.cpp)
-target_link_libraries(camera_config_server_tester ${Opencv_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(camera_config_server_tester ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
 ####################################

@@ -11,9 +11,11 @@
 #include <mutex>
 
 
+#include <boost/system/system_error.hpp>
 #include <boost/filesystem.hpp>
 
-#include <opencv/cv.h>
+//#include <opencv/cv.h>
+#include <opencv4/opencv2/opencv.hpp>
 
 #include <util/DataUnit.h>
 
@@ -56,7 +58,7 @@ namespace BaseSLAM {
 		 * @param async using new thread or not.
 		 * @return
 		 */
-//		virtual bool load_data(bool async = true);
+		virtual bool load_data(bool async = true) = 0;
 
 		/**
 		 * @brief return ptr of image i;
@@ -64,12 +66,15 @@ namespace BaseSLAM {
 		 * @return nullptr if index not exist.
 		 */
 		T *get_data(long i) const {
+			std::cout << image_number_ << std::endl;
 
 			if (i < image_number_) {
 				return data_set_[i];
 			} else {
-				if (!thread_finished_) {
-					while (!thread_finished_) {
+				// index i out of range.
+//				if (!thread_finished_) {
+					// wait until i-th image is loaded or loading data thread is end.
+					while (!thread_finished_ && i >= image_number_) {
 						usleep(100);
 					}
 					if (i < image_number_) {
@@ -78,9 +83,9 @@ namespace BaseSLAM {
 						return nullptr;
 					}
 
-				} else {
-					return nullptr;
-				}
+//				} else {
+//					return nullptr;
+//				}
 			}
 		}
 
@@ -103,15 +108,63 @@ namespace BaseSLAM {
 
 	bool MYNTVIDataReader::load_data(bool async) {
 
+		/**
+		 * @brief Just modified this function for different dataset.
+		 */
 		auto load_func = [&]() {
-			for (auto p:boost::filesystem::directory_iterator(dataset_dir_ + "image_0/")) {
-				std::cout << p << std::endl;
+			try {
+				std::vector<boost::filesystem::path> path_vec;
+				std::copy(boost::filesystem::directory_iterator(dataset_dir_ + "image_0/"),
+				          boost::filesystem::directory_iterator(), back_inserter(path_vec));
+
+				std::sort(path_vec.begin(), path_vec.end());
+				std::string left_file_name("");
+				std::string right_file_name("");
+
+				for (int i(0); i < path_vec.size(); ++i) {
+					left_file_name = path_vec[i].c_str();
+					right_file_name = left_file_name;
+					int index = right_file_name.find("image_0");
+					right_file_name.replace(index, 7, "image_1");
+
+//					std::cout << "left file:" << left_file_name
+//					          << "\nright file:" << right_file_name << std::endl;
+
+					auto *data = new StereoINSData();
+					*(data->left_img_) = cv::imread(left_file_name);
+					*(data->right_img_) = cv::imread(right_file_name);
+
+					data_set_.push_back(data);
+					image_number_ = data_set_.size();
+
+					std::cout << data->left_img_->size() << "-<>-" << data->right_img_->size() << std::endl;
+					std::cout << "size" << data_set_.size() << std::endl;
+
+
+				}
+				thread_finished_ = true;
+
+			} catch (std::exception &e) {
+				std::cout << e.what() << std::endl;
+				*thread_except_ = e;
+				thread_finished_ = true;
 			}
 
 
 		};
+		thread_finished_ = false;
 
-		load_func;
+
+		if (async) {
+			std::thread t(load_func);
+			t.detach();
+
+		} else {
+
+			load_func();
+
+		}
+		return true;
 
 
 	}

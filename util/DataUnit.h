@@ -29,18 +29,18 @@
 
 #include <vector>
 
-#include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 
 #include <Eigen/Dense>
 
 namespace BaseSLAM {
 
 	struct StereoData {
-		long idx_ = 0;
-		double time_stamp_;
-		double global_timestamp_;
-		cv::Mat *left_img_;
-		cv::Mat *right_img_;
+		long idx_ = -1;
+		double time_stamp_ = -1.0;
+		double global_timestamp_ = -1.0;
+		cv::Mat *left_img_ = new cv::Mat();
+		cv::Mat *right_img_ = new cv::Mat();
 
 		~StereoData() {
 			delete (left_img_);
