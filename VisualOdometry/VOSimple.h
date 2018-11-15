@@ -56,7 +56,12 @@ namespace BaseSLAM{
 //			frame_vec_.push_back(Frame(cam_ptr_,data_ptr))
 			auto * tframe = new Frame(cam_ptr_,data_ptr,current_index_);
 			current_index_++;
-			tframe->CalculateKeyPoints(detector);
+//			tframe->CalculateKeyPoints(detector);
+
+
+
+
+
 			frame_vec_.push_back(*tframe);
 
 

@@ -39,28 +39,28 @@ namespace BaseSLAM {
 
 
 //		template <typename DetectorType>
-		bool CalculateKeyPoints( cv::Ptr<cv::FastFeatureDetector> detector_ptr) {
-
-			cv::Mat left_keypoint_img(*(data_ptr_->left_img_));
-			cv::Mat right_keypoint_img(*(data_ptr_->right_img_));
-			cv::Mat desc1, desc2;
-
-			detector_ptr->detect(*(data_ptr_->left_img_),
-			                               left_feature_points_);
-			detector_ptr->detect(*(data_ptr_->right_img_),
-					right_feature_points_);
-
-			cv::drawKeypoints(*(data_ptr_->left_img_),left_feature_points_,left_keypoint_img);
-			cv::drawKeypoints(*(data_ptr_->right_img_),right_feature_points_,right_keypoint_img);
-
-			cv::imshow("show left",left_keypoint_img);
-			cv::imshow("show right",right_keypoint_img);
-
-
-			return true;
-
-
-		}
+//		bool CalculateKeyPoints( cv::Ptr<cv::FastFeatureDetector> detector_ptr) {
+//
+//			cv::Mat left_keypoint_img(*(data_ptr_->left_img_));
+//			cv::Mat right_keypoint_img(*(data_ptr_->right_img_));
+//			cv::Mat desc1, desc2;
+//
+//			detector_ptr->detect(*(data_ptr_->left_img_),
+//			                               left_feature_points_);
+//			detector_ptr->detect(*(data_ptr_->right_img_),
+//					right_feature_points_);
+//
+//			cv::drawKeypoints(*(data_ptr_->left_img_),left_feature_points_,left_keypoint_img);
+//			cv::drawKeypoints(*(data_ptr_->right_img_),right_feature_points_,right_keypoint_img);
+//
+//			cv::imshow("show left",left_keypoint_img);
+//			cv::imshow("show right",right_keypoint_img);
+//
+//
+//			return true;
+//
+//
+//		}
 
 	};
 }
