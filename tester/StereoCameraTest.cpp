@@ -26,8 +26,11 @@
 
 #include <VisualOdometry/StereoCamera.h>
 
+#include <util/StereoImageReader.h>
 
 int main(){
+
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTEYEData/dataset_6f_simple");
 
 
 }
