@@ -83,6 +83,9 @@ namespace BaseSLAM {
 			cv::imshow("mask", special_mask);
 
 
+
+
+
 			detector->detectAndCompute(*(tframe->data_ptr_->left_img_),
 			                           cv::noArray(),
 			                           tframe->left_feature_points_,
@@ -93,12 +96,12 @@ namespace BaseSLAM {
 			                           tframe->right_descriptors_);
 
 
-			lsd_detector->detect(*(tframe->data_ptr_->left_img_), tframe->left_lines_, 2, 10);
-			lsd_detector->detect(*(tframe->data_ptr_->right_img_), tframe->right_lines_, 2, 10);
-			lsd_descriptor->compute(*(tframe->data_ptr_->left_img_), tframe->left_lines_,
-			                        tframe->left_line_descriptors_);
-			lsd_descriptor->compute(*(tframe->data_ptr_->right_img_), tframe->right_lines_,
-			                        tframe->right_line_descriptors_);
+//			lsd_detector->detect(*(tframe->data_ptr_->left_img_), tframe->left_lines_, 2, 10);
+//			lsd_detector->detect(*(tframe->data_ptr_->right_img_), tframe->right_lines_, 2, 10);
+//			lsd_descriptor->compute(*(tframe->data_ptr_->left_img_), tframe->left_lines_,
+//			                        tframe->left_line_descriptors_);
+//			lsd_descriptor->compute(*(tframe->data_ptr_->right_img_), tframe->right_lines_,
+//			                        tframe->right_line_descriptors_);
 
 
 			if (latest_frame) {
@@ -136,33 +139,37 @@ namespace BaseSLAM {
 				                tframe->right_feature_points_,
 				                right_matches, right_keypoint_img);
 
-
-				std::vector<std::vector<cv::DMatch>> left_line_matches, right_line_matches;
-				lsd_matcher->knnMatch(latest_frame->left_line_descriptors_, tframe->left_line_descriptors_,
-				                      left_line_matches,100);
-				lsd_matcher->knnMatch(latest_frame->right_line_descriptors_, tframe->right_line_descriptors_,
-				                      right_line_matches,100);
-				std::cout << "left line matches:" << left_line_matches[0].size() << std::endl;
-				std::cout << "right line matches:" << right_line_matches[0].size() << std::endl;
+//
+//				std::vector<std::vector<cv::DMatch>> left_line_matches, right_line_matches;
+//				lsd_matcher->knnMatch(latest_frame->left_line_descriptors_, tframe->left_line_descriptors_,
+//				                      left_line_matches,100);
+//				lsd_matcher->knnMatch(latest_frame->right_line_descriptors_, tframe->right_line_descriptors_,
+//				                      right_line_matches,100);
+//				std::cout << "left line matches:" << left_line_matches[0].size() << std::endl;
+//				std::cout << "right line matches:" << right_line_matches[0].size() << std::endl;
 
 
 //				cv::drawMatches(*(latest_frame->data_ptr_->left_img_),
 //						latest_frame)
-				cv::line_descriptor::drawLineMatches(
-						*(latest_frame->data_ptr_->left_img_),
-						latest_frame->left_lines_,
-						*(tframe->data_ptr_->left_img_),
-						tframe->left_lines_,
-						left_line_matches[0],left_line_img
-						);
-				cv::line_descriptor::drawLineMatches(
-						*(latest_frame->data_ptr_->right_img_),
-						latest_frame->right_lines_,
-						*(tframe->data_ptr_->right_img_),
-						tframe->right_lines_,
-						right_line_matches[0],right_line_img
-						);
+//				cv::line_descriptor::drawLineMatches(
+//						*(latest_frame->data_ptr_->left_img_),
+//						latest_frame->left_lines_,
+//						*(tframe->data_ptr_->left_img_),
+//						tframe->left_lines_,
+//						left_line_matches[0],left_line_img
+//						);
+//				cv::line_descriptor::drawLineMatches(
+//						*(latest_frame->data_ptr_->right_img_),
+//						latest_frame->right_lines_,
+//						*(tframe->data_ptr_->right_img_),
+//						tframe->right_lines_,
+//						right_line_matches[0],right_line_img
+//						);
 
+//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->left_img_),
+//						latest_frame->left_lines_,left_line_img);
+//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->right_img_),
+//						tframe->right_lines_,right_line_img);
 
 //				cv::drawKeypoints(*(data_ptr->left_img_), tframe->left_feature_points_, left_keypoint_img);
 //				cv::drawKeypoints(*(data_ptr->right_img_), tframe->right_feature_points_, right_keypoint_img);
@@ -171,8 +178,8 @@ namespace BaseSLAM {
 				cv::imshow("show left", left_keypoint_img);
 				cv::imshow("show right", right_keypoint_img);
 
-				cv::imshow("show line left", left_line_img);
-				cv::imshow("show line right", right_line_img);
+//				cv::imshow("show line left", left_line_img);
+//				cv::imshow("show line right", right_line_img);
 
 
 			}

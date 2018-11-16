@@ -9,7 +9,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mav
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-lopencv_line_descriptor -lopencv_optflow -lopencv_plot  -lopencv_stereo   -lopencv_xfeatures2d  -lopencv_calib3d -lopencv_features2d ")
 
 
-
 # CCACHE
 find_program(CCACHE_FOUND ccache)
 if (CCACHE_FOUND)
@@ -18,9 +17,7 @@ if (CCACHE_FOUND)
 endif (CCACHE_FOUND)
 
 
-find_package(Eigen3 REQUIRED )
-
-
+find_package(Eigen3 REQUIRED)
 
 
 #GTSAM
@@ -65,6 +62,9 @@ target_link_libraries(StereoSparseTracking ${OpenCV_LIBS})
 
 add_executable(camera_config_server_tester tester/StereoCameraTest.cpp)
 target_link_libraries(camera_config_server_tester ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+add_executable(Key_points_test tester/KeypointsTest.cpp)
+target_link_libraries(Key_points_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
 ####################################
