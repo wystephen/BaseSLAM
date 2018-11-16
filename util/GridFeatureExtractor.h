@@ -29,11 +29,13 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <opencv2/xfeatures2d.hpp>
+
 namespace BaseSLAM {
 	class GridFeatureExtractor {
 	public:
-		int row_size_ = 100;
-		int col_size_ = 100;
+		int row_size_ = 200;
+		int col_size_ = 200;
 
 
 		static cv::Ptr<GridFeatureExtractor> create() {
@@ -45,10 +47,23 @@ namespace BaseSLAM {
 		}
 
 
+		/**
+		 * @brief Not right...
+		 * @param img
+		 * @param key_points
+		 * @return
+		 */
 		bool detect(const cv::Mat img, std::vector<cv::KeyPoint> &key_points) {
 
+			if(key_points.size()>0){
+				key_points.clear();
+			}
+
 			cv::Mat sub_img;
-			auto orb_detector = cv::ORB::create();
+//			auto normal_detector = cv::ORB::create(500,1.1,18,10);
+//			auto normal_detector = cv::FastFeatureDetector::create();
+//			auto normal_detector = cv::xfeatures2d::SiftFeatureDetector::create(500);
+			auto normal_detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 
 			int image_rows(img.rows), image_cols(img.cols);
 
@@ -63,16 +78,24 @@ namespace BaseSLAM {
 						cut_col = (j + 1) * col_size_ - image_cols;
 					}
 					sub_img = img(cv::Range(i * row_size_, i * row_size_ + row_size_ - cut_row),
-					              cv::Range(j * col_size_, (j + 1) * col_size_ - cut_col));
+					              cv::Range(j * col_size_, (j + 1) * col_size_ - cut_col)
+					).clone();
 
 					std::vector<cv::KeyPoint> tmp;
 
-					orb_detector->detect(sub_img, tmp);
+					normal_detector->detect(sub_img, tmp);
+					std::cout << "tmp size:" << tmp.size() << std::endl;
+
+//					cv::drawKeypoints(sub_img, tmp, sub_img);
+//					cv::imshow("sub img", sub_img);
+//					cv::waitKey(100);
 
 					for (int k(0); k < tmp.size(); ++k) {
-						key_points.push_back(cv::KeyPoint(tmp[i].pt.x+i*row_size_,tmp[i].pt.y+j*col_size_,tmp[i].size,tmp[i].angle));
+						key_points.push_back(cv::KeyPoint(tmp[i].pt.x + j * col_size_,
+						                                  tmp[i].pt.y + i * row_size_,
+						                                  tmp[i].size, tmp[i].angle));
 					}
-					std::cout << "i,j" << i << "," << j<< std::endl;
+					std::cout << "i,j" << i << "," << j << std::endl;
 
 
 				}
