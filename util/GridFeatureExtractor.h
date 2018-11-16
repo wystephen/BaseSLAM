@@ -159,8 +159,8 @@ namespace BaseSLAM {
 
 	class GridFeatureExtractor {
 	public:
-		int row_size_ = 100;
-		int col_size_ = 100;
+		int row_size_ = 150;
+		int col_size_ = 150;
 		int over_row_ = 30;
 		int over_col = 30;
 
@@ -189,7 +189,7 @@ namespace BaseSLAM {
 			}
 
 			cv::Mat sub_img;
-			auto normal_detector = cv::ORB::create();
+			auto normal_detector = cv::ORB::create(10);
 //			auto normal_detector = cv::FastFeatureDetector::create();
 //			auto normal_detector = cv::xfeatures2d::SiftFeatureDetector::create(500);
 //			auto normal_detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
@@ -220,7 +220,7 @@ namespace BaseSLAM {
 					).clone();
 
 //					cv::imshow("sub img be", sub_img);
-					BrightnessAndContrastAuto(sub_img, sub_img, 0.5);
+					BrightnessAndContrastAuto(sub_img.clone(), sub_img, 0.1);
 //					cv::imshow("sub img af",sub_img);
 //					cv::waitKey(0);
 
@@ -262,7 +262,7 @@ namespace BaseSLAM {
 			cv::Mat tmp_res;
 
 //			adjustBrightnessContrast(img,tmp_res,)
-			BrightnessAndContrastAuto(img, tmp_res, 0.05);
+			BrightnessAndContrastAuto(img, tmp_res, 0.5);
 			cv::imshow("before auto ", img);
 			cv::imshow("auto", tmp_res);
 
