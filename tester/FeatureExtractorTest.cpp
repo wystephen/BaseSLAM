@@ -49,8 +49,8 @@ int main() {
 
 
 
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
@@ -61,12 +61,12 @@ int main() {
 	std::vector<cv::KeyPoint> left_key_points, right_key_points;
 	cv::Mat left_key_img, right_key_img;
 
-	cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(5);
+//	cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(5);
 //	cv::Ptr<cv::AgastFeatureDetector> agast_detector = cv::AgastFeatureDetector::create(3);
 //	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
 //	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 //	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
-//	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
+	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
 
 
 	int i(0);
