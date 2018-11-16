@@ -9,6 +9,8 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/features2d.hpp>
 
+#include <opencv2/line_descriptor.hpp>
+
 #include <util/DataUnit.h>
 #include <VisualOdometry/StereoCamera.h>
 
@@ -29,6 +31,10 @@ namespace BaseSLAM {
 
 		std::vector<cv::KeyPoint> left_feature_points_, right_feature_points_;// key points (or feature points)
 		cv::Mat left_descriptors_, right_descriptors_;
+
+		std::vector<cv::line_descriptor::KeyLine> left_lines_, right_lines_; // line descriptors.
+		cv::Mat left_line_descriptors_, right_line_descriptors_;
+
 
 		Frame(StereoCamera *cam_ptr, StereoINSData *data_ptr, int index) {
 			idx_ = index;

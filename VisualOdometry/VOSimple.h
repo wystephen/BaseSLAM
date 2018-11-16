@@ -28,6 +28,7 @@
 #define BASESLAM_VOSIMPLE_H
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/line_descriptor.hpp>
 
 #include <VisualOdometry/Frame.h>
 
@@ -48,9 +49,17 @@ namespace BaseSLAM {
 
 //		cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(400);
 //		cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(5);
-//		cv::Ptr<cv::ORB> detector = cv::ORB::create(10000);
+//		cv::Ptr<cv::ORB> detector = cv::ORB::create(10000,2.0,10,15,0,2);
 //		cv::Ptr<cv::xfeatures2d::SIFT> detector= cv::xfeatures2d::SIFT::create(10000);
+//		cv::Ptr<cv::AKAZE> detector = cv::AKAZE::create(cv::AKAZE::DESCRIPTOR_MLDB,
 		cv::Ptr<cv::AKAZE> detector = cv::AKAZE::create();
+
+
+		// Liner feature detector,descriptor and matcher.
+		cv::Ptr<cv::line_descriptor::LSDDetector> lsd_detector = cv::line_descriptor::LSDDetector::createLSDDetector();
+		cv::Ptr<cv::line_descriptor::BinaryDescriptor> lsd_descriptor = cv::line_descriptor::BinaryDescriptor::createBinaryDescriptor();
+		cv::Ptr<cv::line_descriptor::BinaryDescriptorMatcher> lsd_matcher = cv::line_descriptor::BinaryDescriptorMatcher::createBinaryDescriptorMatcher();
+
 
 		VOSimple(StereoCamera *cam_ptr) {
 
@@ -67,8 +76,12 @@ namespace BaseSLAM {
 //			tframe->CalculateKeyPoints(detector);
 			special_mask = data_ptr->left_img_->clone();
 			special_mask = special_mask * 0.0;
+//			for(int i(0);i<10;i++){
+//				for(int j(0))
+//			}
 //			for(int i(0);)
 			cv::imshow("mask", special_mask);
+
 
 			detector->detectAndCompute(*(tframe->data_ptr_->left_img_),
 			                           cv::noArray(),
@@ -78,6 +91,15 @@ namespace BaseSLAM {
 			                           cv::noArray(),
 			                           tframe->right_feature_points_,
 			                           tframe->right_descriptors_);
+
+
+			lsd_detector->detect(*(tframe->data_ptr_->left_img_), tframe->left_lines_, 2, 10);
+			lsd_detector->detect(*(tframe->data_ptr_->right_img_), tframe->right_lines_, 2, 10);
+			lsd_descriptor->compute(*(tframe->data_ptr_->left_img_), tframe->left_lines_,
+			                        tframe->left_line_descriptors_);
+			lsd_descriptor->compute(*(tframe->data_ptr_->right_img_), tframe->right_lines_,
+			                        tframe->right_line_descriptors_);
+
 
 			if (latest_frame) {
 //				std::vector<uchar> status;
@@ -91,6 +113,10 @@ namespace BaseSLAM {
 //				cv::BFMatcher<
 				cv::Mat left_keypoint_img(*(tframe->data_ptr_->left_img_));
 				cv::Mat right_keypoint_img(*(tframe->data_ptr_->right_img_));
+
+				cv::Mat left_line_img;//(*(tframe->data_ptr_->left_img_));
+				cv::Mat right_line_img;//(*(tframe->data_ptr_->right_img_));
+
 
 				std::vector<cv::DMatch> left_matches, right_matches;
 				cv::BFMatcher matcher(cv::NORM_L2SQR);
@@ -111,18 +137,42 @@ namespace BaseSLAM {
 				                right_matches, right_keypoint_img);
 
 
+				std::vector<std::vector<cv::DMatch>> left_line_matches, right_line_matches;
+				lsd_matcher->knnMatch(latest_frame->left_line_descriptors_, tframe->left_line_descriptors_,
+				                      left_line_matches,100);
+				lsd_matcher->knnMatch(latest_frame->right_line_descriptors_, tframe->right_line_descriptors_,
+				                      right_line_matches,100);
+				std::cout << "left line matches:" << left_line_matches[0].size() << std::endl;
+				std::cout << "right line matches:" << right_line_matches[0].size() << std::endl;
 
 
+//				cv::drawMatches(*(latest_frame->data_ptr_->left_img_),
+//						latest_frame)
+				cv::line_descriptor::drawLineMatches(
+						*(latest_frame->data_ptr_->left_img_),
+						latest_frame->left_lines_,
+						*(tframe->data_ptr_->left_img_),
+						tframe->left_lines_,
+						left_line_matches[0],left_line_img
+						);
+				cv::line_descriptor::drawLineMatches(
+						*(latest_frame->data_ptr_->right_img_),
+						latest_frame->right_lines_,
+						*(tframe->data_ptr_->right_img_),
+						tframe->right_lines_,
+						right_line_matches[0],right_line_img
+						);
 
 
-
-
-//
 //				cv::drawKeypoints(*(data_ptr->left_img_), tframe->left_feature_points_, left_keypoint_img);
 //				cv::drawKeypoints(*(data_ptr->right_img_), tframe->right_feature_points_, right_keypoint_img);
+
 //
 				cv::imshow("show left", left_keypoint_img);
 				cv::imshow("show right", right_keypoint_img);
+
+				cv::imshow("show line left", left_line_img);
+				cv::imshow("show line right", right_line_img);
 
 
 			}
