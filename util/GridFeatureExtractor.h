@@ -161,8 +161,8 @@ namespace BaseSLAM {
 	public:
 		int row_size_ = 150;
 		int col_size_ = 150;
-		int over_row_ = 30;
-		int over_col = 30;
+		int over_row_ = 50;
+		int over_col = 50;
 
 		int min_batch_feature_num_ = 20;
 
@@ -189,8 +189,8 @@ namespace BaseSLAM {
 			}
 
 			cv::Mat sub_img;
-			auto normal_detector = cv::ORB::create(10);
-//			auto normal_detector = cv::FastFeatureDetector::create();
+//			auto normal_detector = cv::ORB::create(30);
+			auto normal_detector = cv::FastFeatureDetector::create();
 //			auto normal_detector = cv::xfeatures2d::SiftFeatureDetector::create(500);
 //			auto normal_detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 //			auto normal_detector = cv::AKAZE::create();
@@ -226,30 +226,33 @@ namespace BaseSLAM {
 
 					std::vector<cv::KeyPoint> tmp;
 //
-//					int threshold = 15;
-//					while (tmp.size() < min_batch_feature_num_ && threshold > 20) {
-//						normal_detector->setThreshold(threshold);
+					int threshold = 200;
+					while (tmp.size() < min_batch_feature_num_ && threshold > 20) {
+						normal_detector->setThreshold(threshold);
 //						normal_detector->setEdgeThreshold(threshold);
 //						normal_detector->setFastThreshold(threshold);
 //						normal_detector->setThreshold(double(threshold-4)/10);//AKAZE feature
 
-//						normal_detector->detect(sub_img, tmp);
-//						threshold = threshold - 1;
-//					}
+						normal_detector->detect(sub_img, tmp);
+						threshold = threshold - 1;
+					}
 
-					normal_detector->detect(sub_img,tmp);
+//					normal_detector->detect(sub_img,tmp);
 //					std::cout << "tmp size:" << tmp.size()
 //					          << " threshold:" << threshold << std::endl;
 
 //					cv::drawKeypoints(sub_img, tmp, sub_img);
 //					cv::imshow("sub img", sub_img);
 //					cv::waitKey(100);
-
-					for (int k(0); k < tmp.size(); ++k) {
-						key_points.push_back(cv::KeyPoint(tmp[k].pt.x + col_offset,
-						                                  tmp[k].pt.y + row_offset,
-						                                  tmp[k].size, tmp[k].angle));
+					if (tmp.size() < 2 * min_batch_feature_num_) {
+						for (int k(0); k < tmp.size(); ++k) {
+							key_points.push_back(cv::KeyPoint(tmp[k].pt.x + col_offset,
+							                                  tmp[k].pt.y + row_offset,
+							                                  tmp[k].size, tmp[k].angle));
+						}
 					}
+
+
 //					std::cout << "i,j" << i << "," << j << std::endl;
 //					std::cout << "col offset:" << col_offset << "row offset :" << row_offset << std::endl;
 
