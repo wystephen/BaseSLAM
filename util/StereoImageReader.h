@@ -131,8 +131,8 @@ namespace BaseSLAM {
 //					          << "\nright file:" << right_file_name << std::endl;
 
 					auto *data = new StereoINSData();
-					*(data->left_img_) = cv::imread(left_file_name);
-					*(data->right_img_) = cv::imread(right_file_name);
+					*(data->left_img_) = cv::imread(left_file_name,cv::IMREAD_GRAYSCALE);
+					*(data->right_img_) = cv::imread(right_file_name,cv::IMREAD_GRAYSCALE);
 
 					data_set_.push_back(data);
 					image_number_ = data_set_.size();

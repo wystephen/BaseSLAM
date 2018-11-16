@@ -35,6 +35,7 @@
 
 #include <opencv2/opencv.hpp>
 
+
 int main() {
 
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
@@ -84,12 +85,20 @@ int main() {
 
 //		agast_detector->detect(*(data->left_img_),left_key_points);
 //		agast_detector->detect(*(data->right_img_),right_key_points);
-		cv::cvtColor(data->left_img_->clone(),left_key_img,cv::COLOR_GRAY2RGB);
-		cv::cvtColor(data->right_img_->clone(),right_key_img,cv::COLOR_GRAY2RGB);
-		double threshold = 10.0;
+
+		std::cout << data->left_img_->type() << std::endl;
+
+
+		cv::cvtColor(*(data->left_img_), left_key_img, cv::COLOR_GRAY2BGR);
+		cv::cvtColor(*(data->right_img_), right_key_img, cv::COLOR_GRAY2BGR);
+//		left_key_img=data->left_img_->clone();
+//		right_key_img = data->right_img_->clone();
+		double threshold = 15.0;
 		left_key_points.clear();
 		right_key_points.clear();
-		for (int i(1); i < data->left_img_->cols - 1; i++) {
+
+#pragma omp parallel for
+		for (int i=(1); i < data->left_img_->cols - 1; i++) {
 			for (int j(1); j < data->left_img_->rows - 1; j++) {
 				Eigen::Vector2d left_grad(
 						data->left_img_->ptr<uchar>(j)[i + 1] - data->left_img_->ptr<uchar>(j)[i - 1],
@@ -100,24 +109,53 @@ int main() {
 						data->right_img_->ptr<uchar>(j + 1)[i] - data->right_img_->ptr<uchar>(j - 1)[i]
 				);
 				if (left_grad.norm() > threshold) {
-					left_key_points.push_back(cv::KeyPoint(i, j, 3));
-					cv::ellipse(left_key_img,cv::Point2d(i,j),cv::Size(4,4),0.0,0.0,0.0,cv::Scalar(200,200,0));
+//					left_key_points.push_back(cv::KeyPoint(i, j, 1));
+					cv::ellipse(left_key_img, cv::Point2d(i,j), cv::Size(4, 4), 0.0, 0.0, 0.0,
+					            cv::Scalar(200, 200, 0));
+
 				}
 
 
 				if (right_grad.norm() > threshold) {
-					right_key_points.push_back(cv::KeyPoint(i, j, 3));
-					cv::ellipse(right_key_img,cv::Point2d(i,j),cv::Size(4,4),0.0,0.0,0.0,cv::Scalar(200,200,0));
+//					right_key_points.push_back(cv::KeyPoint(i, j, 1));
+					cv::ellipse(right_key_img, cv::Point2d(i, j), cv::Size(4, 4), 0.0, 0.0, 0.0,
+					            cv::Scalar(200, 200, 0));
 				}
+
+
 
 			}
 		}
+//		cv::Mat prev_pts(left_key_points.size(),2);
+//		for(int i(0);i<left_key_points.size();++i){
+//			prev_pts(i,0) =
+//		}
+
+//		cv::calcOpticalFlowPyrLK(*(data->left_img_),*(data->right_img_),)
+
+
+		cv::Mat two_mat(data->left_img_->rows,data->right_img_->cols*2,0,cv::Scalar(0,0,0));
+
+//		for(int i(0);i<data->left_img_->rows;++i){
+//			two_mat.row(i) = data->left_img_->row(i).clone();
+//			two_mat.row(i+data->left_img_->rows) = data->right_img_->row(i).clone();
+//		}
+//#pragma omp parallel for
+		for(int i=0;i<data->left_img_->rows;++i){
+			for(int j=0;j<data->left_img_->cols;++j){
+				two_mat.at<cv::Vec3b>(i,j) = left_key_img.at<cv::Vec3b>(i,j);
+				two_mat.at<cv::Vec3b>(i,j+left_key_img.cols) = right_key_img.at<cv::Vec3b>(i,j);
+			}
+		}
+
+		cv::imshow("tw img", two_mat);
 
 //		cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
 //		cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
-		std::cout << "left size :" << data->left_img_->size << std::endl;
-		std::cout << "left key img size:" << left_key_img.size<<std::endl;
+//		std::cout << "left size :" << data->left_img_->size << std::endl;
+//		std::cout << "left key img size:" << left_key_img.size << std::endl;
 
+		cv::imshow("left show",*(data->left_img_));
 
 		cv::imshow("left_key", left_key_img);
 		cv::imshow("right_key", right_key_img);
