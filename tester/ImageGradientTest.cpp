@@ -73,6 +73,7 @@ int main() {
 		auto *data = data_reader.get_data(i);
 		if (data == nullptr) {
 			std::cout << "finished" << std::endl;
+
 			break;
 		}
 //		std::cout << "readed image" << std::endl;
@@ -177,18 +178,21 @@ int main() {
 
 		int error_counter = 0;
 		for(int i=0;i<left_points.size();++i){
-			cv::line(two_mat,
-					left_points[i],
-					cv::Point2f(track_left_points[i].x+left_key_img.cols,track_left_points[i].y),
-					cv::Scalar(0,200,20));
+
 			if(left_points[i].y-track_left_points[i].y>5){
 				error_counter++;
 							cv::line(two_mat,
 					left_points[i],
 					cv::Point2f(track_left_points[i].x+left_key_img.cols,track_left_points[i].y),
 					cv::Scalar(0,0,200));
+			}else{
+			cv::line(two_mat,
+					left_points[i],
+					cv::Point2f(track_left_points[i].x+left_key_img.cols,track_left_points[i].y),
+					cv::Scalar(0,200,20));
 			}
 		}
+//		std::cout<< "totally:"<<
 
 
 

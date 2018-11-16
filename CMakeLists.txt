@@ -69,6 +69,10 @@ target_link_libraries(Key_points_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 add_executable(image_gradient_test tester/ImageGradientTest.cpp)
 target_link_libraries(image_gradient_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+
+add_executable(feature_extractor_test tester/FeatureExtractorTest.cpp)
+target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
 ####################################
 #MAIN EXEC
 ####################################
