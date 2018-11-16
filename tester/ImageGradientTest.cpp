@@ -25,6 +25,7 @@
 //
 
 
+
 #include <VisualOdometry/StereoCamera.h>
 
 #include <util/StereoImageReader.h>
@@ -57,14 +58,13 @@ int main() {
 
 
 	std::vector<cv::KeyPoint> left_key_points, right_key_points;
-	cv::Mat left_key_img,right_key_img;
+	cv::Mat left_key_img, right_key_img;
 
 //	cv::Ptr<cv::FastFeatureDetector> fast_detector = cv::FastFeatureDetector::create(5);
 //	cv::Ptr<cv::AgastFeatureDetector> agast_detector = cv::AgastFeatureDetector::create(3);
 //	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
 //	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(1000);
-
 
 
 	int i(0);
@@ -79,20 +79,48 @@ int main() {
 //		cv::imshow("show right", *(data->right_img_));
 //		std::cout << " after imshow" << std::endl;
 //		vo.addNewFrame(data);
-		detector->detect(*(data->left_img_),left_key_points);
-		detector->detect(*(data->right_img_),right_key_points);
+//		detector->detect(*(data->left_img_),left_key_points);
+//		detector->detect(*(data->right_img_),right_key_points);
 
 //		agast_detector->detect(*(data->left_img_),left_key_points);
 //		agast_detector->detect(*(data->right_img_),right_key_points);
+		cv::cvtColor(data->left_img_->clone(),left_key_img,cv::COLOR_GRAY2RGB);
+		cv::cvtColor(data->right_img_->clone(),right_key_img,cv::COLOR_GRAY2RGB);
+		double threshold = 10.0;
+		left_key_points.clear();
+		right_key_points.clear();
+		for (int i(1); i < data->left_img_->cols - 1; i++) {
+			for (int j(1); j < data->left_img_->rows - 1; j++) {
+				Eigen::Vector2d left_grad(
+						data->left_img_->ptr<uchar>(j)[i + 1] - data->left_img_->ptr<uchar>(j)[i - 1],
+						data->left_img_->ptr<uchar>(j + 1)[i] - data->left_img_->ptr<uchar>(j - 1)[i]
+				);
+				Eigen::Vector2d right_grad(
+						data->right_img_->ptr<uchar>(j)[i + 1] - data->right_img_->ptr<uchar>(j)[i - 1],
+						data->right_img_->ptr<uchar>(j + 1)[i] - data->right_img_->ptr<uchar>(j - 1)[i]
+				);
+				if (left_grad.norm() > threshold) {
+					left_key_points.push_back(cv::KeyPoint(i, j, 3));
+					cv::ellipse(left_key_img,cv::Point2d(i,j),cv::Size(4,4),0.0,0.0,0.0,cv::Scalar(200,200,0));
+				}
 
-		cv::drawKeypoints(*(data->left_img_),left_key_points,left_key_img);
-		cv::drawKeypoints(*(data->right_img_),right_key_points,right_key_img);
+
+				if (right_grad.norm() > threshold) {
+					right_key_points.push_back(cv::KeyPoint(i, j, 3));
+					cv::ellipse(right_key_img,cv::Point2d(i,j),cv::Size(4,4),0.0,0.0,0.0,cv::Scalar(200,200,0));
+				}
+
+			}
+		}
+
+//		cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
+//		cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
+		std::cout << "left size :" << data->left_img_->size << std::endl;
+		std::cout << "left key img size:" << left_key_img.size<<std::endl;
 
 
-		cv::imshow("left_key",left_key_img);
-		cv::imshow("right_key",right_key_img);
-
-
+		cv::imshow("left_key", left_key_img);
+		cv::imshow("right_key", right_key_img);
 
 
 		cv::waitKey(110);

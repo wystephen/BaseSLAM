@@ -66,6 +66,8 @@ target_link_libraries(camera_config_server_tester ${OpenCV_LIBS} ${Boost_LIBRARI
 add_executable(Key_points_test tester/KeypointsTest.cpp)
 target_link_libraries(Key_points_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_executable(image_gradient_test tester/ImageGradientTest.cpp)
+target_link_libraries(image_gradient_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ####################################
 #MAIN EXEC
