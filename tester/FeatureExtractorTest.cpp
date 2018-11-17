@@ -124,24 +124,6 @@ int main() {
 //			detector->detect(*(data->left_img_), left_key_points);
 //			detector->detect(*(data->right_img_), right_key_points);
 
-			std::cout << "begin test thread" << std::endl;
-
-			std::thread t([](){
-				std::cout << "start the thread" << std::endl;
-				int kg = 0;
-				while(kg < 10){
-					std::cout << "kg:" << kg << std::endl;
-					kg++;
-					usleep(100000);
-				}
-
-			});
-//			t.joinable();
-			usleep(100);
-
-			std::cout << "out of thread:" << std::endl;
-
-			t.join();
 
 //			cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
 //			cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
