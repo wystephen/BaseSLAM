@@ -97,7 +97,7 @@ int main() {
 //	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
 	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
 
-	int clear_counter(0),blur_counter(0);
+	int clear_counter(0), blur_counter(0);
 
 	int i(0);
 	while (true) {
@@ -115,9 +115,9 @@ int main() {
 //		detector->detect(*(data->right_img_), right_key_points);
 
 //		double score = cv::Laplacian(*(data->left_img_),cv::Mat(),0);
-		if (false&&blurDetect(*(data->left_img_))) {
+		if (false && blurDetect(*(data->left_img_))) {
 			std::cout << "failed" << std::endl;
-			cv::imwrite("/home/steve/temp/"+std::to_string(i)+".png",*(data->left_img_));
+			cv::imwrite("/home/steve/temp/" + std::to_string(i) + ".png", *(data->left_img_));
 			blur_counter++;
 		} else {
 

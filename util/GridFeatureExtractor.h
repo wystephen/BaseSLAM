@@ -273,6 +273,11 @@ namespace BaseSLAM {
 
 			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
 		}
+
+		bool detect(const cv::Mat &img,
+				std::vector<cv::KeyPoint> &key_points){
+
+		}
 	};
 
 
