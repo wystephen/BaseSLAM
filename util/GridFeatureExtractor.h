@@ -196,17 +196,8 @@ namespace BaseSLAM {
 //			auto normal_detector = cv::AKAZE::create();
 
 			int image_rows(img.rows), image_cols(img.cols);
-
-//			int row_offset(0), col_offset(0);
-
-
-
 			for (int row_offset = 0; row_offset < image_rows; row_offset += (row_size_ - over_row_)) {
 				for (int col_offset = 0; col_offset < image_cols; col_offset = col_offset + col_size_ - over_col) {
-//					std::cout << "row offset :" << row_offset << " row_size:" << row_size_ << " over row:"
-//					          << over_row_;//<< std::endl;
-//					std::cout << "col offset:" << col_offset << "col size:" << col_size_ << " over col:" << over_col
-//					          << std::endl;
 
 					int cut_row(0), cut_col(0);
 					if (row_offset + row_size_ > image_rows) {
@@ -219,10 +210,7 @@ namespace BaseSLAM {
 					              cv::Range(col_offset, col_offset + col_size_ - cut_col)
 					).clone();
 
-//					cv::imshow("sub img be", sub_img);
 					BrightnessAndContrastAuto(sub_img.clone(), sub_img, 0.1);
-//					cv::imshow("sub img af",sub_img);
-//					cv::waitKey(0);
 
 					std::vector<cv::KeyPoint> tmp;
 //
@@ -238,12 +226,6 @@ namespace BaseSLAM {
 					}
 
 //					normal_detector->detect(sub_img,tmp);
-//					std::cout << "tmp size:" << tmp.size()
-//					          << " threshold:" << threshold << std::endl;
-
-//					cv::drawKeypoints(sub_img, tmp, sub_img);
-//					cv::imshow("sub img", sub_img);
-//					cv::waitKey(100);
 					if (tmp.size() < 2 * min_batch_feature_num_) {
 						for (int k(0); k < tmp.size(); ++k) {
 							key_points.push_back(cv::KeyPoint(tmp[k].pt.x + col_offset,
@@ -251,30 +233,48 @@ namespace BaseSLAM {
 							                                  tmp[k].size, tmp[k].angle));
 						}
 					}
-
-
-//					std::cout << "i,j" << i << "," << j << std::endl;
-//					std::cout << "col offset:" << col_offset << "row offset :" << row_offset << std::endl;
-
-
-
-
 				}
 			}
 
-			cv::Mat tmp_res;
-
-//			adjustBrightnessContrast(img,tmp_res,)
-			BrightnessAndContrastAuto(img, tmp_res, 0.5);
-			cv::imshow("before auto ", img);
-			cv::imshow("auto", tmp_res);
-
-
+//			cv::Mat tmp_res;
+//			BrightnessAndContrastAuto(img, tmp_res, 0.5);
+//			cv::imshow("before auto ", img);
+//			cv::imshow("auto", tmp_res);
 			return true;
 		}
 
 
 	};
+
+//	class
+
+
+	class GridFastExtractor {
+	public:
+		int grid_rows_ = 5;
+		int grid_cols_ = 7;
+		int grid_feature_num_ = 100;
+
+
+		GridFastExtractor(int grid_row,
+		                     int grid_col,
+		                     int feature_number
+		) {
+			grid_rows_ = grid_row;
+			grid_cols_ = grid_col;
+			grid_feature_num_ = feature_number / (grid_rows_ * grid_cols_);
+
+		}
+
+//		int grid_detector()
+		static cv::Ptr<GridFastExtractor> create(int grid_row,
+		                                         int grid_col,
+		                                         int totally_feature_num) {
+
+			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
+		}
+	};
+
 
 }
 
