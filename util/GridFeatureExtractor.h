@@ -257,8 +257,8 @@ namespace BaseSLAM {
 
 
 		GridFastExtractor(int grid_row,
-		                     int grid_col,
-		                     int feature_number
+		                  int grid_col,
+		                  int feature_number
 		) {
 			grid_rows_ = grid_row;
 			grid_cols_ = grid_col;
@@ -266,7 +266,7 @@ namespace BaseSLAM {
 
 		}
 
-//		int grid_detector()
+		// Create Grid-based feature detector
 		static cv::Ptr<GridFastExtractor> create(int grid_row,
 		                                         int grid_col,
 		                                         int totally_feature_num) {
@@ -275,7 +275,10 @@ namespace BaseSLAM {
 		}
 
 		bool detect(const cv::Mat &img,
-				std::vector<cv::KeyPoint> &key_points){
+		            std::vector<cv::KeyPoint> &key_points) {
+
+			auto detector_ptr = new cv::FastFeatureDetector::create();
+
 
 		}
 	};
