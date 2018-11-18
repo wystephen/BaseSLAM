@@ -306,8 +306,7 @@ namespace BaseSLAM {
 
 			// using mask to avoid redetecting existing features.
 			cv::Mat
-			mask(img.rows, img.cols, cv::
-			CV_8U, cv::Scalar(1));
+			mask(img.rows, img.cols, cv::CV_8U, cv::Scalar(1));
 
 
 
@@ -333,11 +332,13 @@ namespace BaseSLAM {
 					try {
 
 						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
+						std::cout << point.pt << "at ;" << full2grid(point.pt.x,point.pt.y) << std::endl;
 
 					} catch (std::exception &e) {
 						std::cout << " error at push previous key points to grid key points vector." << std::endl;
 					}
 				}
+
 
 
 			}

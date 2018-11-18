@@ -121,8 +121,8 @@ int main() {
 			blur_counter++;
 		} else {
 
-//			detector->detect(*(data->left_img_), left_key_points);
-//			detector->detect(*(data->right_img_), right_key_points);
+			detector->detect(*(data->left_img_), left_key_points);
+			detector->detect(*(data->right_img_), right_key_points);
 
 
 //			cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
