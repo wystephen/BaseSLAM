@@ -251,10 +251,17 @@ namespace BaseSLAM {
 
 	class GridFastExtractor {
 	public:
-		int grid_rows_ = 5;
-		int grid_cols_ = 7;
+		int grid_rows_ = 4;
+		int grid_cols_ = 6;
 		int grid_feature_num_ = 100;
 
+		// Create Grid-based feature detector
+		static cv::Ptr<GridFastExtractor> create(int grid_row,
+		                                         int grid_col,
+		                                         int totally_feature_num) {
+
+			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
+		}
 
 		GridFastExtractor(int grid_row,
 		                  int grid_col,
@@ -266,20 +273,63 @@ namespace BaseSLAM {
 
 		}
 
-		// Create Grid-based feature detector
-		static cv::Ptr<GridFastExtractor> create(int grid_row,
-		                                         int grid_col,
-		                                         int totally_feature_num) {
-
-			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
-		}
 
 		bool detect(const cv::Mat &img,
-		            std::vector<cv::KeyPoint> &key_points) {
+		            std::vector<cv::KeyPoint> &key_points, bool initial) {
+			// compute grid and calculate feature number in each grid.
 
-			auto detector_ptr = new cv::FastFeatureDetector::create();
+			int image_row = img.rows;
+			int image_col = img.cols;
+
+			int row_size = (image_row/grid_rows_);
+			int col_size = (image_col/grid_cols_);
 
 
+
+
+
+
+			auto detector = cv::FastFeatureDetector::create();
+
+			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
+
+			// separate Keypoints into different grid
+
+
+			// Select new Keypoints based on respoonse in each grid
+
+
+			// add all feature to key_points(input vec);
+
+
+			return true;
+
+
+		}
+
+
+		int getGrid_rows_() const {
+			return grid_rows_;
+		}
+
+		void setGrid_rows_(int grid_rows_) {
+			GridFastExtractor::grid_rows_ = grid_rows_;
+		}
+
+		int getGrid_cols_() const {
+			return grid_cols_;
+		}
+
+		void setGrid_cols_(int grid_cols_) {
+			GridFastExtractor::grid_cols_ = grid_cols_;
+		}
+
+		int getGrid_feature_num_() const {
+			return grid_feature_num_;
+		}
+
+		void setGrid_feature_num_(int grid_feature_num_) {
+			GridFastExtractor::grid_feature_num_ = grid_feature_num_;
 		}
 	};
 
