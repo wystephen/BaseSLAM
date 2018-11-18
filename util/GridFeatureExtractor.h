@@ -275,18 +275,31 @@ namespace BaseSLAM {
 
 
 		bool detect(const cv::Mat &img,
-		            std::vector<cv::KeyPoint> &key_points, bool initial) {
+		            std::vector<cv::KeyPoint> &key_points,
+		            bool clear_input_keypoints = true) {
 			// compute grid and calculate feature number in each grid.
 
 			int image_row = img.rows;
 			int image_col = img.cols;
 
-			int row_size = (image_row/grid_rows_);
-			int col_size = (image_col/grid_cols_);
+			int row_size = (image_row / grid_rows_);
+			int col_size = (image_col / grid_cols_);
+
+
+			auto full2grid = [row_size, col_size, this](int x, int y, int &gx, int &gy) -> int {
+
+				int grid_id = 0;
+
+				int grid_x = x / col_size;
+				int grid_y = y / row_size;
+
+				grid_id = y + x * this->grid_rows_;
 
 
 
+				return grid_id;
 
+			};
 
 
 			auto detector = cv::FastFeatureDetector::create();
