@@ -263,6 +263,12 @@ namespace BaseSLAM {
 			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
 		}
 
+		/**
+		 * @brief Constructor function
+		 * @param grid_row
+		 * @param grid_col
+		 * @param feature_number
+		 */
 		GridFastExtractor(int grid_row,
 		                  int grid_col,
 		                  int feature_number
@@ -274,6 +280,13 @@ namespace BaseSLAM {
 		}
 
 
+		/**
+		 * @brief Detect key points, keep number of feature points in each grid equal to @param grid_feature_num_;
+		 * @param img
+		 * @param key_points
+		 * @param clear_input_keypoints
+		 * @return
+		 */
 		bool detect(const cv::Mat &img,
 		            std::vector<cv::KeyPoint> &key_points,
 		            bool clear_input_keypoints = true) {
@@ -292,7 +305,9 @@ namespace BaseSLAM {
 			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
 
 			// using mask to avoid redetecting existing features.
-			cv::Mat mask(img.rows,img.cols, cv::CV_8U, cv::Scalar(1));
+			cv::Mat
+			mask(img.rows, img.cols, cv::
+			CV_8U, cv::Scalar(1));
 
 
 
@@ -313,8 +328,16 @@ namespace BaseSLAM {
 			};
 
 
-			if(!clear_input_keypoints){
-				for(auto point )
+			if (!clear_input_keypoints) {
+				for (auto point:key_points) {
+					try {
+
+						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
+
+					} catch (std::exception &e) {
+						std::cout << " error at push previous key points to grid key points vector." << std::endl;
+					}
+				}
 
 
 			}
