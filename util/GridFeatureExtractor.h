@@ -285,21 +285,39 @@ namespace BaseSLAM {
 			int row_size = (image_row / grid_rows_);
 			int col_size = (image_col / grid_cols_);
 
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints;
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints;
 
-			auto full2grid = [row_size, col_size, this](int x, int y, int &gx, int &gy) -> int {
+			grid_keypoints.resize(grid_rows_ * grid_cols_);
+			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
+
+			// using mask to avoid redetecting existing features.
+			cv::Mat mask(img.rows,img.cols, cv::CV_8U, cv::Scalar(1));
+
+
+
+			// map image index(x,y) to grid index(gx,gy) and return a integer represent the index of gird in vector
+			auto full2grid = [row_size, col_size, this](int x, int y) -> int {
 
 				int grid_id = 0;
 
 				int grid_x = x / col_size;
 				int grid_y = y / row_size;
 
-				grid_id = y + x * this->grid_rows_;
 
+				grid_id = y + x * this->grid_rows_;
 
 
 				return grid_id;
 
 			};
+
+
+			if(!clear_input_keypoints){
+				for(auto point )
+
+
+			}
 
 
 			auto detector = cv::FastFeatureDetector::create();
