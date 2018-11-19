@@ -301,8 +301,8 @@ namespace BaseSLAM {
 			int row_size = (image_row / grid_rows_);
 			int col_size = (image_col / grid_cols_);
 
-			std::vector<std::vector<cv::KeyPoint>> grid_keypoints(grid_rows_ * grid_cols_);
-			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints(grid_rows_ * grid_cols_);
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_+1) * (grid_cols_+1));
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_+1) * (grid_cols_+1));
 
 //			grid_keypoints.resize(grid_rows_ * grid_cols_);
 //			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
@@ -316,8 +316,8 @@ namespace BaseSLAM {
 			auto full2grid = [row_size, col_size, this](int x, int y) -> int {
 
 				int grid_id = 0;
-				int grid_x = x / col_size;
-				int grid_y = y / row_size;
+				int grid_x = x / row_size;
+				int grid_y = y / col_size;
 
 //				grid_id = y + x * this->grid_rows_;
 				grid_id = grid_x + grid_y * this->grid_rows_;
