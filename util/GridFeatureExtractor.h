@@ -301,11 +301,11 @@ namespace BaseSLAM {
 			int row_size = (image_row / grid_rows_);
 			int col_size = (image_col / grid_cols_);
 
-			std::vector<std::vector<cv::KeyPoint>> grid_keypoints;
-			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints;
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints(grid_rows_*grid_cols_);
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints(grid_rows_*grid_cols_);
 
-			grid_keypoints.resize(grid_rows_ * grid_cols_);
-			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
+//			grid_keypoints.resize(grid_rows_ * grid_cols_);
+//			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
 
 			// using mask to avoid redetecting existing features.
 			cv::Mat mask(img.rows, img.cols, CV_8U, cv::Scalar(1));
@@ -316,13 +316,12 @@ namespace BaseSLAM {
 			auto full2grid = [row_size, col_size, this](int x, int y) -> int {
 
 				int grid_id = 0;
-
 				int grid_x = x / col_size;
 				int grid_y = y / row_size;
 
-
-				grid_id = y + x * this->grid_rows_;
-
+//				grid_id = y + x * this->grid_rows_;
+				grid_id = grid_x + grid_y * this->grid_rows_;
+				std::cout << "grid id:" << grid_id << std::endl;
 
 				return grid_id;
 
@@ -373,10 +372,9 @@ namespace BaseSLAM {
 			// AND add all feature to key_points(input vec);
 
 
-
 			for (int i(0); i < grid_keypoints.size(); ++i) {
 				std::sort(grid_new_keypoints[i].begin(), grid_new_keypoints[i].end(),
-				          &GridFastExtractor::CompareKeypointResponse);
+				          &GridFastExtractor::keyPointCompareByResponse);
 
 				for (int j(0); j < grid_feature_num_ - grid_keypoints[i].size(); ++j) {
 					key_points.push_back(grid_new_keypoints[i][j]);
@@ -416,10 +414,15 @@ namespace BaseSLAM {
 		}
 
 
-		static bool CompareKeypointResponse(
+		/*
+		 * @brief keyPointCompareByResponse
+		 *    Compare two keypoints based on the response.
+		 */
+		static bool keyPointCompareByResponse(
 				const cv::KeyPoint &pt1,
-				const cv::KeyPoint &pt2
-		) {
+				const cv::KeyPoint &pt2) {
+			// Keypoint with higher response will be at the
+			// beginning of the vector.
 			return pt1.response > pt2.response;
 		}
 	};
