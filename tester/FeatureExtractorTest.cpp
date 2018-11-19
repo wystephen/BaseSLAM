@@ -95,7 +95,8 @@ int main() {
 //	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
 //	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 //	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
-	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
+//	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
+	auto detector  = BaseSLAM::GridFastExtractor::create();
 
 	int clear_counter(0), blur_counter(0);
 

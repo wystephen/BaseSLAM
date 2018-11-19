@@ -165,8 +165,6 @@ namespace BaseSLAM {
 		int over_col = 50;
 
 
-
-
 		int min_batch_feature_num_ = 20;
 
 
@@ -261,9 +259,9 @@ namespace BaseSLAM {
 		int mask_range = 3;
 
 		// Create Grid-based feature detector
-		static cv::Ptr<GridFastExtractor> create(int grid_row,
-		                                         int grid_col,
-		                                         int totally_feature_num) {
+		static cv::Ptr<GridFastExtractor> create(int grid_row = 7,
+		                                         int grid_col = 5,
+		                                         int totally_feature_num = 1000) {
 
 			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
 		}
@@ -338,32 +336,53 @@ namespace BaseSLAM {
 
 						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
 						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
-						mask(cv::Range(point.pt.x-mask_range,point.pt.x+mask_range),
-								cv::Range(point.pt.y-mask_range,point.pt.y+mask_range)) = 0;
+						int x_min_offset(0), x_max_offset(0), y_min_offset(0), y_max_offset(0);
+
+						mask(cv::Range(point.pt.x - mask_range, point.pt.x + mask_range),
+						     cv::Range(point.pt.y - mask_range, point.pt.y + mask_range)) = 0;
 
 					} catch (std::exception &e) {
 						std::cout << " error at push previous key points to grid key points vector." << std::endl;
 					}
 				}
+			} else {
+				key_points.clear();
 			}
 
-			key_points.clear();
+			std::cout << "mask area:" <<
+			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
 			auto detector = cv::FastFeatureDetector::create();
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
-//			detector->detect(img,)
-
-
+			std::vector<cv::KeyPoint> tmp_key_points;
+			detector->detect(img, tmp_key_points, mask);
 
 			// separate Keypoints into different grid
-
-
+			for (auto point:tmp_key_points) {
+				try {
+//					grid_keypoints[full2grid]
+					grid_new_keypoints[full2grid(point.pt.x, point.pt.y)].push_back((point));
+				} catch (std::exception &e) {
+					std::cout << "Error:" << __LINE__ << " error when add new point:" <<
+					          point.pt << std::endl;
+				}
+			}
 			// Select new Keypoints based on respoonse in each grid
+			// AND add all feature to key_points(input vec);
 
 
-			// add all feature to key_points(input vec);
+
+			for (int i(0); i < grid_keypoints.size(); ++i) {
+				std::sort(grid_new_keypoints[i].begin(), grid_new_keypoints[i].end(),
+				          &GridFastExtractor::CompareKeypointResponse);
+
+				for (int j(0); j < grid_feature_num_ - grid_keypoints[i].size(); ++j) {
+					key_points.push_back(grid_new_keypoints[i][j]);
+				}
+
+			}
 
 
 			return true;
@@ -394,6 +413,14 @@ namespace BaseSLAM {
 
 		void setGrid_feature_num_(int grid_feature_num_) {
 			GridFastExtractor::grid_feature_num_ = grid_feature_num_;
+		}
+
+
+		static bool CompareKeypointResponse(
+				const cv::KeyPoint &pt1,
+				const cv::KeyPoint &pt2
+		) {
+			return pt1.response > pt2.response;
 		}
 	};
 
