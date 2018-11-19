@@ -301,8 +301,8 @@ namespace BaseSLAM {
 			int row_size = (image_row / grid_rows_);
 			int col_size = (image_col / grid_cols_);
 
-			std::vector<std::vector<cv::KeyPoint>> grid_keypoints(grid_rows_*grid_cols_);
-			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints(grid_rows_*grid_cols_);
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints(grid_rows_ * grid_cols_);
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints(grid_rows_ * grid_cols_);
 
 //			grid_keypoints.resize(grid_rows_ * grid_cols_);
 //			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
@@ -334,7 +334,7 @@ namespace BaseSLAM {
 					try {
 
 						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
-						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
+//						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
 						int x_min_offset(0), x_max_offset(0), y_min_offset(0), y_max_offset(0);
 
 						mask(cv::Range(point.pt.x - mask_range, point.pt.x + mask_range),
@@ -352,7 +352,7 @@ namespace BaseSLAM {
 			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
-			auto detector = cv::FastFeatureDetector::create();
+			auto detector = cv::FastFeatureDetector::create(1);
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
 			std::vector<cv::KeyPoint> tmp_key_points;
@@ -361,7 +361,8 @@ namespace BaseSLAM {
 			// separate Keypoints into different grid
 			for (auto point:tmp_key_points) {
 				try {
-//					grid_keypoints[full2grid]
+//					std::cout << "access the index:" << full2grid(point.pt.x, point.pt.y) << std::endl;
+//					std::cout << "grid_new points size:" << grid_new_keypoints.size() << std::endl;
 					grid_new_keypoints[full2grid(point.pt.x, point.pt.y)].push_back((point));
 				} catch (std::exception &e) {
 					std::cout << "Error:" << __LINE__ << " error when add new point:" <<
@@ -376,7 +377,9 @@ namespace BaseSLAM {
 				std::sort(grid_new_keypoints[i].begin(), grid_new_keypoints[i].end(),
 				          &GridFastExtractor::keyPointCompareByResponse);
 
-				for (int j(0); j < grid_feature_num_ - grid_keypoints[i].size(); ++j) {
+				for (int j(0);
+				     j < grid_feature_num_ - grid_keypoints[i].size() &&
+				     j < grid_new_keypoints[i].size(); ++j) {
 					key_points.push_back(grid_new_keypoints[i][j]);
 				}
 
