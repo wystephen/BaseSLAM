@@ -28,7 +28,7 @@
 #define BASESLAM_GRIDFEATUREEXTRACTOR_H
 
 #include <opencv2/opencv.hpp>
-
+#include <opencv2/core.hpp>
 #include <opencv2/xfeatures2d.hpp>
 
 namespace BaseSLAM {
@@ -164,6 +164,9 @@ namespace BaseSLAM {
 		int over_row_ = 50;
 		int over_col = 50;
 
+
+
+
 		int min_batch_feature_num_ = 20;
 
 
@@ -255,6 +258,8 @@ namespace BaseSLAM {
 		int grid_cols_ = 6;
 		int grid_feature_num_ = 100;
 
+		int mask_range = 3;
+
 		// Create Grid-based feature detector
 		static cv::Ptr<GridFastExtractor> create(int grid_row,
 		                                         int grid_col,
@@ -305,8 +310,7 @@ namespace BaseSLAM {
 			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
 
 			// using mask to avoid redetecting existing features.
-			cv::Mat
-			mask(img.rows, img.cols, cv::CV_8U, cv::Scalar(1));
+			cv::Mat mask(img.rows, img.cols, CV_8U, cv::Scalar(1));
 
 
 
@@ -327,26 +331,31 @@ namespace BaseSLAM {
 			};
 
 
+			// TODO:should be test in tracking process!
 			if (!clear_input_keypoints) {
 				for (auto point:key_points) {
 					try {
 
 						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
-						std::cout << point.pt << "at ;" << full2grid(point.pt.x,point.pt.y) << std::endl;
+						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
+						mask(cv::Range(point.pt.x-mask_range,point.pt.x+mask_range),
+								cv::Range(point.pt.y-mask_range,point.pt.y+mask_range)) = 0;
 
 					} catch (std::exception &e) {
 						std::cout << " error at push previous key points to grid key points vector." << std::endl;
 					}
 				}
-
-
-
 			}
+
+			key_points.clear();
 
 
 			auto detector = cv::FastFeatureDetector::create();
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
+//			detector->detect(img,)
+
+
 
 			// separate Keypoints into different grid
 
