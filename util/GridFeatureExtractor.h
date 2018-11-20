@@ -156,99 +156,99 @@ namespace BaseSLAM {
 		return 0;
 	}
 
+	/*
 
-	class GridFeatureExtractor {
-	public:
-		int row_size_ = 150;
-		int col_size_ = 150;
-		int over_row_ = 50;
-		int over_col = 50;
-
-
-		int min_batch_feature_num_ = 20;
-
-
-		static cv::Ptr<GridFeatureExtractor> create() {
-			return new GridFeatureExtractor();
-		}
-
-		GridFeatureExtractor() {
-
-		}
-
-
-		/**
-		 * @brief Not right.
-		 * @param img
-		 * @param key_points
-		 * @return
-		 */
-		bool detect(const cv::Mat img, std::vector<cv::KeyPoint> &key_points) {
-
-			if (key_points.size() > 0) {
-				key_points.clear();
-			}
-
-			cv::Mat sub_img;
-//			auto normal_detector = cv::ORB::create(30);
-			auto normal_detector = cv::FastFeatureDetector::create();
-//			auto normal_detector = cv::xfeatures2d::SiftFeatureDetector::create(500);
-//			auto normal_detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
-//			auto normal_detector = cv::AKAZE::create();
-
-			int image_rows(img.rows), image_cols(img.cols);
-			for (int row_offset = 0; row_offset < image_rows; row_offset += (row_size_ - over_row_)) {
-				for (int col_offset = 0; col_offset < image_cols; col_offset = col_offset + col_size_ - over_col) {
-
-					int cut_row(0), cut_col(0);
-					if (row_offset + row_size_ > image_rows) {
-						cut_row = row_offset + row_size_ - image_rows;
-					}
-					if (col_offset + col_size_ > image_cols) {
-						cut_col = col_offset + col_size_ - image_cols;
-					}
-					sub_img = img(cv::Range(row_offset, row_offset + row_size_ - cut_row),
-					              cv::Range(col_offset, col_offset + col_size_ - cut_col)
-					).clone();
-
-					BrightnessAndContrastAuto(sub_img.clone(), sub_img, 0.1);
-
-					std::vector<cv::KeyPoint> tmp;
+//	class GridFeatureExtractor {
+//	public:
+//		int row_size_ = 150;
+//		int col_size_ = 150;
+//		int over_row_ = 50;
+//		int over_col = 50;
 //
-					int threshold = 200;
-					while (tmp.size() < min_batch_feature_num_ && threshold > 20) {
-						normal_detector->setThreshold(threshold);
-//						normal_detector->setEdgeThreshold(threshold);
-//						normal_detector->setFastThreshold(threshold);
-//						normal_detector->setThreshold(double(threshold-4)/10);//AKAZE feature
+//
+//		int min_batch_feature_num_ = 20;
+//
+//
+//		static cv::Ptr<GridFeatureExtractor> create() {
+//			return new GridFeatureExtractor();
+//		}
+//
+//		GridFeatureExtractor() {
+//
+//		}
+//
+//
+//		/**
+//		 * @brief Not right.
+//		 * @param img
+//		 * @param key_points
+//		 * @return
+//		 *\/
+//		bool detect(const cv::Mat img, std::vector<cv::KeyPoint> &key_points) {
+//
+//			if (key_points.size() > 0) {
+//				key_points.clear();
+//			}
+//
+//			cv::Mat sub_img;
+////			auto normal_detector = cv::ORB::create(30);
+//			auto normal_detector = cv::FastFeatureDetector::create();
+////			auto normal_detector = cv::xfeatures2d::SiftFeatureDetector::create(500);
+////			auto normal_detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
+////			auto normal_detector = cv::AKAZE::create();
+//
+//			int image_rows(img.rows), image_cols(img.cols);
+//			for (int row_offset = 0; row_offset < image_rows; row_offset += (row_size_ - over_row_)) {
+//				for (int col_offset = 0; col_offset < image_cols; col_offset = col_offset + col_size_ - over_col) {
+//
+//					int cut_row(0), cut_col(0);
+//					if (row_offset + row_size_ > image_rows) {
+//						cut_row = row_offset + row_size_ - image_rows;
+//					}
+//					if (col_offset + col_size_ > image_cols) {
+//						cut_col = col_offset + col_size_ - image_cols;
+//					}
+//					sub_img = img(cv::Range(row_offset, row_offset + row_size_ - cut_row),
+//					              cv::Range(col_offset, col_offset + col_size_ - cut_col)
+//					).clone();
+//
+//					BrightnessAndContrastAuto(sub_img.clone(), sub_img, 0.1);
+//
+//					std::vector<cv::KeyPoint> tmp;
+////
+//					int threshold = 200;
+//					while (tmp.size() < min_batch_feature_num_ && threshold > 20) {
+//						normal_detector->setThreshold(threshold);
+////						normal_detector->setEdgeThreshold(threshold);
+////						normal_detector->setFastThreshold(threshold);
+////						normal_detector->setThreshold(double(threshold-4)/10);//AKAZE feature
+//
+//						normal_detector->detect(sub_img, tmp);
+//						threshold = threshold - 1;
+//					}
+//
+////					normal_detector->detect(sub_img,tmp);
+//					if (tmp.size() < 2 * min_batch_feature_num_) {
+//						for (int k(0); k < tmp.size(); ++k) {
+//							key_points.push_back(cv::KeyPoint(tmp[k].pt.x + col_offset,
+//							                                  tmp[k].pt.y + row_offset,
+//							                                  tmp[k].size, tmp[k].angle));
+//						}
+//					}
+//				}
+//			}
+//
+////			cv::Mat tmp_res;
+////			BrightnessAndContrastAuto(img, tmp_res, 0.5);
+////			cv::imshow("before auto ", img);
+////			cv::imshow("auto", tmp_res);
+//			return true;
+//		}
+//
+//
+//	};
 
-						normal_detector->detect(sub_img, tmp);
-						threshold = threshold - 1;
-					}
-
-//					normal_detector->detect(sub_img,tmp);
-					if (tmp.size() < 2 * min_batch_feature_num_) {
-						for (int k(0); k < tmp.size(); ++k) {
-							key_points.push_back(cv::KeyPoint(tmp[k].pt.x + col_offset,
-							                                  tmp[k].pt.y + row_offset,
-							                                  tmp[k].size, tmp[k].angle));
-						}
-					}
-				}
-			}
-
-//			cv::Mat tmp_res;
-//			BrightnessAndContrastAuto(img, tmp_res, 0.5);
-//			cv::imshow("before auto ", img);
-//			cv::imshow("auto", tmp_res);
-			return true;
-		}
-
-
-	};
-
-//	class
-
+	*/
 
 	class GridFastExtractor {
 	public:
@@ -259,8 +259,8 @@ namespace BaseSLAM {
 		int mask_range = 3;
 
 		// Create Grid-based feature detector
-		static cv::Ptr<GridFastExtractor> create(int grid_row = 7,
-		                                         int grid_col = 5,
+		static cv::Ptr<GridFastExtractor> create(int grid_row = 4,
+		                                         int grid_col = 6,
 		                                         int totally_feature_num = 200) {
 
 			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
@@ -298,8 +298,8 @@ namespace BaseSLAM {
 			int image_row = img.rows;
 			int image_col = img.cols;
 
-			int row_size = (image_row / grid_rows_);
-			int col_size = (image_col / grid_cols_);
+			int row_size = std::ceil(float(image_row) / float(grid_rows_));
+			int col_size = std::ceil(float(image_col) / float(grid_cols_));
 
 			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
 			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
@@ -316,11 +316,11 @@ namespace BaseSLAM {
 			auto full2grid = [row_size, col_size, this](int x, int y) -> int {
 
 				int grid_id = 0;
-				int grid_x = x / row_size;
-				int grid_y = y / col_size;
+				int grid_x = x / col_size;
+				int grid_y = y / row_size;
 
 //				grid_id = y + x * this->grid_rows_;
-				grid_id = grid_x + grid_y * this->grid_rows_;
+				grid_id = grid_x + grid_y * this->grid_cols_;
 //				std::cout << "grid id:" << grid_id << std::endl;
 
 				return grid_id;
@@ -352,7 +352,7 @@ namespace BaseSLAM {
 			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
-			auto detector = cv::FastFeatureDetector::create(1);
+			auto detector = cv::FastFeatureDetector::create();
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
 			std::vector<cv::KeyPoint> tmp_key_points;
@@ -386,15 +386,17 @@ namespace BaseSLAM {
 			}
 
 			//Valid grid result:
-			cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
-			for (int i(0); i < img.cols; ++i) {
-				for (int j(0); j < img.rows; ++j) {
-					grid_raw_mat.at<uchar>(j, i) = uchar(
-							float(full2grid(i, j)) / double(grid_new_keypoints.size()) * 255);
+			if (false) {
+				cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
+				for (int i(0); i < img.cols; ++i) {
+					for (int j(0); j < img.rows; ++j) {
+						grid_raw_mat.at<uchar>(j, i) = uchar(
+								float(full2grid(i, j)) / double(grid_new_keypoints.size()) * 255);
+					}
 				}
+				std::cout << "grid raw mat:" << grid_raw_mat.size << std::endl;
+				cv::imshow("grid valid:", grid_raw_mat);
 			}
-			std::cout << "grid raw mat:" << grid_raw_mat.size << std::endl;
-			cv::imshow("grid valid:", grid_raw_mat);
 
 
 			return true;
