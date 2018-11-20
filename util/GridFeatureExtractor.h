@@ -386,7 +386,7 @@ namespace BaseSLAM {
 			}
 
 			//Valid grid result:
-			if (false) {
+			if (true) {
 				cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
 				for (int i(0); i < img.cols; ++i) {
 					for (int j(0); j < img.rows; ++j) {
