@@ -321,7 +321,7 @@ namespace BaseSLAM {
 
 //				grid_id = y + x * this->grid_rows_;
 				grid_id = grid_x + grid_y * this->grid_rows_;
-				std::cout << "grid id:" << grid_id << std::endl;
+//				std::cout << "grid id:" << grid_id << std::endl;
 
 				return grid_id;
 
