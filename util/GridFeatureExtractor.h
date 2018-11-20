@@ -386,7 +386,7 @@ namespace BaseSLAM {
 			}
 
 			//Valid grid result:
-			if (true) {
+			if (false) {
 				cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
 				for (int i(0); i < img.cols; ++i) {
 					for (int j(0); j < img.rows; ++j) {
@@ -396,6 +396,7 @@ namespace BaseSLAM {
 				}
 				std::cout << "grid raw mat:" << grid_raw_mat.size << std::endl;
 				cv::imshow("grid valid:", grid_raw_mat);
+				std::cout << "totally feature numbers:" << key_points.size() << std::endl;
 			}
 
 

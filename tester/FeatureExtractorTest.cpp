@@ -78,8 +78,8 @@ int main() {
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-hard");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-hard");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
 
 	cv::namedWindow("show left");
@@ -97,7 +97,7 @@ int main() {
 //	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 //	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
 //	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
-	auto detector  = BaseSLAM::GridFastExtractor::create();
+	auto detector = BaseSLAM::GridFastExtractor::create();
 
 	int clear_counter(0), blur_counter(0);
 
@@ -116,30 +116,23 @@ int main() {
 //		detector->detect(*(data->left_img_), left_key_points);
 //		detector->detect(*(data->right_img_), right_key_points);
 
-//		double score = cv::Laplacian(*(data->left_img_),cv::Mat(),0);
-		if (false && blurDetect(*(data->left_img_))) {
-			std::cout << "failed" << std::endl;
-			cv::imwrite("/home/steve/temp/" + std::to_string(i) + ".png", *(data->left_img_));
-			blur_counter++;
-		} else {
 
 
-			detector->detect(*(data->left_img_), left_key_points);
-			detector->detect(*(data->right_img_), right_key_points);
+
+		detector->detect(*(data->left_img_), left_key_points);
+		detector->detect(*(data->right_img_), right_key_points);
 
 
-			cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
-			cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
+		cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
+		cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
 
 
-			cv::imshow("left_key", left_key_img);
-			cv::imshow("right_key", right_key_img);
+		cv::imshow("left_key", left_key_img);
+		cv::imshow("right_key", right_key_img);
 
 
-			cv::waitKey(10);
-			std::cout << "index :" << i << std::endl;
-			clear_counter++;
-		}
+		cv::waitKey(10);
+		std::cout << "index :" << i << std::endl;
 
 //		std::cout << "score :" << score << std::endl;
 
@@ -148,7 +141,6 @@ int main() {
 
 		++i;
 	}
-	std::cout << "clear :" << clear_counter << " blur :" << blur_counter << std::endl;
 
 
 }
