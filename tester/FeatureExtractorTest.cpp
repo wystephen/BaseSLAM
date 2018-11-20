@@ -78,9 +78,11 @@ int main() {
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-hard");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/ImageData/02");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
@@ -131,7 +133,7 @@ int main() {
 		cv::imshow("right_key", right_key_img);
 
 
-		cv::waitKey(10);
+		cv::waitKey(200);
 		std::cout << "index :" << i << std::endl;
 
 //		std::cout << "score :" << score << std::endl;

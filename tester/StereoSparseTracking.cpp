@@ -39,36 +39,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-//模糊检测，如果原图像是模糊图像，返回0，否则返回1
-bool blurDetect(cv::Mat srcImage) {
 
-	cv::Mat gray1;
-	if (srcImage.channels() != 1) {
-		//进行灰度化
-		cv::cvtColor(srcImage, gray1, cv::COLOR_BGR2GRAY);
-	} else {
-		gray1 = srcImage.clone();
-	}
-	cv::Mat tmp_m1, tmp_sd1;    //用来存储均值和方差
-	double m1 = 0, sd1 = 0;
-	//使用3x3的Laplacian算子卷积滤波
-	cv::Laplacian(gray1, gray1, CV_16S, 3);
-	//归到0~255
-	cv::convertScaleAbs(gray1, gray1);
-	//计算均值和方差
-	cv::meanStdDev(gray1, tmp_m1, tmp_sd1);
-	m1 = tmp_m1.at<double>(0, 0);        //均值
-	sd1 = tmp_sd1.at<double>(0, 0);        //标准差
-	//cout << "原图像：" << endl;
-	std::cout << "均值: " << m1 << " , 方差: " << sd1 * sd1 << std::endl;
-	if (sd1 * sd1 < 10) {
-		std::cout << "原图像是模糊图像" << std::endl;
-		return true;
-	} else {
-		std::cout << "原图像是清晰图像" << std::endl;
-		return false;
-	}
-}
 
 
 int main() {
@@ -90,12 +61,6 @@ int main() {
 	std::vector<cv::KeyPoint> left_key_points, right_key_points;
 	cv::Mat left_key_img, right_key_img;
 
-//	cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(5);
-//	cv::Ptr<cv::AgastFeatureDetector> agast_detector = cv::AgastFeatureDetector::create(3);
-//	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
-//	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
-//	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
-//	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
 	auto detector  = BaseSLAM::GridFastExtractor::create();
 
 	int clear_counter(0), blur_counter(0);
