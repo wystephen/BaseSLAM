@@ -9,12 +9,14 @@ namespace BaseSLAM{
 
 
 	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData data) {
+		BaseSLAM::Frame current_frame();
 		if(latest_frame_ptr_== nullptr){
 			// the first frame or some error generated before.
 
 
+
 		}else{
-			// trace and
+			// trace and update new features.
 
 		}
 

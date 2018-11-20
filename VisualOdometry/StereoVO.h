@@ -19,6 +19,7 @@ namespace BaseSLAM {
 	class StereoVO {
 	public:
 
+		std::shared_ptr<BaseSLAM::StereoCamera> camera_ptr_;
 
 		cv::Ptr<BaseSLAM::GridFastExtractor> detector_ptr_;//= GridFastExtractor::create();
 
