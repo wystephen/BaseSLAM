@@ -261,7 +261,7 @@ namespace BaseSLAM {
 		// Create Grid-based feature detector
 		static cv::Ptr<GridFastExtractor> create(int grid_row = 7,
 		                                         int grid_col = 5,
-		                                         int totally_feature_num = 1000) {
+		                                         int totally_feature_num = 200) {
 
 			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
 		}
@@ -301,8 +301,8 @@ namespace BaseSLAM {
 			int row_size = (image_row / grid_rows_);
 			int col_size = (image_col / grid_cols_);
 
-			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_+1) * (grid_cols_+1));
-			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_+1) * (grid_cols_+1));
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
 
 //			grid_keypoints.resize(grid_rows_ * grid_cols_);
 //			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
@@ -377,13 +377,24 @@ namespace BaseSLAM {
 				std::sort(grid_new_keypoints[i].begin(), grid_new_keypoints[i].end(),
 				          &GridFastExtractor::keyPointCompareByResponse);
 
-				for (int j(0);
-				     j < grid_feature_num_ - grid_keypoints[i].size() &&
-				     j < grid_new_keypoints[i].size(); ++j) {
+				for (int j(0); j < grid_feature_num_ - grid_keypoints[i].size() &&
+				               j < grid_new_keypoints[i].size(); ++j) {
+					// Get new key points.
 					key_points.push_back(grid_new_keypoints[i][j]);
 				}
 
 			}
+
+			//Valid grid result:
+			cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
+			for (int i(0); i < img.cols; ++i) {
+				for (int j(0); j < img.rows; ++j) {
+					grid_raw_mat.at<uchar>(j, i) = uchar(
+							float(full2grid(i, j)) / double(grid_new_keypoints.size()) * 255);
+				}
+			}
+			std::cout << "grid raw mat:" << grid_raw_mat.size << std::endl;
+			cv::imshow("grid valid:", grid_raw_mat);
 
 
 			return true;
