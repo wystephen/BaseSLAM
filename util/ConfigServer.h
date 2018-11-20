@@ -103,13 +103,17 @@ namespace BaseSLAM {
 		}
 
 
-		static ConfigServer *getInstance() {
+		/**
+		 * @brief thread-safety function to get instance.
+		 * @return
+		 */
+		static std::shared_ptr<BaseSLAM::ConfigServer> getInstance() {
 			static std::once_flag oc;// call onece local static variable
 
 			if (instance_ == nullptr) {
 				std::call_once(oc, [] {
 					if (instance_ == nullptr) {
-						instance_ = new ConfigServer();
+						*instance_ = (ConfigServer());
 					}
 				});
 			}
@@ -117,13 +121,13 @@ namespace BaseSLAM {
 		}
 
 
-	private:
-
-
 		ConfigServer() : file_() {
 
 
 		}
+
+	private:
+
 
 		~ConfigServer() {
 			if (file_.isOpened()) {
@@ -133,7 +137,7 @@ namespace BaseSLAM {
 
 		ConfigServer &operator=(const ConfigServer &) = default;
 
-		static ConfigServer *instance_;
+		static std::shared_ptr<BaseSLAM::ConfigServer> instance_;
 
 		cv::FileStorage file_;
 

@@ -20,11 +20,30 @@ namespace BaseSLAM {
 
 		cv::Ptr<BaseSLAM::GridFastExtractor> detector_ptr_;//= GridFastExtractor::create();
 
-		BaseSLAM::ConfigServer config_;
+		std::shared_ptr<BaseSLAM::ConfigServer> config_ptr_; // config file
 
-		std::vector<BaseSLAM::Frame> fram_vec_;
+		std::vector<BaseSLAM::Frame> fram_vec_; // save all the frame here.
+
+		std::shared_ptr<BaseSLAM::Frame> latest_frame_ptr_ = nullptr; // point to latest frame
+
+		//
+		StereoVO() {
+			config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+		}
 
 
+		/**
+		 * @brief Default deconstruct function.
+		 */
+		~StereoVO() {
+
+		}
+
+
+	protected:
+
+
+	private:
 
 
 	};

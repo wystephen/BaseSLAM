@@ -2,3 +2,8 @@
 
 Base.feature_number: 1000
 Base.local_window_size: 10000
+
+GridFastExtractor.feature_num:300
+GridFastExtractor.grid_rows:4
+GridFastExtractor.grid_cols:6
+
