@@ -97,6 +97,7 @@ namespace BaseSLAM {
 			std::call_once(oc_get, [&] {
 				tmp = T(instance_->file_[key]);
 
+
 			});
 
 			return tmp;
@@ -121,9 +122,20 @@ namespace BaseSLAM {
 		}
 
 
+		/**
+		 * @brief
+		 */
 		ConfigServer() : file_() {
 
 
+		}
+
+		/**
+		 * @brief
+		 * @return
+		 */
+		bool isLoadedFile() {
+			return file_.isOpened();
 		}
 
 	private:

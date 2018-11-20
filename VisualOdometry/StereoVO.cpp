@@ -7,4 +7,19 @@
 
 namespace BaseSLAM{
 
+
+	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData data) {
+		if(latest_frame_ptr_== nullptr){
+			// the first frame or some error generated before.
+
+
+		}else{
+			// trace and
+
+		}
+
+
+
+	}
+
 }

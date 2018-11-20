@@ -10,10 +10,12 @@
 
 #include <util/GridFeatureExtractor.h>
 #include <util/ConfigServer.h>
+#include <util/DataUnit.h>
 
 #include <VisualOdometry/Frame.h>
 
 namespace BaseSLAM {
+
 	class StereoVO {
 	public:
 
@@ -29,6 +31,12 @@ namespace BaseSLAM {
 		//
 		StereoVO() {
 			config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+			try{
+
+			}catch(std::exception &e){
+				std::cout << "Some error happen during load config file to initial detector" << std::endl;
+				std::cout << e.what() << std::endl;
+			}
 		}
 
 
@@ -38,6 +46,17 @@ namespace BaseSLAM {
 		~StereoVO() {
 
 		}
+
+
+		/**
+		 * @brief Add new frame to stereo visual odometry.
+		 * extract feature, tracking feature. And call a new thread for mapping.
+		 * @param data StereoINSData include <stereo image and INS data between current moment and previous moment>
+		 * @return
+		 *
+		 * @author Yan Wang
+		 */
+		bool addNewFrame(BaseSLAM::StereoINSData data);
 
 
 	protected:
