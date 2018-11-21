@@ -40,8 +40,6 @@
 #include <opencv2/imgcodecs.hpp>
 
 
-
-
 int main() {
 
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
@@ -61,7 +59,7 @@ int main() {
 	std::vector<cv::KeyPoint> left_key_points, right_key_points;
 	cv::Mat left_key_img, right_key_img;
 
-	auto detector  = BaseSLAM::GridFastExtractor::create();
+	auto detector = BaseSLAM::GridFastExtractor::create();
 
 	int clear_counter(0), blur_counter(0);
 
@@ -73,31 +71,21 @@ int main() {
 			break;
 		}
 
-		if ( blurDetect(*(data->left_img_))) {
-			std::cout << "failed" << std::endl;
-			cv::imwrite("/home/steve/temp/" + std::to_string(i) + ".png", *(data->left_img_));
-			blur_counter++;
-		} else {
+
+		detector->detect(*(data->left_img_), left_key_points);
+		detector->detect(*(data->right_img_), right_key_points);
 
 
+		cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
+		cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
 
 
-			detector->detect(*(data->left_img_), left_key_points);
-			detector->detect(*(data->right_img_), right_key_points);
+		cv::imshow("left_key", left_key_img);
+		cv::imshow("right_key", right_key_img);
 
 
-			cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
-			cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
-
-
-			cv::imshow("left_key", left_key_img);
-			cv::imshow("right_key", right_key_img);
-
-
-			cv::waitKey(10);
-			std::cout << "index :" << i << std::endl;
-			clear_counter++;
-		}
+		cv::waitKey(10);
+		std::cout << "index :" << i << std::endl;
 
 //		std::cout << "score :" << score << std::endl;
 

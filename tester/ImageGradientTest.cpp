@@ -31,7 +31,7 @@
 #include <util/StereoImageReader.h>
 #include <VisualOdometry/StereoCamera.h>
 
-#include <VisualOdometry/VOSimple.h>
+//#include <VisualOdometry/VOSimple.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -51,8 +51,8 @@ int main() {
 
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/ImageData/02");
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/ImageData/02");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
@@ -67,7 +67,7 @@ int main() {
 //	cv::Ptr<cv::AgastFeatureDetector> agast_detector = cv::AgastFeatureDetector::create(3);
 //	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
 //	cv::Ptr<cv::xfeatures2d::HarrisLaplaceFeatureDetector> detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
-	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(1000);
+//	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(1000);
 
 
 	int i(0);
@@ -132,19 +132,11 @@ int main() {
 			}
 		}
 
-
-
-
 		std::vector<uchar> status;
 		std::vector<float> err;
 
-//		for(int i(0);i<left_key_points.size())
-
-
 		cv::calcOpticalFlowPyrLK(*(data->left_img_), *(data->right_img_),
 				left_points,track_left_points,status,err);
-
-
 
 
 		cv::Mat two_mat(data->left_img_->rows, data->right_img_->cols * 2, CV_8UC3, cv::Scalar(0, 0, 0));

@@ -29,12 +29,22 @@ namespace BaseSLAM {
 
 		std::shared_ptr<BaseSLAM::Frame> latest_frame_ptr_ = nullptr; // point to latest frame
 
+		long current_index_ = 0;
+
+
+		std::vector<cv::KeyPoint> curr_left_key_points_, curr_right_key_points_; // left and right key points
+		std::vector<cv::KeyPoint> prev_left_key_points_, prev_right_key_points_; // left and right key points
+
+		std::vector<cv::Mat> prev_left_pyramid_;
+		std::vector<cv::Mat> curr_left_pyramid_;
+		std::vector<cv::Mat> curr_right_pyramid_;
+
 		//
 		StereoVO() {
 			config_ptr_ = BaseSLAM::ConfigServer::getInstance();
-			try{
+			try {
 
-			}catch(std::exception &e){
+			} catch (std::exception &e) {
 				std::cout << "Some error happen during load config file to initial detector" << std::endl;
 				std::cout << e.what() << std::endl;
 			}
@@ -57,7 +67,11 @@ namespace BaseSLAM {
 		 *
 		 * @author Yan Wang
 		 */
-		bool addNewFrame(BaseSLAM::StereoINSData data);
+		bool addNewFrame(BaseSLAM::StereoINSData &data);
+
+
+		void stereoMatch(std::vector<cv::KeyPoint> left_points,
+		                 std::vector<int> &inlier_flags);
 
 
 	protected:

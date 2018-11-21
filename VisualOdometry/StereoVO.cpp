@@ -5,21 +5,57 @@
 #include "StereoVO.h"
 
 
-namespace BaseSLAM{
+namespace BaseSLAM {
 
 
-	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData data) {
-		BaseSLAM::Frame current_frame();
-		if(latest_frame_ptr_== nullptr){
+	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData &data) {
+		BaseSLAM::Frame current_frame(camera_ptr_, &data, current_index_);
+
+		//build image pyramid
+
+		cv::buildOpticalFlowPyramid(
+				*(data.left_img_),
+				curr_left_pyramid_,
+				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
+				         config_ptr_->get<int>("VO.pyramid_patch_size")),
+				config_ptr_->get<int>("VO.pyramid_levels"),
+				true, cv::BorderTypes::BORDER_REFLECT_101,
+				cv::BorderTypes::BORDER_CONSTANT, false
+
+		);
+
+
+		cv::buildOpticalFlowPyramid(
+				*(data.right_img_),
+				curr_right_pyramid_,
+				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
+				         config_ptr_->get<int>("VO.pyramid_patch_size")),
+				config_ptr_->get<int>("VO.pyramid_levels"),
+				true, cv::BorderTypes::BORDER_REFLECT_101,
+				cv::BorderTypes::BORDER_CONSTANT, false
+
+		);
+
+
+		if (latest_frame_ptr_ == nullptr) {
 			// the first frame or some error generated before.
 
 
 
-		}else{
-			// trace and update new features.
+
+
+		} else {
+			// trace features
+
+
+			// Add new features.
+
+			//draw features
 
 		}
 
+
+		current_index_++;
 
 
 	}
