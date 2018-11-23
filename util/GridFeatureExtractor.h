@@ -369,8 +369,6 @@ namespace BaseSLAM {
 					          point.pt << std::endl;
 				}
 			}
-			// Select new Keypoints based on respoonse in each grid
-			// AND add all feature to key_points(input vec);
 
 
 			for (int i(0); i < grid_keypoints.size(); ++i) {
