@@ -432,6 +432,8 @@ namespace BaseSLAM {
 		/*
 		 * @brief keyPointCompareByResponse
 		 *    Compare two keypoints based on the response.
+		 *
+		 *
 		 */
 		static bool keyPointCompareByResponse(
 				const cv::KeyPoint &pt1,

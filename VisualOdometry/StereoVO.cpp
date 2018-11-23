@@ -56,6 +56,12 @@ namespace BaseSLAM {
 		}
 
 
+		prev_left_pyramid_ = curr_left_pyramid_;
+		prev_right_pyramid_ = curr_right_pyramid_;
+		prev_left_key_points_ = curr_left_key_points_;
+		prev_right_key_points_ = curr_right_key_points_;
+
+
 		current_index_++;
 
 
