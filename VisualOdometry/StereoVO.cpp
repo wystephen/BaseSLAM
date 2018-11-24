@@ -39,10 +39,11 @@ namespace BaseSLAM {
 
 		if (latest_frame_ptr_ == nullptr) {
 			// the first frame or some error generated before.
+			detector_ptr_->detect(*(data.left_img_),
+			                      curr_left_key_points_);
 
-
-
-
+			detector_ptr_->detect(*(data.right_img_),
+			                      curr_right_key_points_);
 
 
 		} else {
