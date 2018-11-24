@@ -40,7 +40,7 @@ namespace BaseSLAM {
 		cv::Mat left_line_descriptors_, right_line_descriptors_;
 
 
-		Frame(std::shared_ptr<StereoCamera> cam_ptr, StereoINSData *data_ptr, int index) {
+		Frame(std::shared_ptr<StereoCamera> cam_ptr, std::shared_ptr<StereoINSData> data_ptr, int index) {
 			idx_ = index;
 			cam_ptr_ = cam_ptr;
 			data_ptr_ = data_ptr;
