@@ -9,7 +9,7 @@ namespace BaseSLAM {
 
 
 	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData &data) {
-		BaseSLAM::Frame current_frame(camera_ptr_, &data, current_index_);
+		BaseSLAM::Frame current_frame = BaseSLAM::Frame(camera_ptr_, &data, current_index_);
 
 		//build image pyramid
 
@@ -49,8 +49,10 @@ namespace BaseSLAM {
 		} else {
 			// trace features
 
-			cv::calcOpticalFlowPyrLK(prev_left_pyramid_,curr_left_pyramid_,
-					prev_left_key_points_,)
+//			std::vector<cv::Point2f> l_key_points,1
+
+//			cv::calcOpticalFlowPyrLK(prev_left_pyramid_,curr_left_pyramid_,
+//					prev_left_key_points_, )
 
 
 			// Add new features.
