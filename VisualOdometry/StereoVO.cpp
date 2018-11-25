@@ -49,6 +49,9 @@ namespace BaseSLAM {
 		} else {
 			// trace features
 
+			cv::calcOpticalFlowPyrLK(prev_left_pyramid_,curr_left_pyramid_,
+					prev_left_key_points_,)
+
 
 			// Add new features.
 
