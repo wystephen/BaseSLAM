@@ -47,6 +47,8 @@ namespace BaseSLAM {
 		cv::Mat *left_img_ptr_ = nullptr;//new cv::Mat();
 		cv::Mat *right_img_ptr_ = nullptr;// new cv::Mat();
 
+		int imread_flag_ = 0;
+
 
 		/**
 		 * @brief return point of left image(cv::Mat),
