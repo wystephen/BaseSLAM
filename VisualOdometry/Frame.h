@@ -25,7 +25,8 @@ namespace BaseSLAM {
 	class Frame {
 	public:
 		std::shared_ptr<BaseSLAM::StereoCamera> cam_ptr_; // camera model
-		std::shared_ptr<BaseSLAM::StereoINSData> data_ptr_;//
+//		std::shared_ptr<BaseSLAM::StereoINSData> data_ptr_;//
+		BaseSLAM::StereoINSData *data_ptr_;//
 
 		long idx_;// id of frame
 		double time_stampe_; // when it is recorded
@@ -40,7 +41,7 @@ namespace BaseSLAM {
 		cv::Mat left_line_descriptors_, right_line_descriptors_;
 
 
-		Frame(std::shared_ptr<StereoCamera> cam_ptr, std::shared_ptr<StereoINSData> data_ptr, int index) {
+		Frame(std::shared_ptr<StereoCamera> cam_ptr, StereoINSData *data_ptr, int index) {
 			idx_ = index;
 			cam_ptr_ = cam_ptr;
 			data_ptr_ = data_ptr;

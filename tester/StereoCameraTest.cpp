@@ -62,8 +62,8 @@ int main() {
 			break;
 		}
 //		std::cout << "readed image" << std::endl;
-//		cv::imshow("show left",*(data->left_img_));
-//		cv::imshow("show right", *(data->right_img_));
+//		cv::imshow("show left",*(data->left_img_ptr_));
+//		cv::imshow("show right", *(data->right_img_ptr_));
 //		std::cout << " after imshow" << std::endl;
 		vo.addNewFrame(data);
 

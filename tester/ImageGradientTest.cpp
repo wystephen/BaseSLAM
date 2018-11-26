@@ -79,38 +79,38 @@ int main() {
 			break;
 		}
 //		std::cout << "readed image" << std::endl;
-//		cv::imshow("show left",*(data->left_img_));
-//		cv::imshow("show right", *(data->right_img_));
+//		cv::imshow("show left",*(data->left_img_ptr_));
+//		cv::imshow("show right", *(data->right_img_ptr_));
 //		std::cout << " after imshow" << std::endl;
 //		vo.addNewFrame(data);
-//		detector->detect(*(data->left_img_),left_key_points);
-//		detector->detect(*(data->right_img_),right_key_points);
+//		detector->detect(*(data->left_img_ptr_),left_key_points);
+//		detector->detect(*(data->right_img_ptr_),right_key_points);
 
-//		agast_detector->detect(*(data->left_img_),left_key_points);
-//		agast_detector->detect(*(data->right_img_),right_key_points);
+//		agast_detector->detect(*(data->left_img_ptr_),left_key_points);
+//		agast_detector->detect(*(data->right_img_ptr_),right_key_points);
 
-		std::cout << data->left_img_->type() << std::endl;
+		std::cout << data->left_img_ptr_->type() << std::endl;
 
 
-		cv::cvtColor(*(data->left_img_), left_key_img, cv::COLOR_GRAY2BGR);
-		cv::cvtColor(*(data->right_img_), right_key_img, cv::COLOR_GRAY2BGR);
-//		left_key_img=data->left_img_->clone();
-//		right_key_img = data->right_img_->clone();
+		cv::cvtColor(*(data->left_img_ptr_), left_key_img, cv::COLOR_GRAY2BGR);
+		cv::cvtColor(*(data->right_img_ptr_), right_key_img, cv::COLOR_GRAY2BGR);
+//		left_key_img=data->left_img_ptr_->clone();
+//		right_key_img = data->right_img_ptr_->clone();
 		double threshold = 30.0;
 		left_key_points.clear();
 		right_key_points.clear();
 		std::vector<cv::Point2f> left_points, right_points;
 		std::vector<cv::Point2f> track_left_points, track_right_points;
 //#pragma omp parallel for
-		for (int i = (1); i < data->left_img_->cols - 1; i++) {
-			for (int j(1); j < data->left_img_->rows - 1; j++) {
+		for (int i = (1); i < data->left_img_ptr_->cols - 1; i++) {
+			for (int j(1); j < data->left_img_ptr_->rows - 1; j++) {
 				Eigen::Vector2d left_grad(
-						data->left_img_->ptr<uchar>(j)[i + 1] - data->left_img_->ptr<uchar>(j)[i - 1],
-						data->left_img_->ptr<uchar>(j + 1)[i] - data->left_img_->ptr<uchar>(j - 1)[i]
+						data->left_img_ptr_->ptr<uchar>(j)[i + 1] - data->left_img_ptr_->ptr<uchar>(j)[i - 1],
+						data->left_img_ptr_->ptr<uchar>(j + 1)[i] - data->left_img_ptr_->ptr<uchar>(j - 1)[i]
 				);
 				Eigen::Vector2d right_grad(
-						data->right_img_->ptr<uchar>(j)[i + 1] - data->right_img_->ptr<uchar>(j)[i - 1],
-						data->right_img_->ptr<uchar>(j + 1)[i] - data->right_img_->ptr<uchar>(j - 1)[i]
+						data->right_img_ptr_->ptr<uchar>(j)[i + 1] - data->right_img_ptr_->ptr<uchar>(j)[i - 1],
+						data->right_img_ptr_->ptr<uchar>(j + 1)[i] - data->right_img_ptr_->ptr<uchar>(j - 1)[i]
 				);
 				if (left_grad.norm() > threshold) {
 					left_key_points.push_back(cv::KeyPoint(i, j, 1));
@@ -135,20 +135,20 @@ int main() {
 		std::vector<uchar> status;
 		std::vector<float> err;
 
-		cv::calcOpticalFlowPyrLK(*(data->left_img_), *(data->right_img_),
+		cv::calcOpticalFlowPyrLK(*(data->left_img_ptr_), *(data->right_img_ptr_),
 				left_points,track_left_points,status,err);
 
 
-		cv::Mat two_mat(data->left_img_->rows, data->right_img_->cols * 2, CV_8UC3, cv::Scalar(0, 0, 0));
+		cv::Mat two_mat(data->left_img_ptr_->rows, data->right_img_ptr_->cols * 2, CV_8UC3, cv::Scalar(0, 0, 0));
 
 
-//		for(int i(0);i<data->left_img_->rows;++i){
-//			two_mat.row(i) = data->left_img_->row(i).clone();
-//			two_mat.row(i+data->left_img_->rows) = data->right_img_->row(i).clone();
+//		for(int i(0);i<data->left_img_ptr_->rows;++i){
+//			two_mat.row(i) = data->left_img_ptr_->row(i).clone();
+//			two_mat.row(i+data->left_img_ptr_->rows) = data->right_img_ptr_->row(i).clone();
 //		}
 #pragma omp parallel for
-		for (int i = 0; i < data->left_img_->rows; ++i) {
-			for (int j = 0; j < data->left_img_->cols; ++j) {
+		for (int i = 0; i < data->left_img_ptr_->rows; ++i) {
+			for (int j = 0; j < data->left_img_ptr_->cols; ++j) {
 				two_mat.at<cv::Vec3b>(i, j) = left_key_img.at<cv::Vec3b>(i, j);
 				two_mat.at<cv::Vec3b>(i, j + left_key_img.cols) = right_key_img.at<cv::Vec3b>(i, j);
 			}
@@ -192,12 +192,12 @@ int main() {
 
 		cv::imshow("tw img", two_mat);
 
-//		cv::drawKeypoints(*(data->left_img_), left_key_points, left_key_img);
-//		cv::drawKeypoints(*(data->right_img_), right_key_points, right_key_img);
-//		std::cout << "left size :" << data->left_img_->size << std::endl;
+//		cv::drawKeypoints(*(data->left_img_ptr_), left_key_points, left_key_img);
+//		cv::drawKeypoints(*(data->right_img_ptr_), right_key_points, right_key_img);
+//		std::cout << "left size :" << data->left_img_ptr_->size << std::endl;
 //		std::cout << "left key img size:" << left_key_img.size << std::endl;
 
-		cv::imshow("left show", *(data->left_img_));
+		cv::imshow("left show", *(data->left_img_ptr_));
 
 		cv::imshow("left_key", left_key_img);
 		cv::imshow("right_key", right_key_img);

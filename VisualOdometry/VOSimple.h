@@ -74,7 +74,7 @@ namespace BaseSLAM {
 			auto *tframe = new Frame(cam_ptr_, data_ptr, current_index_);
 			current_index_++;
 //			tframe->CalculateKeyPoints(detector);
-			special_mask = data_ptr->left_img_->clone();
+			special_mask = data_ptr->left_img_ptr_->clone();
 			special_mask = special_mask * 0.0;
 //			for(int i(0);i<10;i++){
 //				for(int j(0))
@@ -86,39 +86,39 @@ namespace BaseSLAM {
 
 
 
-			detector->detectAndCompute(*(tframe->data_ptr_->left_img_),
+			detector->detectAndCompute(*(tframe->data_ptr_->left_img_ptr_),
 			                           cv::noArray(),
 			                           tframe->left_feature_points_,
 			                           tframe->left_descriptors_);
-			detector->detectAndCompute(*(tframe->data_ptr_->right_img_),
+			detector->detectAndCompute(*(tframe->data_ptr_->right_img_ptr_),
 			                           cv::noArray(),
 			                           tframe->right_feature_points_,
 			                           tframe->right_descriptors_);
 
 
-//			lsd_detector->detect(*(tframe->data_ptr_->left_img_), tframe->left_lines_, 2, 10);
-//			lsd_detector->detect(*(tframe->data_ptr_->right_img_), tframe->right_lines_, 2, 10);
-//			lsd_descriptor->compute(*(tframe->data_ptr_->left_img_), tframe->left_lines_,
+//			lsd_detector->detect(*(tframe->data_ptr_->left_img_ptr_), tframe->left_lines_, 2, 10);
+//			lsd_detector->detect(*(tframe->data_ptr_->right_img_ptr_), tframe->right_lines_, 2, 10);
+//			lsd_descriptor->compute(*(tframe->data_ptr_->left_img_ptr_), tframe->left_lines_,
 //			                        tframe->left_line_descriptors_);
-//			lsd_descriptor->compute(*(tframe->data_ptr_->right_img_), tframe->right_lines_,
+//			lsd_descriptor->compute(*(tframe->data_ptr_->right_img_ptr_), tframe->right_lines_,
 //			                        tframe->right_line_descriptors_);
 
 
 			if (latest_frame) {
 //				std::vector<uchar> status;
 //				std::vector<float> error;
-//				cv::calcOpticalFlowPyrLK(*(latest_frame->data_ptr_->left_img_),
-//				                         *(tframe->data_ptr_->left_img_),
+//				cv::calcOpticalFlowPyrLK(*(latest_frame->data_ptr_->left_img_ptr_),
+//				                         *(tframe->data_ptr_->left_img_ptr_),
 //				                         latest_frame->left_feature_points_,
 //				                         tframe->left_feature_points_,
 //				                         status, error);
 //
 //				cv::BFMatcher<
-				cv::Mat left_keypoint_img(*(tframe->data_ptr_->left_img_));
-				cv::Mat right_keypoint_img(*(tframe->data_ptr_->right_img_));
+				cv::Mat left_keypoint_img(*(tframe->data_ptr_->left_img_ptr_));
+				cv::Mat right_keypoint_img(*(tframe->data_ptr_->right_img_ptr_));
 
-				cv::Mat left_line_img;//(*(tframe->data_ptr_->left_img_));
-				cv::Mat right_line_img;//(*(tframe->data_ptr_->right_img_));
+				cv::Mat left_line_img;//(*(tframe->data_ptr_->left_img_ptr_));
+				cv::Mat right_line_img;//(*(tframe->data_ptr_->right_img_ptr_));
 
 
 				std::vector<cv::DMatch> left_matches, right_matches;
@@ -127,15 +127,15 @@ namespace BaseSLAM {
 				matcher.match(latest_frame->left_descriptors_, tframe->left_descriptors_, left_matches);
 				matcher.match(latest_frame->right_descriptors_, tframe->right_descriptors_, right_matches);
 
-				cv::drawMatches(*(latest_frame->data_ptr_->left_img_),
+				cv::drawMatches(*(latest_frame->data_ptr_->left_img_ptr_),
 				                latest_frame->left_feature_points_,
-				                *(tframe->data_ptr_->left_img_),
+				                *(tframe->data_ptr_->left_img_ptr_),
 				                tframe->left_feature_points_,
 				                left_matches, left_keypoint_img);
 
-				cv::drawMatches(*(latest_frame->data_ptr_->right_img_),
+				cv::drawMatches(*(latest_frame->data_ptr_->right_img_ptr_),
 				                latest_frame->right_feature_points_,
-				                *(tframe->data_ptr_->right_img_),
+				                *(tframe->data_ptr_->right_img_ptr_),
 				                tframe->right_feature_points_,
 				                right_matches, right_keypoint_img);
 
@@ -149,30 +149,30 @@ namespace BaseSLAM {
 //				std::cout << "right line matches:" << right_line_matches[0].size() << std::endl;
 
 
-//				cv::drawMatches(*(latest_frame->data_ptr_->left_img_),
+//				cv::drawMatches(*(latest_frame->data_ptr_->left_img_ptr_),
 //						latest_frame)
 //				cv::line_descriptor::drawLineMatches(
-//						*(latest_frame->data_ptr_->left_img_),
+//						*(latest_frame->data_ptr_->left_img_ptr_),
 //						latest_frame->left_lines_,
-//						*(tframe->data_ptr_->left_img_),
+//						*(tframe->data_ptr_->left_img_ptr_),
 //						tframe->left_lines_,
 //						left_line_matches[0],left_line_img
 //						);
 //				cv::line_descriptor::drawLineMatches(
-//						*(latest_frame->data_ptr_->right_img_),
+//						*(latest_frame->data_ptr_->right_img_ptr_),
 //						latest_frame->right_lines_,
-//						*(tframe->data_ptr_->right_img_),
+//						*(tframe->data_ptr_->right_img_ptr_),
 //						tframe->right_lines_,
 //						right_line_matches[0],right_line_img
 //						);
 
-//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->left_img_),
+//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->left_img_ptr_),
 //						latest_frame->left_lines_,left_line_img);
-//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->right_img_),
+//				cv::line_descriptor::drawKeylines(*(tframe->data_ptr_->right_img_ptr_),
 //						tframe->right_lines_,right_line_img);
 
-//				cv::drawKeypoints(*(data_ptr->left_img_), tframe->left_feature_points_, left_keypoint_img);
-//				cv::drawKeypoints(*(data_ptr->right_img_), tframe->right_feature_points_, right_keypoint_img);
+//				cv::drawKeypoints(*(data_ptr->left_img_ptr_), tframe->left_feature_points_, left_keypoint_img);
+//				cv::drawKeypoints(*(data_ptr->right_img_ptr_), tframe->right_feature_points_, right_keypoint_img);
 
 //
 				cv::imshow("show left", left_keypoint_img);

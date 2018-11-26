@@ -9,12 +9,14 @@ namespace BaseSLAM {
 
 
 	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData &data) {
-		BaseSLAM::Frame current_frame = BaseSLAM::Frame(camera_ptr_, &data, current_index_);
+		BaseSLAM::Frame current_frame = BaseSLAM::Frame(camera_ptr_,
+		                                                &data,
+		                                                current_index_);
 
 		//build image pyramid
 
 		cv::buildOpticalFlowPyramid(
-				*(data.left_img_),
+				*(data.left_img_ptr_),
 				curr_left_pyramid_,
 				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
 				         config_ptr_->get<int>("VO.pyramid_patch_size")),
@@ -26,7 +28,7 @@ namespace BaseSLAM {
 
 
 		cv::buildOpticalFlowPyramid(
-				*(data.right_img_),
+				*(data.right_img_ptr_),
 				curr_right_pyramid_,
 				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
 				         config_ptr_->get<int>("VO.pyramid_patch_size")),
@@ -39,10 +41,10 @@ namespace BaseSLAM {
 
 		if (latest_frame_ptr_ == nullptr) {
 			// the first frame or some error generated before.
-			detector_ptr_->detect(*(data.left_img_),
+			detector_ptr_->detect(*(data.left_img_ptr_),
 			                      curr_left_key_points_);
 
-			detector_ptr_->detect(*(data.right_img_),
+			detector_ptr_->detect(*(data.right_img_ptr_),
 			                      curr_right_key_points_);
 
 

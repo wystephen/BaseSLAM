@@ -39,12 +39,36 @@ namespace BaseSLAM {
 		long idx_ = -1;
 		double time_stamp_ = -1.0;
 		double global_timestamp_ = -1.0;
-		cv::Mat *left_img_ = new cv::Mat();
-		cv::Mat *right_img_ = new cv::Mat();
+		std::string left_image_file_ = "";
+		std::string right_image_file_ = "";
+		cv::Mat *left_img_ptr_ = new cv::Mat();
+		cv::Mat *right_img_ptr_ = new cv::Mat();
+
+
+		cv::Mat *get_left_image();
+
+		cv::Mat *get_right_image();
+
+
+		bool unloadImage() {
+			delete (left_img_ptr_);
+			delete (right_img_ptr_);
+		}
+
+		bool loadImage() {
+			try{
+			*left_img_ptr_ = cv::imread(left_image_file_);
+			*right_img_ptr_ = cv::imread(right_image_file_);
+
+			}catch (std::exception &e){
+				std::cout << "error during load"
+			}
+
+		}
 
 		~StereoData() {
-			delete (left_img_);
-			delete (right_img_);
+			delete (left_img_ptr_);
+			delete (right_img_ptr_);
 		}
 
 	};
