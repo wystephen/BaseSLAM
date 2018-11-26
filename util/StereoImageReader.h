@@ -132,12 +132,7 @@ namespace BaseSLAM {
 
 					auto *data = new StereoINSData();
 					cv::Mat tmp;
-					*(data->left_img_ptr_) = cv::imread(left_file_name,cv::IMREAD_GRAYSCALE);
-					*(data->right_img_ptr_) = cv::imread(right_file_name,cv::IMREAD_GRAYSCALE);
-//					tmp = cv::imread(left_file_name);
-//					cv::cvtColor(tmp,*(data->left_img_ptr_),cv::COLOR_BGR2GRAY);
-//					tmp = cv::imread(right_file_name);
-//					cv::cvtColor(tmp,*(data->right_img_ptr_),cv::COLOR_BGR2GRAY);
+					data->loadImage(left_file_name,right_file_name,cv::IMREAD_GRAYSCALE);
 
 					data_set_.push_back(data);
 					image_number_ = data_set_.size();

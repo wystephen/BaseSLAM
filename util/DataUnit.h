@@ -57,6 +57,8 @@ namespace BaseSLAM {
 		 */
 		cv::Mat *get_left_image() {
 			if (left_img_ptr_ == nullptr) {//} || left_img_ptr_->rows < 1) {
+
+				std::cout << "RELOAD IMAGE LEFT" << std::endl;
 				loadImage();
 			}
 
@@ -70,6 +72,7 @@ namespace BaseSLAM {
 		 */
 		cv::Mat *get_right_image() {
 			if (right_img_ptr_ == nullptr) {//} || right_img_ptr_->rows < 1) {
+				std::cout << "RELOAD IMAGE RIGHT" << std::endl;
 				loadImage();
 			}
 
@@ -102,8 +105,8 @@ namespace BaseSLAM {
 		 */
 		bool loadImage() {
 			try {
-				left_img_ptr_ = new cv::Mat(cv::imread(left_image_file_));
-				right_img_ptr_ = new cv::Mat(cv::imread(right_image_file_));
+				left_img_ptr_ = new cv::Mat(cv::imread(left_image_file_, imread_flag_));
+				right_img_ptr_ = new cv::Mat(cv::imread(right_image_file_, imread_flag_));
 
 			} catch (std::exception &e) {
 				ERROR_MSG_FLAG(e.what());
@@ -121,9 +124,11 @@ namespace BaseSLAM {
 		 * @return
 		 */
 		bool loadImage(const std::string &left_file_name,
-		               const std::string &right_file_name) {
+		               const std::string &right_file_name,
+		               int imread_flag = cv::IMREAD_COLOR) {
 			left_image_file_ = left_file_name;
 			right_image_file_ = right_file_name;
+			imread_flag_ = imread_flag;
 			return loadImage();
 
 		}

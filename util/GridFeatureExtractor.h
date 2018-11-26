@@ -258,12 +258,15 @@ namespace BaseSLAM {
 
 		int mask_range = 3;
 
-		// Create Grid-based feature detector
-		static cv::Ptr<GridFastExtractor> create(int grid_row = 4,
-		                                         int grid_col = 6,
-		                                         int totally_feature_num = 200) {
+		int fast_threshold_ = 10;
 
-			return new GridFastExtractor(grid_row, grid_col, totally_feature_num);
+		// Create Grid-based feature detector
+		static cv::Ptr<GridFastExtractor> create(int grid_row = 3,
+		                                         int grid_col = 4,
+		                                         int totally_feature_num = 200,
+		                                         int fast_threshold = 10) {
+
+			return new GridFastExtractor(grid_row, grid_col, totally_feature_num, fast_threshold);
 		}
 
 		/**
@@ -274,11 +277,13 @@ namespace BaseSLAM {
 		 */
 		GridFastExtractor(int grid_row,
 		                  int grid_col,
-		                  int feature_number
+		                  int feature_number,
+		                  int fast_threshold
 		) {
 			grid_rows_ = grid_row;
 			grid_cols_ = grid_col;
 			grid_feature_num_ = feature_number / (grid_rows_ * grid_cols_);
+			fast_threshold_ = fast_threshold;
 
 		}
 
@@ -304,8 +309,6 @@ namespace BaseSLAM {
 			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
 			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
 
-//			grid_keypoints.resize(grid_rows_ * grid_cols_);
-//			grid_new_keypoints.resize(grid_rows_ * grid_cols_);
 
 			// using mask to avoid redetecting existing features.
 			cv::Mat mask(img.rows, img.cols, CV_8U, cv::Scalar(1));
@@ -319,9 +322,7 @@ namespace BaseSLAM {
 				int grid_x = x / col_size;
 				int grid_y = y / row_size;
 
-//				grid_id = y + x * this->grid_rows_;
 				grid_id = grid_x + grid_y * this->grid_cols_;
-//				std::cout << "grid id:" << grid_id << std::endl;
 
 				return grid_id;
 
