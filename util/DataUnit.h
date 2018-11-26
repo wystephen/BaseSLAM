@@ -33,6 +33,9 @@
 
 #include <Eigen/Dense>
 
+
+#include <util/ErrorMSG.h>
+
 namespace BaseSLAM {
 
 	struct StereoData {
@@ -41,30 +44,88 @@ namespace BaseSLAM {
 		double global_timestamp_ = -1.0;
 		std::string left_image_file_ = "";
 		std::string right_image_file_ = "";
-		cv::Mat *left_img_ptr_ = new cv::Mat();
-		cv::Mat *right_img_ptr_ = new cv::Mat();
+		cv::Mat *left_img_ptr_ = nullptr;//new cv::Mat();
+		cv::Mat *right_img_ptr_ = nullptr;// new cv::Mat();
 
 
-		cv::Mat *get_left_image();
-
-		cv::Mat *get_right_image();
-
-
-		bool unloadImage() {
-			delete (left_img_ptr_);
-			delete (right_img_ptr_);
-		}
-
-		bool loadImage() {
-			try{
-			*left_img_ptr_ = cv::imread(left_image_file_);
-			*right_img_ptr_ = cv::imread(right_image_file_);
-
-			}catch (std::exception &e){
-				std::cout << "error during load"
+		/**
+		 * @brief return point of left image(cv::Mat),
+		 * load image from file if the point is null ptr.
+		 * @return
+		 */
+		cv::Mat *get_left_image() {
+			if (left_img_ptr_ == nullptr) {//} || left_img_ptr_->rows < 1) {
+				loadImage();
 			}
 
+			return left_img_ptr_;
+
 		}
+
+		/**
+		 * @brief return point of right image(cv::Mat), load image from file if the point is null point.
+		 * @return
+		 */
+		cv::Mat *get_right_image() {
+			if (right_img_ptr_ == nullptr) {//} || right_img_ptr_->rows < 1) {
+				loadImage();
+			}
+
+			return right_img_ptr_;
+		}
+
+
+		/**
+		 * @brief remove the image from RAM.
+		 * @return
+		 */
+		bool unloadImage() {
+
+			try {
+				delete (left_img_ptr_);
+				delete (right_img_ptr_);
+				left_img_ptr_ = nullptr;
+				right_img_ptr_ = nullptr;
+			} catch (std::exception &e) {
+				ERROR_MSG_FLAG(e.what());
+				return false;
+			}
+
+			return true;
+		}
+
+		/**
+		 * @brief Load image without new files' name.
+		 * @return
+		 */
+		bool loadImage() {
+			try {
+				left_img_ptr_ = new cv::Mat(cv::imread(left_image_file_));
+				right_img_ptr_ = new cv::Mat(cv::imread(right_image_file_));
+
+			} catch (std::exception &e) {
+				ERROR_MSG_FLAG(e.what());
+				return false;
+			}
+			return true;
+
+		}
+
+
+		/**
+		 * @brief Load image based on filename provided in parameters.
+		 * @param left_file_name
+		 * @param right_file_name
+		 * @return
+		 */
+		bool loadImage(const std::string &left_file_name,
+		               const std::string &right_file_name) {
+			left_image_file_ = left_file_name;
+			right_image_file_ = right_file_name;
+			return loadImage();
+
+		}
+
 
 		~StereoData() {
 			delete (left_img_ptr_);
