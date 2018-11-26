@@ -46,6 +46,12 @@ namespace BaseSLAM {
 
 	public:
 
+
+		/**
+		 * @brief set parameter file name.
+		 * @param file_name
+		 * @return
+		 */
 		bool setParameterFile(const std::string &file_name) {
 			if (instance_->file_.isOpened()) {
 				std::cout << "config file is loaded:"
@@ -149,11 +155,11 @@ namespace BaseSLAM {
 
 		ConfigServer &operator=(const ConfigServer &) = default;
 
-		static std::shared_ptr<BaseSLAM::ConfigServer> instance_;
+		static std::shared_ptr<BaseSLAM::ConfigServer> instance_; //
 
-		cv::FileStorage file_;
+		cv::FileStorage file_; //loaded config file.
 
-		std::string file_name_ = "";
+		std::string file_name_ = ""; // file name.
 
 
 	};
