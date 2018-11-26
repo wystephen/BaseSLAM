@@ -306,8 +306,8 @@ namespace BaseSLAM {
 			int row_size = std::ceil(float(image_row) / float(grid_rows_));
 			int col_size = std::ceil(float(image_col) / float(grid_cols_));
 
-			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
-			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_ + 1) * (grid_cols_ + 1));
+			std::vector<std::vector<cv::KeyPoint>> grid_keypoints((grid_rows_) * (grid_cols_));
+			std::vector<std::vector<cv::KeyPoint>> grid_new_keypoints((grid_rows_) * (grid_cols_));
 
 
 			// using mask to avoid redetecting existing features.
