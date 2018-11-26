@@ -33,10 +33,10 @@
 
 int main() {
 
-	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
-	stereo_camera_ptr->print("camera");
+    auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
+    stereo_camera_ptr->print("camera");
 
-	BaseSLAM::VOSimple vo(stereo_camera_ptr);
+    BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
 
 
@@ -45,33 +45,34 @@ int main() {
 
 
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+    BaseSLAM::MYNTVIDataReader
+            data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 
-	cv::namedWindow("show left");
-	cv::namedWindow("show right");
+    cv::namedWindow("show left");
+    cv::namedWindow("show right");
 
-	// Create carema model and load parameters.
+    // Create carema model and load parameters.
 
 
 
-	int i(0);
-	while (true) {
-		auto *data = data_reader.get_data(i);
-		if (data == nullptr) {
-			std::cout << "finished" << std::endl;
-			break;
-		}
+    int i(0);
+    while (true) {
+        auto *data = data_reader.get_data(i);
+        if (data == nullptr) {
+            std::cout << "finished" << std::endl;
+            break;
+        }
 //		std::cout << "readed image" << std::endl;
 //		cv::imshow("show left",*(data->left_img_ptr_));
 //		cv::imshow("show right", *(data->right_img_ptr_));
 //		std::cout << " after imshow" << std::endl;
-		vo.addNewFrame(data);
+        vo.addNewFrame(data);
 
-		cv::waitKey(110);
-		std::cout << "index :" << i << std::endl;
+        cv::waitKey(110);
+        std::cout << "index :" << i << std::endl;
 
-		++i;
-	}
+        ++i;
+    }
 
 
 }
