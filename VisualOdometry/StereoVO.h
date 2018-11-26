@@ -35,6 +35,8 @@ namespace BaseSLAM {
 		std::vector<cv::KeyPoint> curr_left_key_points_, curr_right_key_points_; // left and right key points
 		std::vector<cv::KeyPoint> prev_left_key_points_, prev_right_key_points_; // left and right key points
 
+
+
 		std::vector<cv::Mat> prev_left_pyramid_;
 		std::vector<cv::Mat> prev_right_pyramid_;
 		std::vector<cv::Mat> curr_left_pyramid_;

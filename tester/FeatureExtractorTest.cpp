@@ -80,9 +80,9 @@ int main() {
 
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-hard");
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/ImageData/02");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
@@ -121,8 +121,8 @@ int main() {
 
 
 
-		detector->detect(*(data->left_img_ptr_), left_key_points);
-		detector->detect(*(data->right_img_ptr_), right_key_points);
+		detector->detect(*(data->get_left_image()), left_key_points);
+		detector->detect(*(data->get_right_image()), right_key_points);
 
 
 		cv::drawKeypoints(*(data->left_img_ptr_), left_key_points, left_key_img);

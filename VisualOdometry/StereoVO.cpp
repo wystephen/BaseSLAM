@@ -51,7 +51,17 @@ namespace BaseSLAM {
 		} else {
 			// trace features
 
-//			std::vector<cv::Point2f> l_key_points,1
+			// construct point
+			std::vector<cv::Point2f> prev_left_points,prev_right_points;
+			std::vector<cv::Point2f> curr_left_points,curr_right_points;
+
+			for(auto key_p:prev_left_key_points_){
+				prev_left_points.push_back(key_p.pt);
+			}
+
+			for(auto key_p:prev_right_key_points_){
+				prev_right_points.push_back(key_p.pt);
+			}
 
 //			cv::calcOpticalFlowPyrLK(prev_left_pyramid_,curr_left_pyramid_,
 //					prev_left_key_points_, )

@@ -38,7 +38,8 @@ namespace BaseSLAM {
 		std::vector<Frame> frame_vec_;//vec save all frame.
 		int current_index_ = 0;
 
-		StereoCamera *cam_ptr_;
+		std::shared_ptr<StereoCamera> cam_ptr_;
+
 		StereoINSData *data_ptr_;
 
 		Frame *latest_frame = nullptr;
@@ -61,7 +62,7 @@ namespace BaseSLAM {
 		cv::Ptr<cv::line_descriptor::BinaryDescriptorMatcher> lsd_matcher = cv::line_descriptor::BinaryDescriptorMatcher::createBinaryDescriptorMatcher();
 
 
-		VOSimple(StereoCamera *cam_ptr) {
+		VOSimple(std::shared_ptr<StereoCamera> cam_ptr) {
 
 			cam_ptr_ = cam_ptr;
 //			special_mask =cv::Mat()
@@ -81,9 +82,6 @@ namespace BaseSLAM {
 //			}
 //			for(int i(0);)
 			cv::imshow("mask", special_mask);
-
-
-
 
 
 			detector->detectAndCompute(*(tframe->data_ptr_->left_img_ptr_),
