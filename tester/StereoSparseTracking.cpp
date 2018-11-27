@@ -30,6 +30,8 @@
 #include <util/StereoImageReader.h>
 #include <VisualOdometry/StereoCamera.h>
 
+#include <VisualOdometry/StereoVO.h>
+
 //#include <VisualOdometry/VOSimple.h>
 
 
