@@ -56,7 +56,7 @@ add_executable(CVTester tester/cv_tester.cpp)
 target_link_libraries(CVTester ${OpenCV_LIBS})
 
 
-add_executable(StereoSparseTracking tester/StereoSparseTracking.cpp VisualOdometry/StereoVO.cpp VisualOdometry/StereoVO.h)
+add_executable(StereoSparseTracking tester/StereoSparseTracking.cpp )
 target_link_libraries(StereoSparseTracking ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 

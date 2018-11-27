@@ -25,12 +25,12 @@
 //
 
 
-#include <VisualOdometry/StereoCamera.h>
+//#include <VisualOdometry/StereoCamera.h>
 
 #include <util/StereoImageReader.h>
 #include <VisualOdometry/StereoCamera.h>
 
-#include <VisualOdometry/VOSimple.h>
+//#include <VisualOdometry/VOSimple.h>
 
 
 #include <util/GridFeatureExtractor.h>

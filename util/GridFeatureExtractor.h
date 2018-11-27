@@ -380,9 +380,11 @@ namespace BaseSLAM {
 				               j < grid_new_keypoints[i].size(); ++j) {
 					// Get new key points.
 					key_points.push_back(grid_new_keypoints[i][j]);
+//					std::cout << grid_new_keypoints[i][j].class_id << "\n";
 				}
 
 			}
+//			std::cout << std::flush;
 
 			//Valid grid result:
 			if (false) {
