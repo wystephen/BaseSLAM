@@ -50,7 +50,8 @@ int main() {
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-home-modified");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
