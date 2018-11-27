@@ -13,6 +13,8 @@ namespace BaseSLAM {
 		                                                &data,
 		                                                current_index_);
 
+
+
 		//build image pyramid
 
 		cv::buildOpticalFlowPyramid(
@@ -87,13 +89,28 @@ namespace BaseSLAM {
 
 			int erased_counter = 0;
 			for (int i(0); i < curr_left_points.size(); ++i) {
-				if (left_track_inliers[i]) {
-					if (curr_left_points[i].x < data.get_left_image()->cols - 1 &&
-					    curr_left_points[i].x > 1 &&
-					    curr_left_points[i].y < data.get_left_image()->rows - 1 &&
-					    curr_left_points[i].y > 1) {
+				if (left_track_inliers[i - erased_counter]) {
+					if (curr_left_points[i - erased_counter].x < data.get_left_image()->cols - 1 &&
+					    curr_left_points[i - erased_counter].x > 1 &&
+					    curr_left_points[i - erased_counter].y < data.get_left_image()->rows - 1 &&
+					    curr_left_points[i - erased_counter].y > 1 && left_track_inliers[i] &&
+					    left_track_inliers[i - erased_counter] == 1) {
 						continue;
-					}else{
+					} else {
+
+
+						curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i - erased_counter],
+						                                             prev_left_key_points_[i - erased_counter].size + 1,
+						                                             -1, -10.0, 0, -1));
+
+
+						prev_left_key_points_.erase(prev_left_key_points_.begin() + i - erased_counter);
+						prev_left_points.erase(prev_left_points.begin() + i - erased_counter);
+						left_track_errs.erase(left_track_errs.begin() + i - erased_counter);
+						left_track_inliers.erase(left_track_inliers.begin() + i - erased_counter);
+
+						erased_counter++;
+
 
 					}
 
@@ -106,14 +123,21 @@ namespace BaseSLAM {
 
 
 
+
 			//find stereo feature points by LK.
 
 
 			// Add new features to left image.
+			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
 
 
 
 			//draw features
+			cv::Mat tmp_left_key_point_img(cv::Size(data.get_left_image()->rows, data.get_left_image()->cols),
+			                               CV_8UC3, cv::Scalar(0, 0, 0));
+
+			cv::drawKeypoints(*(data.get_left_image()), curr_left_key_points_, tmp_left_key_point_img);
+			cv::imshow("left img tracked point", tmp_left_key_point_img);
 
 		}
 

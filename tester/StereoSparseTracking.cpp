@@ -86,7 +86,8 @@ int main() {
 
 //		cv::drawKeypoints(*(data->left_img_ptr_), left_key_points, left_key_img);
 //		cv::drawKeypoints(*(data->right_img_ptr_), right_key_points, right_key_img);
-		stereoVO.addNewFrame(*data);
+		BaseSLAM::StereoINSData t_data(*data);
+		stereoVO.addNewFrame(t_data);
 
 
 		cv::imshow("left_key", left_key_img);

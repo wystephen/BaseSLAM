@@ -114,7 +114,7 @@ namespace BaseSLAM {
 		 * @brief thread-safety function to get instance.
 		 * @return
 		 */
-		static std::shared_ptr<BaseSLAM::ConfigServer> getInstance() {
+		static ConfigServer *getInstance() {
 			static std::once_flag oc;// call onece local static variable
 
 			if (instance_ == nullptr) {
@@ -155,7 +155,8 @@ namespace BaseSLAM {
 
 		ConfigServer &operator=(const ConfigServer &) = default;
 
-		static std::shared_ptr<BaseSLAM::ConfigServer> instance_; //
+//		static std::shared_ptr<BaseSLAM::ConfigServer> instance_; //
+		static BaseSLAM::ConfigServer *instance_; //
 
 		cv::FileStorage file_; //loaded config file.
 

@@ -24,7 +24,9 @@ namespace BaseSLAM {
 
 		cv::Ptr<BaseSLAM::GridFastExtractor> detector_ptr_;//= GridFastExtractor::create();
 
-		std::shared_ptr<BaseSLAM::ConfigServer> config_ptr_; // config file
+
+		BaseSLAM::ConfigServer *config_ptr_; // config file
+
 
 		std::vector<BaseSLAM::Frame> fram_vec_; // save all the frame here.
 
