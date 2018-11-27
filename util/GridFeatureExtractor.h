@@ -353,6 +353,7 @@ namespace BaseSLAM {
 			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
+
 //			auto detector = cv::FastFeatureDetector::create();//soso
 			auto detector = cv::GFTTDetector::create();//good
 //			auto detector = cv::AgastFeatureDetector::create();//good
@@ -365,7 +366,11 @@ namespace BaseSLAM {
 
 			// separate Keypoints into different grid
 			for (auto point:tmp_key_points) {
+
 				try {
+					if(point.response<0.0){
+						std::cout << "key points response smaller than 0.0." << std::endl;
+					}
 //					std::cout << "access the index:" << full2grid(point.pt.x, point.pt.y) << std::endl;
 //					std::cout << "grid_new points size:" << grid_new_keypoints.size() << std::endl;
 					grid_new_keypoints[full2grid(point.pt.x, point.pt.y)].push_back((point));
@@ -388,6 +393,7 @@ namespace BaseSLAM {
 				}
 
 			}
+			std::cout << key_points.size() << std::endl;
 //			std::cout << std::flush;
 
 			//Valid grid result:
@@ -431,8 +437,14 @@ namespace BaseSLAM {
 			return grid_feature_num_;
 		}
 
-		void setGrid_feature_num_(int grid_feature_num_) {
-			GridFastExtractor::grid_feature_num_ = grid_feature_num_;
+		/**
+		 * @brief
+		 * @param grid_feature_num_
+		 */
+		void set_feature_num(int total_feature_num_) {
+//			GridFastExtractor::grid_feature_num_ = grid_feature_num_;
+			grid_feature_num_ = total_feature_num_/(grid_rows_*grid_cols_);
+
 		}
 
 

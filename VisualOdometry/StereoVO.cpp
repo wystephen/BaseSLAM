@@ -80,11 +80,18 @@ namespace BaseSLAM {
 			                         cv::OPTFLOW_USE_INITIAL_FLOW
 			);
 
-			//// delete some point based on ransac.
+
+			//// delete some point based on image range
 
 
 
-			// Add new features.
+
+			//find stereo feature points by LK.
+
+
+			// Add new features to left image.
+
+
 
 			//draw features
 

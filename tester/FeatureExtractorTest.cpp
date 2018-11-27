@@ -78,10 +78,10 @@ int main() {
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-hard");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/ImageData/02");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/SourceData/dataset/sequences/05");
@@ -102,6 +102,7 @@ int main() {
 //	cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create(10000);
 //	cv::Ptr<BaseSLAM::GridFeatureExtractor> detector = BaseSLAM::GridFeatureExtractor::create();
 	auto detector = BaseSLAM::GridFastExtractor::create();
+	detector->set_feature_num(100);
 
 	int clear_counter(0), blur_counter(0);
 
