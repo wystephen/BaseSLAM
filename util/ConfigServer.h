@@ -39,10 +39,30 @@
 #include <opencv2/opencv.hpp>
 
 namespace BaseSLAM {
+
+
 	/**
 	 * @brief thread-safe config server
 	 */
 	class ConfigServer {
+
+	private:
+//		static std::shared_ptr<BaseSLAM::ConfigServer> instance_; //
+		static BaseSLAM::ConfigServer *instance_; //
+
+		cv::FileStorage file_; //loaded config file.
+
+		std::string file_name_ = ""; // file name.
+
+		~ConfigServer() {
+			if (file_.isOpened()) {
+				file_.release();
+			}
+		}
+
+		ConfigServer &operator=(const ConfigServer &) = default;
+
+
 
 	public:
 
@@ -114,7 +134,7 @@ namespace BaseSLAM {
 		 * @brief thread-safety function to get instance.
 		 * @return
 		 */
-		static ConfigServer *getInstance() {
+		static BaseSLAM::ConfigServer *getInstance() {
 			static std::once_flag oc;// call onece local static variable
 
 			if (instance_ == nullptr) {
@@ -144,23 +164,7 @@ namespace BaseSLAM {
 			return file_.isOpened();
 		}
 
-	private:
 
-
-		~ConfigServer() {
-			if (file_.isOpened()) {
-				file_.release();
-			}
-		}
-
-		ConfigServer &operator=(const ConfigServer &) = default;
-
-//		static std::shared_ptr<BaseSLAM::ConfigServer> instance_; //
-		static BaseSLAM::ConfigServer *instance_; //
-
-		cv::FileStorage file_; //loaded config file.
-
-		std::string file_name_ = ""; // file name.
 
 
 	};

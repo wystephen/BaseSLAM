@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 project(BaseSLAM)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TOOL Release)
 
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g  -lpthread -fopenmp -mavx -mfma ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g  -lpthread -fopenmp -mavx -mfma ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-lopencv_line_descriptor -lopencv_optflow -lopencv_plot  -lopencv_stereo   -lopencv_xfeatures2d  -lopencv_calib3d -lopencv_features2d ")
 
 
@@ -57,7 +57,7 @@ add_executable(CVTester tester/cv_tester.cpp)
 target_link_libraries(CVTester ${OpenCV_LIBS})
 
 
-add_executable(StereoSparseTracking tester/StereoSparseTracking.cpp )
+add_executable(StereoSparseTracking tester/StereoSparseTracking.cpp )#util/ConfigServer.h )#VisualOdometry/StereoVO.h VisualOdometry/StereoVO.cpp util/ConfigServer.h)
 target_link_libraries(StereoSparseTracking ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 

@@ -39,6 +39,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+
+#include <util/ConfigServer.h>
+
 //模糊检测，如果原图像是模糊图像，返回0，否则返回1
 bool blurDetect(cv::Mat srcImage) {
 
@@ -75,6 +78,8 @@ int main() {
 
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
 	stereo_camera_ptr->print("camera");
+
+//	auto* config_ptr_ = BaseSLAM::ConfigServer::getInstance();
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 

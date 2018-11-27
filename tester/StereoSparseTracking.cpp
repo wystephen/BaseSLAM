@@ -26,16 +26,20 @@
 
 
 //#include <VisualOdometry/StereoCamera.h>
+#include <util/ConfigServer.h>
 
 #include <util/StereoImageReader.h>
 #include <VisualOdometry/StereoCamera.h>
 
 #include <VisualOdometry/StereoVO.h>
+#include <VisualOdometry/StereoVO.cpp>
+
 
 //#include <VisualOdometry/VOSimple.h>
 
 
 #include <util/GridFeatureExtractor.h>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
@@ -47,7 +51,7 @@ int main() {
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
 	stereo_camera_ptr->print("camera");
 
-	auto config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+	auto* config_ptr_ = BaseSLAM::ConfigServer::getInstance();
 	config_ptr_->setParameterFile("/home/steve/Code/BaseSLAM/parameterfiles/parameteres.yaml");
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
