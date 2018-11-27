@@ -85,6 +85,26 @@ namespace BaseSLAM {
 
 
 
+			int erased_counter = 0;
+			for (int i(0); i < curr_left_points.size(); ++i) {
+				if (left_track_inliers[i]) {
+					if (curr_left_points[i].x < data.get_left_image()->cols - 1 &&
+					    curr_left_points[i].x > 1 &&
+					    curr_left_points[i].y < data.get_left_image()->rows - 1 &&
+					    curr_left_points[i].y > 1) {
+						continue;
+					}else{
+
+					}
+
+				}
+			}
+
+
+
+
+
+
 
 			//find stereo feature points by LK.
 
