@@ -3,11 +3,16 @@
 Base.feature_number: 1000
 Base.local_window_size: 10000
 
-GridFastExtractor.feature_num:300
-GridFastExtractor.grid_rows:4
-GridFastExtractor.grid_cols:6
+GridFastExtractor.feature_num: 300
+GridFastExtractor.grid_rows: 4
+GridFastExtractor.grid_cols: 6
+GridFastExtractor.fast_threshold: 10
 
-VO.pyramid_patch_size=5
-VO.pyramid_levels=5
+VO.pyramid_patch_size: 5
+VO.pyramid_levels: 5
+VO.LK.patch_size: 5
+VO.LK.max_iteration: 20
+VO.LK.track_precision: 1e-3
+
 
 

@@ -8,6 +8,7 @@
 
 #include <opencv2/opencv.hpp>
 
+
 #include <util/GridFeatureExtractor.h>
 #include <util/ConfigServer.h>
 #include <util/DataUnit.h>
@@ -31,6 +32,8 @@ namespace BaseSLAM {
 
 		long current_index_ = 0;
 
+		int feature_point_counter_ = 0;
+
 
 		std::vector<cv::KeyPoint> curr_left_key_points_, curr_right_key_points_; // left and right key points
 		std::vector<cv::KeyPoint> prev_left_key_points_, prev_right_key_points_; // left and right key points
@@ -45,6 +48,10 @@ namespace BaseSLAM {
 		//
 		StereoVO() {
 			config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+			detector_ptr_ = new GridFastExtractor(config_ptr_->get<int>("GridFastExtractor.grid_rows"),
+			                                      config_ptr_->get<int>("GridFasetExtractor.grid_cols"),
+			                                      config_ptr_->get<int>("GridFastExtractor.feature_num"),
+			                                      config_ptr_->get<int>("GridFastExtractor.fast_threshold"));
 			try {
 
 			} catch (std::exception &e) {

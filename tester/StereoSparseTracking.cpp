@@ -47,11 +47,16 @@ int main() {
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
 	stereo_camera_ptr->print("camera");
 
+	auto config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+	config_ptr_->setParameterFile("/home/steve/Code/BaseSLAM/parameterfiles/parameteres.yaml");
+
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
+
+	BaseSLAM::StereoVO stereoVO;
 
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-home-modified");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");
@@ -75,12 +80,13 @@ int main() {
 		}
 
 
-		detector->detect(*(data->left_img_ptr_), left_key_points);
-		detector->detect(*(data->right_img_ptr_), right_key_points);
+//		detector->detect(*(data->left_img_ptr_), left_key_points);
+//		detector->detect(*(data->right_img_ptr_), right_key_points);
 
 
-		cv::drawKeypoints(*(data->left_img_ptr_), left_key_points, left_key_img);
-		cv::drawKeypoints(*(data->right_img_ptr_), right_key_points, right_key_img);
+//		cv::drawKeypoints(*(data->left_img_ptr_), left_key_points, left_key_img);
+//		cv::drawKeypoints(*(data->right_img_ptr_), right_key_points, right_key_img);
+		stereoVO.addNewFrame(*data);
 
 
 		cv::imshow("left_key", left_key_img);

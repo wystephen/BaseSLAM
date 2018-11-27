@@ -353,7 +353,11 @@ namespace BaseSLAM {
 			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
-			auto detector = cv::FastFeatureDetector::create();
+//			auto detector = cv::FastFeatureDetector::create();//soso
+			auto detector = cv::GFTTDetector::create();//good
+//			auto detector = cv::AgastFeatureDetector::create();//good
+//			auto detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
+//			auto detector = cv::xfeatures2d::MSDDetector::create();
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
 			std::vector<cv::KeyPoint> tmp_key_points;

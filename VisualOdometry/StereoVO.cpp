@@ -51,20 +51,37 @@ namespace BaseSLAM {
 		} else {
 			// trace features
 
-			// construct point
-			std::vector<cv::Point2f> prev_left_points,prev_right_points;
-			std::vector<cv::Point2f> curr_left_points,curr_right_points;
+			//// construct point
+			std::vector<cv::Point2f> prev_left_points, prev_right_points;
+			std::vector<cv::Point2f> curr_left_points, curr_right_points;
 
-			for(auto key_p:prev_left_key_points_){
+			for (auto key_p:prev_left_key_points_) {
 				prev_left_points.push_back(key_p.pt);
 			}
 
-			for(auto key_p:prev_right_key_points_){
+			for (auto key_p:prev_right_key_points_) {
 				prev_right_points.push_back(key_p.pt);
 			}
+			std::vector<uchar> left_track_inliers(0), stereo_track_inliers(0);
+			std::vector<float> left_track_errs(0), stereo_track_erros(0);
 
-//			cv::calcOpticalFlowPyrLK(prev_left_pyramid_,curr_left_pyramid_,
-//					prev_left_key_points_, )
+			cv::calcOpticalFlowPyrLK(prev_left_pyramid_, curr_left_pyramid_,
+			                         prev_left_points, curr_left_points,
+			                         left_track_inliers,
+			                         left_track_errs,
+			                         cv::Size(config_ptr_->get<int>("VO.LK.patch_size"),
+			                                  config_ptr_->get<int>("VO.LK.patch_size")),
+			                         config_ptr_->get<int>("VO.pyramid_levels"),
+			                         cv::TermCriteria(
+					                         cv::TermCriteria::COUNT + cv::TermCriteria::EPS,
+					                         config_ptr_->get<int>("VO.LK.max_iteration"),
+					                         config_ptr_->get<int>("VO.LK.track_precision")
+			                         ),
+			                         cv::OPTFLOW_USE_INITIAL_FLOW
+			);
+
+			//// delete some point based on ransac.
+
 
 
 			// Add new features.
