@@ -423,6 +423,7 @@ namespace BaseSLAM {
 			}
 
 
+
 			for (int i(0); i < grid_keypoints.size(); ++i) {
 				std::sort(grid_new_keypoints[i].begin(), grid_new_keypoints[i].end(),
 				          &GridFastExtractor::keyPointCompareByResponse);

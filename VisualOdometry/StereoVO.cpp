@@ -61,10 +61,12 @@ namespace BaseSLAM {
 			std::vector<cv::Point2f> prev_left_points(0), prev_right_points(0);
 			std::vector<cv::Point2f> curr_left_points(0), curr_right_points(0);
 
+			std::cout << "pre key points size:" << prev_left_key_points_.size() << std::endl;
 			for (auto key_p:prev_left_key_points_) {
 				prev_left_points.push_back(key_p.pt);
 //				curr_left_points.push_back(key_p.pt);
 			}
+			std::cout << "pre points size:" << prev_left_points.size() << std::endl;
 
 			for (auto key_p:prev_right_key_points_) {
 				prev_right_points.push_back(key_p.pt);
@@ -91,6 +93,8 @@ namespace BaseSLAM {
 			//// delete some point based on image range and LK state flag
 			int erased_counter = 0;
 			curr_left_key_points_.clear();
+			std::cout << "curr key points before add:" << curr_left_key_points_.size() << std::endl;
+			std::cout << "curr points size:" << curr_left_points.size() << std::endl;
 			int curr_size = curr_left_points.size();
 			for (int i(0); i < curr_size; ++i) {
 				if (left_track_inliers[i]) {
@@ -129,9 +133,9 @@ namespace BaseSLAM {
 
 
 			// Add new features to left image.
-//			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
+			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
 			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
-//			std::cout << "key point size:" << curr_left_key_points_.size() << std::endl;
+			std::cout << "after key point size:" << curr_left_key_points_.size() << std::endl;
 
 
 

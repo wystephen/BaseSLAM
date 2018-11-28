@@ -11,8 +11,8 @@ GridFastExtractor.fast_threshold: 10
 #VO.pyramid_patch_size: 15
 VO.LK.pyramid_levels: 5
 VO.LK.patch_size: 15
-VO.LK.max_iteration: 30
-VO.LK.track_precision: 1e-10
+VO.LK.max_iteration: 50
+VO.LK.track_precision: 1e-4
 
 
 
