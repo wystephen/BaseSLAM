@@ -40,9 +40,11 @@ namespace BaseSLAM {
 		}
 		try {
 
-			instance_->file_.open(file_name, cv::FileStorage::READ);
-			std::cout << "file open state:" << instance_->file_.isOpened() << std::endl;
-			std::cout << "failed to open file:" << file_name << std::endl;
+			if (!instance_->file_.open(file_name, cv::FileStorage::READ)) {
+				std::cout << "file open state:" << instance_->file_.isOpened() << std::endl;
+				std::cout << "failed to open file:" << file_name << std::endl;
+			}
+
 		} catch (std::exception &e) {
 			std::cout << "some problem generated when try to open config file" << std::endl;
 			std::cout << ERROR_MSG_FLAG(e.what()) << std::endl;
@@ -81,12 +83,20 @@ namespace BaseSLAM {
 
 
 //		std::call_once(oc_get, [&] {
-			try {
-
-				tmp = T(instance_->file_[key]);
-			} catch (std::exception &e) {
-				std::cout << ERROR_MSG_FLAG(e.what()) << std::endl;
+		try {
+			cv::FileNode node = instance_->file_[key];
+			if (node.isNone()) {
+				std::cout << ERROR_MSG_FLAG("node is empty" + ":" + key) << std::endl;
+				throw;
+			} else {
+				tmp = T(node);
 			}
+
+//				tmp = T(instance_->file_[key]);
+
+		} catch (std::exception &e) {
+			std::cout << ERROR_MSG_FLAG(e.what()) << std::endl;
+		}
 
 
 //		});
