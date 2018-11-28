@@ -49,8 +49,8 @@
 
 int main() {
 
-	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
-	stereo_camera_ptr->print("camera");
+//	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
+//	stereo_camera_ptr->print("camera");
 
 	BaseSLAM::ConfigServer *config_ptr_ = BaseSLAM::ConfigServer::getInstance();
 	config_ptr_->setParameterFile("/home/steve/Code/BaseSLAM/parameterfiles/parameters.yaml");
@@ -59,9 +59,9 @@ int main() {
 
 	BaseSLAM::StereoVO stereoVO;
 
-//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
+	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
-	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
 
 	cv::namedWindow("show left");
 	cv::namedWindow("show right");

@@ -1,5 +1,8 @@
 %YAML 1.0
 
+
+CameraFile: "/home/steve/Data/MYNTVI/camera_parameter1.yaml"
+
 Base.feature_number: 1000
 Base.local_window_size: 10000
 

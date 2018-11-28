@@ -53,6 +53,8 @@ namespace BaseSLAM {
 			detector_ptr_->detect(*(data.right_img_ptr_),
 			                      curr_right_key_points_);
 
+			initial_isam();
+
 
 		} else {
 			// trace features
@@ -103,10 +105,10 @@ namespace BaseSLAM {
 					    curr_left_points[i].y < data.get_left_image()->rows - 1 &&
 					    curr_left_points[i].y > 1 && left_track_inliers[i] &&
 					    left_track_inliers[i] == 1) {
-						curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i].x, curr_left_points[i].y,
-						                                             prev_left_key_points_[i].size +
-						                                             10,
-						                                             -1, -10.0, 0, -1));
+//						curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i].x, curr_left_points[i].y,
+//						                                             prev_left_key_points_[i].size +
+//						                                             10,
+//						                                             -1, -10.0, 0, -1));
 //						std::cout<< "error:" << left_track_errs[i] << std::endl;
 					} else {
 						left_track_inliers[i] = 0;
@@ -120,13 +122,77 @@ namespace BaseSLAM {
 			}
 //			std::cout << "erased counter :" << erased_counter << std::endl;
 
-			cv::Mat out_mask;
-			auto F = cv::findFundamentalMat(prev_left_points,curr_left_points,cv::FM_RANSAC,
-					3.,0.99,out_mask);
-			std::cout << "out mask type:"<< out_mask.type() << std::endl;
+			std::vector<uchar> out_mask;
+//			auto F = cv::findFundamentalMat(prev_left_points,curr_left_points,cv::FM_RANSAC,
+//					3.,0.99,out_mask);
+//			std::cout << "out mask type:"<< out_mask.type() << std::endl;
+
 //			for(int i(0);i<curr_left_points.size();++i){
 //				std::cout << "state:" << left_track_inliers[i] << " out mask:" << out_mask.at< << std::endl;
 //			}
+//			std::cout << "left M1:" << camera_ptr_->M1 << std::endl;
+
+			auto l_E = cv::findEssentialMat(
+					prev_left_points, curr_left_points,
+					camera_ptr_->M1,
+					cv::RANSAC,
+					0.999, 1.0,
+					out_mask
+//cv::noArray()
+			);
+
+			cv::Mat tR, tt;
+			cv::recoverPose(l_E, prev_left_points, curr_left_points,
+			                camera_ptr_->M1, tR, tt,
+//			                out_mask
+                            cv::noArray()
+			);
+
+			std::cout << "tR:" << tR << "  tt:" << tt << std::endl;
+//
+			Eigen::Matrix4d inT = Eigen::Matrix4d::Identity();
+
+			for (int i(0); i < 3; ++i) {
+				for (int j(0); j < 3; ++j) {
+					inT(i, j) = tR.at<double>(j, i);
+				}
+				inT(i, 3) = tt.at<double>(i);
+			}
+			std::cout << "inT:" << inT << std::endl;
+
+			pose = pose * inT;
+			tmp_file << pose(0, 3) << "," << pose(1, 3) << "," << pose(2, 3) << std::endl;
+
+
+			int count_out_mask = 0;
+
+			std::cout << "totall point" << curr_left_points.size();
+			for (int i(0); i < curr_left_points.size(); ++i) {
+				if (out_mask[i] == 1) {
+					count_out_mask++;
+				}
+				if (left_track_inliers[i] == 1 && out_mask[i] == 1) {
+//					curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i].x, curr_left_points[i].y,
+//					                                             prev_left_key_points_[i].size +
+//					                                             10,
+//					                                             -1, -10.0, 0, -1));
+					auto tmp_key_point = cv::KeyPoint(curr_left_points[i].x,
+					                                  curr_left_points[i].y,
+					                                  prev_left_key_points_[i].size + 10,
+					                                  -1, -10.0, 0, prev_left_key_points_[i].class_id);
+					if (tmp_key_point.class_id < 0) {
+						tmp_key_point.class_id = feature_point_counter_;
+						feature_point_counter_++;
+					}
+					curr_left_key_points_.push_back(tmp_key_point);
+				}
+
+			}
+
+
+			addNewFrameIsam(curr_left_key_points_, current_index_);
+
+			std::cout << "count out mask:" << count_out_mask << std::endl;
 
 
 			cv::Mat tmp_left_key_point_img(cv::Size(data.get_left_image()->rows, data.get_left_image()->cols),
@@ -155,8 +221,8 @@ namespace BaseSLAM {
 		std::swap(prev_left_pyramid_, curr_left_pyramid_);
 		std::swap(prev_right_pyramid_, curr_right_pyramid_);
 
-		std::swap(prev_left_key_points_ , curr_left_key_points_);
-		std::swap(prev_right_key_points_ , curr_right_key_points_);
+		std::swap(prev_left_key_points_, curr_left_key_points_);
+		std::swap(prev_right_key_points_, curr_right_key_points_);
 		curr_left_key_points_.clear();
 		curr_right_key_points_.clear();
 
@@ -165,6 +231,93 @@ namespace BaseSLAM {
 
 
 		current_index_++;
+
+
+	}
+
+
+	void StereoVO::initial_isam() {
+		// initial isam
+
+		isam2_paramter_ = gtsam::ISAM2Params();
+//		isam2_paramter_.relinearizeSkip1;
+		isam2_ = gtsam::ISAM2(isam2_paramter_);
+
+		//insert frame 0 and set prior constraint
+
+		graph_.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+				gtsam::Symbol('x', current_index_),
+				gtsam::Pose3(Eigen::Matrix4d::Identity()),
+				pose_noise_
+		);
+
+		initial_values_.insert<gtsam::Pose3>(gtsam::Symbol('x', current_index_),
+		                                     gtsam::Pose3(Eigen::Matrix4d::Identity()));
+
+		// initial K
+		double fx = camera_ptr_->M1.at<double>(0, 0);
+		double fy = camera_ptr_->M1.at<double>(1, 1);
+		double u = camera_ptr_->M1.at<double>(0, 2);
+		double v = camera_ptr_->M1.at<double>(1, 2);
+//		*K_ = gtsam::Cal3_S2::shared_ptr(new gtsam::Cal3_S2(fx, fy, 0.0, u, v));
+		*K_ = (gtsam::Cal3_S2(fx, fy, 0.0, u, v));
+//		K_ = gtsam::Cal3_S2::shared_ptr(fx,fy,0.0,u,v);
+//
+
+	}
+
+	bool StereoVO::addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points, int frame_id) {
+
+		// undistort points
+		std::vector<cv::Point2f> points;
+		std::vector<cv::Point2f> corrected_points;
+		for (auto key_points:relate_key_points) {
+			points.push_back(key_points.pt);
+		}
+
+		cv::undistort(points,
+		              corrected_points,
+		              camera_ptr_->M1,
+		              camera_ptr_->D1);
+
+
+
+		// add point to graph and set values
+
+		for (int i(0); i < relate_key_points.size(); ++i) {
+//			gtsam::SimpleCamera camera()
+			graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
+					corrected_points[i], landmark_noise_, gtsam::Symbol('x', frame_id),
+					gtsam::Symbol('l', relate_key_points[i].class_id),
+					K_
+			);
+
+//			if (relate_key_points[i].size < 20) {
+//				graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
+//						corrected_points[i], landmark_noise_, gtsam::Symbol('x', frame_id),
+//						gtsam::Symbol('l', relate_key_points[i].class_id),
+//						K_
+//				);
+//			}
+
+
+
+		}
+
+
+		// update
+		isam2_.update(graph_, initial_values_);
+		isam2_.update();
+
+		auto currentEstimate = isam2_.calculateEstimate();
+		currentEstimate.at(gtsam::Symbol('x', frame_id)).print("frame:" + frame_id);
+
+
+
+
+		// clear graph and values
+		graph_.resize(0);
+		initial_values_.clear();
 
 
 	}
