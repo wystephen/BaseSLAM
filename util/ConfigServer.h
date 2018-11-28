@@ -38,6 +38,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <util/ErrorMSG.h>
+
 namespace BaseSLAM {
 
 

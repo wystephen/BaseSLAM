@@ -9,9 +9,9 @@ namespace BaseSLAM {
 
 
 	bool StereoVO::addNewFrame(BaseSLAM::StereoINSData &data) {
-		BaseSLAM::Frame current_frame = BaseSLAM::Frame(camera_ptr_,
-		                                                &data,
-		                                                current_index_);
+//		std::shared_ptr<BaseSLAM::Frame> current_frame = new BaseSLAM::Frame(camera_ptr_,
+//		                                                                     &data,
+//		                                                                     current_index_);
 
 
 
@@ -41,7 +41,7 @@ namespace BaseSLAM {
 		);
 
 
-		if (latest_frame_ptr_ == nullptr) {
+		if (latest_frame_ptr_ == nullptr && current_index_ == 0) {
 			// the first frame or some error generated before.
 			detector_ptr_->detect(*(data.left_img_ptr_),
 			                      curr_left_key_points_);
@@ -146,6 +146,9 @@ namespace BaseSLAM {
 		prev_right_pyramid_ = curr_right_pyramid_;
 		prev_left_key_points_ = curr_left_key_points_;
 		prev_right_key_points_ = curr_right_key_points_;
+
+
+//		*latest_frame_ptr_ = current_frame;
 
 
 		current_index_++;

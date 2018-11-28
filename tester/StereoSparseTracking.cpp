@@ -52,8 +52,8 @@ int main() {
 	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
 	stereo_camera_ptr->print("camera");
 
-	auto *config_ptr_ = BaseSLAM::ConfigServer::getInstance();
-	config_ptr_->setParameterFile("/home/steve/Code/BaseSLAM/parameterfiles/parameteres.yaml");
+	BaseSLAM::ConfigServer *config_ptr_ = BaseSLAM::ConfigServer::getInstance();
+	config_ptr_->setParameterFile("/home/steve/Code/BaseSLAM/parameterfiles/parameters.yaml");
 
 //	BaseSLAM::VOSimple vo(stereo_camera_ptr);
 
@@ -95,8 +95,8 @@ int main() {
 		stereoVO.addNewFrame(t_data);
 
 
-		cv::imshow("left_key", left_key_img);
-		cv::imshow("right_key", right_key_img);
+//		cv::imshow("left_key", left_key_img);
+//		cv::imshow("right_key", right_key_img);
 
 
 		cv::waitKey(10);

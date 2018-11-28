@@ -51,7 +51,7 @@ namespace BaseSLAM {
 		StereoVO() {
 			config_ptr_ = BaseSLAM::ConfigServer::getInstance();
 			detector_ptr_ = new GridFastExtractor(config_ptr_->get<int>("GridFastExtractor.grid_rows"),
-			                                      config_ptr_->get<int>("GridFasetExtractor.grid_cols"),
+			                                      config_ptr_->get<int>("GridFastExtractor.grid_cols"),
 			                                      config_ptr_->get<int>("GridFastExtractor.feature_num"),
 			                                      config_ptr_->get<int>("GridFastExtractor.fast_threshold"));
 			try {
