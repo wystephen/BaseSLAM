@@ -61,12 +61,12 @@ namespace BaseSLAM {
 			std::vector<cv::Point2f> prev_left_points(0), prev_right_points(0);
 			std::vector<cv::Point2f> curr_left_points(0), curr_right_points(0);
 
-			std::cout << "pre key points size:" << prev_left_key_points_.size() << std::endl;
+//			std::cout << "pre key points size:" << prev_left_key_points_.size() << std::endl;
 			for (auto key_p:prev_left_key_points_) {
 				prev_left_points.push_back(key_p.pt);
 //				curr_left_points.push_back(key_p.pt);
 			}
-			std::cout << "pre points size:" << prev_left_points.size() << std::endl;
+//			std::cout << "pre points size:" << prev_left_points.size() << std::endl;
 
 			for (auto key_p:prev_right_key_points_) {
 				prev_right_points.push_back(key_p.pt);
@@ -93,8 +93,8 @@ namespace BaseSLAM {
 			//// delete some point based on image range and LK state flag
 			int erased_counter = 0;
 			curr_left_key_points_.clear();
-			std::cout << "curr key points before add:" << curr_left_key_points_.size() << std::endl;
-			std::cout << "curr points size:" << curr_left_points.size() << std::endl;
+//			std::cout << "curr key points before add:" << curr_left_key_points_.size() << std::endl;
+//			std::cout << "curr points size:" << curr_left_points.size() << std::endl;
 			int curr_size = curr_left_points.size();
 			for (int i(0); i < curr_size; ++i) {
 				if (left_track_inliers[i]) {
@@ -118,8 +118,15 @@ namespace BaseSLAM {
 
 				}
 			}
-			std::cout << "erased counter :" << erased_counter << std::endl;
-//			std::cout << "curr key points size:" << curr_left_key_points_.size() << std::endl;
+//			std::cout << "erased counter :" << erased_counter << std::endl;
+
+			cv::Mat out_mask;
+			auto F = cv::findFundamentalMat(prev_left_points,curr_left_points,cv::FM_RANSAC,
+					3.,0.99,out_mask);
+			std::cout << "out mask type:"<< out_mask.type() << std::endl;
+//			for(int i(0);i<curr_left_points.size();++i){
+//				std::cout << "state:" << left_track_inliers[i] << " out mask:" << out_mask.at< << std::endl;
+//			}
 
 
 			cv::Mat tmp_left_key_point_img(cv::Size(data.get_left_image()->rows, data.get_left_image()->cols),
@@ -133,9 +140,9 @@ namespace BaseSLAM {
 
 
 			// Add new features to left image.
-			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
+//			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
 			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
-			std::cout << "after key point size:" << curr_left_key_points_.size() << std::endl;
+//			std::cout << "after key point size:" << curr_left_key_points_.size() << std::endl;
 
 
 

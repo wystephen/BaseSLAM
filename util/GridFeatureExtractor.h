@@ -439,6 +439,7 @@ namespace BaseSLAM {
 			std::cout << key_points.size() << std::endl;
 //			std::cout << std::flush;
 
+
 			//Valid grid result:
 			if (false) {
 				cv::Mat grid_raw_mat(img.rows, img.cols, CV_8U, cv::Scalar(255));
