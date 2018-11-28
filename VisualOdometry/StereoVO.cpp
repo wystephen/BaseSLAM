@@ -20,9 +20,9 @@ namespace BaseSLAM {
 		cv::buildOpticalFlowPyramid(
 				*(data.left_img_ptr_),
 				curr_left_pyramid_,
-				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
-				         config_ptr_->get<int>("VO.pyramid_patch_size")),
-				config_ptr_->get<int>("VO.pyramid_levels"),
+				cv::Size(config_ptr_->get<int>("VO.LK.patch_size"),
+				         config_ptr_->get<int>("VO.LK.patch_size")),
+				config_ptr_->get<int>("VO.LK.pyramid_levels"),
 				true, cv::BorderTypes::BORDER_REFLECT_101,
 				cv::BorderTypes::BORDER_CONSTANT, false
 
@@ -32,13 +32,17 @@ namespace BaseSLAM {
 		cv::buildOpticalFlowPyramid(
 				*(data.right_img_ptr_),
 				curr_right_pyramid_,
-				cv::Size(config_ptr_->get<int>("VO.pyramid_patch_size"),
-				         config_ptr_->get<int>("VO.pyramid_patch_size")),
-				config_ptr_->get<int>("VO.pyramid_levels"),
+				cv::Size(config_ptr_->get<int>("VO.LK.patch_size"),
+				         config_ptr_->get<int>("VO.LK.patch_size")),
+				config_ptr_->get<int>("VO.LK.pyramid_levels"),
 				true, cv::BorderTypes::BORDER_REFLECT_101,
 				cv::BorderTypes::BORDER_CONSTANT, false
 
 		);
+
+
+//		std::cout << "curr left pyramid size:" << curr_left_pyramid_.size() <<
+//		          "curr right pyramid size(:" << curr_right_pyramid_.size() << std::endl;
 
 
 		if (latest_frame_ptr_ == nullptr && current_index_ == 0) {
@@ -54,15 +58,17 @@ namespace BaseSLAM {
 			// trace features
 
 			//// construct point
-			std::vector<cv::Point2f> prev_left_points, prev_right_points;
-			std::vector<cv::Point2f> curr_left_points, curr_right_points;
+			std::vector<cv::Point2f> prev_left_points(0), prev_right_points(0);
+			std::vector<cv::Point2f> curr_left_points(0), curr_right_points(0);
 
 			for (auto key_p:prev_left_key_points_) {
 				prev_left_points.push_back(key_p.pt);
+//				curr_left_points.push_back(key_p.pt);
 			}
 
 			for (auto key_p:prev_right_key_points_) {
 				prev_right_points.push_back(key_p.pt);
+				curr_right_points.push_back(key_p.pt);
 			}
 			std::vector<uchar> left_track_inliers(0), stereo_track_inliers(0);
 			std::vector<float> left_track_errs(0), stereo_track_erros(0);
@@ -73,41 +79,33 @@ namespace BaseSLAM {
 			                         left_track_errs,
 			                         cv::Size(config_ptr_->get<int>("VO.LK.patch_size"),
 			                                  config_ptr_->get<int>("VO.LK.patch_size")),
-			                         config_ptr_->get<int>("VO.pyramid_levels"),
+			                         config_ptr_->get<int>("VO.LK.pyramid_levels"),
 			                         cv::TermCriteria(
-					                         cv::TermCriteria::COUNT + cv::TermCriteria::EPS,
+					                         cv::TermCriteria::COUNT + cv::TermCriteria::EPS + 10,
 					                         config_ptr_->get<int>("VO.LK.max_iteration"),
 					                         config_ptr_->get<int>("VO.LK.track_precision")
-			                         ),
-			                         cv::OPTFLOW_USE_INITIAL_FLOW
+			                         )
 			);
 
 
-			//// delete some point based on image range
-
-
-
+			//// delete some point based on image range and LK state flag
 			int erased_counter = 0;
-			for (int i(0); i < curr_left_points.size(); ++i) {
-				if (left_track_inliers[i - erased_counter]) {
-					if (curr_left_points[i - erased_counter].x < data.get_left_image()->cols - 1 &&
-					    curr_left_points[i - erased_counter].x > 1 &&
-					    curr_left_points[i - erased_counter].y < data.get_left_image()->rows - 1 &&
-					    curr_left_points[i - erased_counter].y > 1 && left_track_inliers[i] &&
-					    left_track_inliers[i - erased_counter] == 1) {
-						continue;
-					} else {
-
-
-						curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i - erased_counter],
-						                                             prev_left_key_points_[i - erased_counter].size + 1,
+			curr_left_key_points_.clear();
+			int curr_size = curr_left_points.size();
+			for (int i(0); i < curr_size; ++i) {
+				if (left_track_inliers[i]) {
+					if (curr_left_points[i].x < data.get_left_image()->cols - 1 &&
+					    curr_left_points[i].x > 1 &&
+					    curr_left_points[i].y < data.get_left_image()->rows - 1 &&
+					    curr_left_points[i].y > 1 && left_track_inliers[i] &&
+					    left_track_inliers[i] == 1) {
+						curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i].x, curr_left_points[i].y,
+						                                             prev_left_key_points_[i].size +
+						                                             10,
 						                                             -1, -10.0, 0, -1));
-
-
-						prev_left_key_points_.erase(prev_left_key_points_.begin() + i - erased_counter);
-						prev_left_points.erase(prev_left_points.begin() + i - erased_counter);
-						left_track_errs.erase(left_track_errs.begin() + i - erased_counter);
-						left_track_inliers.erase(left_track_inliers.begin() + i - erased_counter);
+//						std::cout<< "error:" << left_track_errs[i] << std::endl;
+					} else {
+						left_track_inliers[i] = 0;
 
 						erased_counter++;
 
@@ -116,36 +114,40 @@ namespace BaseSLAM {
 
 				}
 			}
+			std::cout << "erased counter :" << erased_counter << std::endl;
+//			std::cout << "curr key points size:" << curr_left_key_points_.size() << std::endl;
 
 
-
-
-
-
-
-
-			//find stereo feature points by LK.
-
-
-			// Add new features to left image.
-			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
-
-
-
-			//draw features
 			cv::Mat tmp_left_key_point_img(cv::Size(data.get_left_image()->rows, data.get_left_image()->cols),
 			                               CV_8UC3, cv::Scalar(0, 0, 0));
 
 			cv::drawKeypoints(*(data.get_left_image()), curr_left_key_points_, tmp_left_key_point_img);
 			cv::imshow("left img tracked point", tmp_left_key_point_img);
 
+
+			//find stereo feature points by LK.
+
+
+			// Add new features to left image.
+//			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
+			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
+//			std::cout << "key point size:" << curr_left_key_points_.size() << std::endl;
+
+
+
+			//draw features
+
+
 		}
 
 
-		prev_left_pyramid_ = curr_left_pyramid_;
-		prev_right_pyramid_ = curr_right_pyramid_;
-		prev_left_key_points_ = curr_left_key_points_;
-		prev_right_key_points_ = curr_right_key_points_;
+		std::swap(prev_left_pyramid_, curr_left_pyramid_);
+		std::swap(prev_right_pyramid_, curr_right_pyramid_);
+
+		std::swap(prev_left_key_points_ , curr_left_key_points_);
+		std::swap(prev_right_key_points_ , curr_right_key_points_);
+		curr_left_key_points_.clear();
+		curr_right_key_points_.clear();
 
 
 //		*latest_frame_ptr_ = current_frame;

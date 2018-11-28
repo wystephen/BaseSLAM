@@ -31,6 +31,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/xfeatures2d.hpp>
 
+#include <util/ErrorMSG.h>
+
 namespace BaseSLAM {
 #define CLIP_RANGE(value, min, max)  ( (value) > (max) ? (max) : (((value) < (min)) ? (min) : (value)) )
 #define COLOR_RANGE(value)  CLIP_RANGE(value, 0, 255)
@@ -329,36 +331,76 @@ namespace BaseSLAM {
 			};
 
 
-			// TODO:should be test in tracking process!
+			// TO!DO:should be test in tracking process!
+			// Add key point to grid key point and add mask to image.
+			int x_min_offset(0), x_max_offset(0), y_min_offset(0), y_max_offset(0);
 			if (!clear_input_keypoints) {
 				for (auto point:key_points) {
 					try {
+						x_min_offset = 0;
+						x_max_offset = 0;
+						y_min_offset = 0;
+						y_max_offset = 0;
 
+						//// add key point to grid key points.
 						grid_keypoints[full2grid(point.pt.x, point.pt.y)].push_back(point);
-//						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
-						int x_min_offset(0), x_max_offset(0), y_min_offset(0), y_max_offset(0);
 
-						mask(cv::Range(point.pt.x - mask_range, point.pt.x + mask_range),
-						     cv::Range(point.pt.y - mask_range, point.pt.y + mask_range)) = 0;
+//						std::cout << point.pt << "at ;" << full2grid(point.pt.x, point.pt.y) << std::endl;
+						if (point.pt.x - mask_range < 0) {
+							x_min_offset = mask_range - point.pt.x;
+						}
+
+						if (point.pt.x + mask_range > image_col) {
+							x_max_offset = (image_col - point.pt.x - mask_range);
+						}
+
+						if (point.pt.y - mask_range < 0) {
+							y_min_offset = mask_range - point.pt.y;
+						}
+
+						if (point.pt.y + mask_range > image_row) {
+							y_max_offset = (image_row - point.pt.y - mask_range);
+						}
+
+//						mask(cv::Range(point.pt.x - mask_range + x_min_offset,
+//						               point.pt.x + mask_range + x_max_offset),
+//						     cv::Range(point.pt.y - mask_range + y_min_offset,
+//						               point.pt.y + mask_range + y_max_offset)) = 0;
+						mask(
+								cv::Range(point.pt.y - mask_range + y_min_offset,
+								          point.pt.y + mask_range + y_max_offset),
+								cv::Range(point.pt.x - mask_range + x_min_offset,
+								          point.pt.x + mask_range + x_max_offset)) = 0;
+
 
 					} catch (std::exception &e) {
-						std::cout << " error at push previous key points to grid key points vector." << std::endl;
+//						std::cout << " error at push previous key points to grid key points vector." << std::endl;
+						std::cout << ERROR_MSG_FLAG("error when push previous key points" + e.what()) << std::endl;
+						std::cout << "x:" << point.pt.x - mask_range + x_min_offset <<
+						          "-" << point.pt.x + mask_range + x_max_offset << "   cols:" << image_col << std::endl;
+						std::cout << "y:" << point.pt.y - mask_range + y_min_offset <<
+						          "-" << point.pt.y + mask_range + y_max_offset << " rows:" << image_row << std::endl;
+
+
 					}
 				}
 			} else {
 				key_points.clear();
 			}
 
-			std::cout << "mask area:" <<
-			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
+//			std::cout << "mask area:" <<
+//			          (mask.rows * mask.cols) - cv::countNonZero(mask) << std::endl;
 
 
 
 //			auto detector = cv::FastFeatureDetector::create();//soso
-			auto detector = cv::GFTTDetector::create();//good
-//			auto detector = cv::AgastFeatureDetector::create();//good
+//			auto detector = cv::GFTTDetector::create();//good
+			auto detector = cv::AgastFeatureDetector::create();//good
 //			auto detector = cv::xfeatures2d::HarrisLaplaceFeatureDetector::create();
 //			auto detector = cv::xfeatures2d::MSDDetector::create();
+
+
+
 
 			// get Keypoints  using mask to avoid re-detect existed feature points in key_points().
 			std::vector<cv::KeyPoint> tmp_key_points;
@@ -368,7 +410,7 @@ namespace BaseSLAM {
 			for (auto point:tmp_key_points) {
 
 				try {
-					if(point.response<0.0){
+					if (point.response < 0.0) {
 						std::cout << "key points response smaller than 0.0." << std::endl;
 					}
 //					std::cout << "access the index:" << full2grid(point.pt.x, point.pt.y) << std::endl;
@@ -443,7 +485,7 @@ namespace BaseSLAM {
 		 */
 		void set_feature_num(int total_feature_num_) {
 //			GridFastExtractor::grid_feature_num_ = grid_feature_num_;
-			grid_feature_num_ = total_feature_num_/(grid_rows_*grid_cols_);
+			grid_feature_num_ = total_feature_num_ / (grid_rows_ * grid_cols_);
 
 		}
 

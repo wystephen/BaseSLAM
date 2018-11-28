@@ -82,21 +82,23 @@ namespace BaseSLAM {
 		T tmp;
 
 
+		// For thread-safety
 //		std::call_once(oc_get, [&] {
-		try {
-			cv::FileNode node = instance_->file_[key];
-			if (node.isNone()) {
-				std::cout << ERROR_MSG_FLAG("node is empty" + ":" + key) << std::endl;
-				throw;
-			} else {
-				tmp = T(node);
-			}
+
+			try {
+				cv::FileNode node = instance_->file_[key];
+				if (node.isNone()) {
+					std::cout << ERROR_MSG_FLAG("node is empty" + ":" + key) << std::endl;
+					throw;
+				} else {
+					tmp = T(node);
+				}
 
 //				tmp = T(instance_->file_[key]);
 
-		} catch (std::exception &e) {
-			std::cout << ERROR_MSG_FLAG(e.what()) << std::endl;
-		}
+			} catch (std::exception &e) {
+				std::cout << ERROR_MSG_FLAG(e.what()) << std::endl;
+			}
 
 
 //		});
