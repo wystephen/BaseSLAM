@@ -287,12 +287,13 @@ namespace BaseSLAM {
 		for (int i(0); i < relate_key_points.size(); ++i) {
 //			gtsam::SimpleCamera camera()
 			graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
-					corrected_points[i], landmark_noise_, gtsam::Symbol('x', frame_id),
+					gtsam::Point2((gtsam::Vector2() << corrected_points[i].x, corrected_points[i].y).finished()),
+					landmark_noise_, gtsam::Symbol('x', frame_id),
 					gtsam::Symbol('l', relate_key_points[i].class_id),
 					K_
 			);
 
-//			if (relate_key_points[i].size < 20) {
+//			if (relate_key_points[i].size < 20 and frame_id==1) {
 //				graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
 //						corrected_points[i], landmark_noise_, gtsam::Symbol('x', frame_id),
 //						gtsam::Symbol('l', relate_key_points[i].class_id),
