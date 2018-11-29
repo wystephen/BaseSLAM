@@ -144,13 +144,13 @@ namespace BaseSLAM {
 		                     std::vector<cv::Point2f> pre_points,
 		                     int frame_id);
 
-		bool addNewFrameStereoISAM(
-				std::vector<cv::KeyPoint> left_key_points,
-				std::vector<cv::Point2f> right_points,
-				int frame_id
-		){
-			std::vector<cv::p
-		}
+//		bool addNewFrameStereoISAM(
+//				std::vector<cv::KeyPoint> left_key_points,
+//				std::vector<cv::Point2f> right_points,
+//				int frame_id
+//		){
+//			std::vector<cv::p
+//		}
 
 
 	};
