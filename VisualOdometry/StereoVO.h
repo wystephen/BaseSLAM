@@ -29,6 +29,7 @@
 
 #include <gtsam/slam/PriorFactor.h>
 #include <gtsam/slam/ProjectionFactor.h>
+#include <gtsam_unstable/slam/PoseBetweenFactor.h>
 
 namespace BaseSLAM {
 
@@ -131,11 +132,25 @@ namespace BaseSLAM {
 		gtsam::noiseModel::Isotropic::shared_ptr landmark_noise_ = gtsam::noiseModel::Isotropic::Sigma(2, 0.1);
 
 
+		gtsam::noiseModel::Diagonal::shared_ptr between_camera_noise_ = gtsam::noiseModel::Diagonal::Sigmas(
+				(gtsam::Vector(6) << gtsam::Vector3::Constant(0.01), gtsam::Vector3::Constant(0.001)).finished(),
+				true
+		);
+
+
 		void initial_isam();
 
 		bool addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points,
 		                     std::vector<cv::Point2f> pre_points,
 		                     int frame_id);
+
+		bool addNewFrameStereoISAM(
+				std::vector<cv::KeyPoint> left_key_points,
+				std::vector<cv::Point2f> right_points,
+				int frame_id
+		){
+			std::vector<cv::p
+		}
 
 
 	};

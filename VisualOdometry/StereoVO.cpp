@@ -173,10 +173,6 @@ namespace BaseSLAM {
 					count_out_mask++;
 				}
 				if (left_track_inliers[i] == 1 && out_mask[i] == 1) {
-//					curr_left_key_points_.push_back(cv::KeyPoint(curr_left_points[i].x, curr_left_points[i].y,
-//					                                             prev_left_key_points_[i].size +
-//					                                             10,
-//					                                             -1, -10.0, 0, -1));
 					auto tmp_key_point = cv::KeyPoint(curr_left_points[i].x,
 					                                  curr_left_points[i].y,
 					                                  prev_left_key_points_[i].size + 10,
@@ -192,7 +188,7 @@ namespace BaseSLAM {
 			}
 
 
-			addNewFrameIsam(curr_left_key_points_, pre_points_selected, current_index_);
+//			addNewFrameIsam(curr_left_key_points_, pre_points_selected, current_index_);
 
 			std::cout << "count out mask:" << count_out_mask << std::endl;
 
@@ -205,12 +201,24 @@ namespace BaseSLAM {
 
 
 			//find stereo feature points by LK.
+			std::vector<uchar> stereo_mask;
+			cv::calcOpticalFlowPyrLK(curr_left_pyramid_, curr_right_pyramid_,
+			                         curr_left_points, curr_right_points,
+			                         stereo_mask, cv::noArray(),
+			                         cv::Size(config_ptr_->get<int>("VO.LK.patch_size"),
+			                                  config_ptr_->get<int>("VO.LK.patch_size")),
+			                         config_ptr_->get<int>("VO.LK.pyramid_levels"),
+			                         cv::TermCriteria(
+					                         cv::TermCriteria::COUNT + cv::TermCriteria::EPS + 10,
+					                         config_ptr_->get<int>("VO.LK.max_iteration"),
+					                         config_ptr_->get<int>("VO.LK.track_precision")
+			                         )
+			);
+
 
 
 			// Add new features to left image.
-//			std::cout << "before key point size:" << curr_left_key_points_.size() << std::endl;
 			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
-//			std::cout << "after key point size:" << curr_left_key_points_.size() << std::endl;
 
 
 
@@ -256,6 +264,32 @@ namespace BaseSLAM {
 		initial_values_.insert<gtsam::Pose3>(gtsam::Symbol('x', current_index_),
 		                                     gtsam::Pose3(Eigen::Matrix4d::Identity()));
 
+
+		graph_.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+				gtsam::Symbol('y', current_index_),
+				gtsam::Pose3(Eigen::Matrix4d::Identity()),
+				pose_noise_
+		);
+
+
+		Eigen::Matrix4d b_pose(Eigen::Matrix4f::Identity());
+		auto bpR = camera_ptr_->R;
+		auto bpT = camera_ptr_->T;
+		for (int i(0); i < 3; ++i) {
+			for (int j(0); j < 3; ++i) {
+				b_pose(i, j) = bpR.at<double>(i, j);
+			}
+			b_pose(i, 4) = bpT.at<double>(i);
+		}
+
+
+		graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
+				gtsam::Symbol('x', current_index_),
+				gtsam::Symbol('y', current_index_),
+				gtsam::Pose3(b_pose),
+				between_camera_noise_
+		);
+
 		// initial K
 		double fx = camera_ptr_->M1.at<double>(0, 0);
 		double fy = camera_ptr_->M1.at<double>(1, 1);
@@ -278,11 +312,11 @@ namespace BaseSLAM {
 		for (auto key_points:relate_key_points) {
 			points.push_back(key_points.pt);
 		}
-		assert(pre_points.size()==relate_key_points.size());
+		assert(pre_points.size() == relate_key_points.size());
 
 
 //		assert(points.size()>0);
-		if(points.size()==0){
+		if (points.size() == 0) {
 			return false;
 		}
 		cv::undistort(points,
@@ -314,7 +348,7 @@ namespace BaseSLAM {
 			);
 
 
-			if (relate_key_points[i].size < 20 and frame_id == 1) {
+			if (relate_key_points[i].size < 19 && frame_id == 1) {
 				graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
 						gtsam::Point2(
 								(gtsam::Vector2() << corrected_pre_points[i].x, corrected_pre_points[i].y).finished()),
