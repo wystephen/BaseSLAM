@@ -115,7 +115,7 @@ namespace BaseSLAM {
 	private:
 
 
-		gtsam::Cal3_S2::shared_ptr K_= nullptr;
+		gtsam::Cal3_S2::shared_ptr K_ = nullptr;
 		gtsam::ISAM2Params isam2_paramter_;
 		gtsam::ISAM2 isam2_;
 
@@ -126,12 +126,14 @@ namespace BaseSLAM {
 				(gtsam::Vector(6) << gtsam::Vector3::Constant(0.1), gtsam::Vector3::Constant(0.01)).finished(),
 				true
 		);
-		gtsam::noiseModel::Isotropic::shared_ptr landmark_noise_ = gtsam::noiseModel::Isotropic::Sigma(3, 0.1);
+		gtsam::noiseModel::Isotropic::shared_ptr landmark_noise_ = gtsam::noiseModel::Isotropic::Sigma(2, 0.1);
 
 
 		void initial_isam();
 
-		bool addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points, int frame_id);
+		bool addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points,
+		                     std::vector<cv::Point2f> pre_points,
+		                     int frame_id);
 
 
 	};

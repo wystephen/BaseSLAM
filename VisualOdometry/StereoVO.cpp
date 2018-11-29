@@ -167,6 +167,7 @@ namespace BaseSLAM {
 			int count_out_mask = 0;
 
 			std::cout << "totall point" << curr_left_points.size();
+			std::vector<cv::Point2f> pre_points_selected;
 			for (int i(0); i < curr_left_points.size(); ++i) {
 				if (out_mask[i] == 1) {
 					count_out_mask++;
@@ -185,12 +186,13 @@ namespace BaseSLAM {
 						feature_point_counter_++;
 					}
 					curr_left_key_points_.push_back(tmp_key_point);
+					pre_points_selected.push_back(prev_left_key_points_[i].pt);
 				}
 
 			}
 
 
-			addNewFrameIsam(curr_left_key_points_, current_index_);
+			addNewFrameIsam(curr_left_key_points_, pre_points_selected, current_index_);
 
 			std::cout << "count out mask:" << count_out_mask << std::endl;
 
@@ -260,17 +262,19 @@ namespace BaseSLAM {
 		double u = camera_ptr_->M1.at<double>(0, 2);
 		double v = camera_ptr_->M1.at<double>(1, 2);
 //		*K_ = gtsam::Cal3_S2::shared_ptr(new gtsam::Cal3_S2(fx, fy, 0.0, u, v));
-		*K_ = (gtsam::Cal3_S2(fx, fy, 0.0, u, v));
+//		*K_ = (gtsam::Cal3_S2(fx, fy, 0.0, u, v));
 //		K_ = gtsam::Cal3_S2::shared_ptr(fx,fy,0.0,u,v);
 //
 
 	}
 
-	bool StereoVO::addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points, int frame_id) {
+	bool StereoVO::addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points, std::vector<cv::Point2f> pre_points,
+	                               int frame_id) {
 
 		// undistort points
 		std::vector<cv::Point2f> points;
 		std::vector<cv::Point2f> corrected_points;
+		std::vector<cv::Point2f> corrected_pre_points;
 		for (auto key_points:relate_key_points) {
 			points.push_back(key_points.pt);
 		}
@@ -280,30 +284,58 @@ namespace BaseSLAM {
 		              camera_ptr_->M1,
 		              camera_ptr_->D1);
 
+		cv::undistort(pre_points,
+		              corrected_pre_points,
+		              camera_ptr_->M1,
+		              camera_ptr_->D1);
 
 
 		// add point to graph and set values
+		double fx = camera_ptr_->M1.at<double>(0, 0);
+		double fy = camera_ptr_->M1.at<double>(1, 1);
+		double u = camera_ptr_->M1.at<double>(0, 2);
+		double v = camera_ptr_->M1.at<double>(1, 2);
 
+		// Define the camera calibration parameters
+		gtsam::Cal3_S2::shared_ptr Kt(new gtsam::Cal3_S2(fx, fy, 0.0, u, v));
 		for (int i(0); i < relate_key_points.size(); ++i) {
 //			gtsam::SimpleCamera camera()
 			graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
 					gtsam::Point2((gtsam::Vector2() << corrected_points[i].x, corrected_points[i].y).finished()),
 					landmark_noise_, gtsam::Symbol('x', frame_id),
 					gtsam::Symbol('l', relate_key_points[i].class_id),
-					K_
+					Kt
 			);
 
-//			if (relate_key_points[i].size < 20 and frame_id==1) {
-//				graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
-//						corrected_points[i], landmark_noise_, gtsam::Symbol('x', frame_id),
-//						gtsam::Symbol('l', relate_key_points[i].class_id),
-//						K_
-//				);
-//			}
 
+			if (relate_key_points[i].size < 20 and frame_id == 1) {
+				graph_.emplace_shared<gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3, gtsam::Cal3_S2>>(
+						gtsam::Point2(
+								(gtsam::Vector2() << corrected_pre_points[i].x, corrected_pre_points[i].y).finished()),
+						landmark_noise_, gtsam::Symbol('x', frame_id - 1),
+						gtsam::Symbol('l', relate_key_points[i].class_id),
+						Kt
+				);
+
+				initial_values_.insert<gtsam::Point3>(gtsam::Symbol('l', relate_key_points[i].class_id),
+				                                      gtsam::Point3(0.0, 0.0, 0.0));
+
+
+				if (relate_key_points[i].class_id == 1) {
+					graph_.emplace_shared<gtsam::PriorFactor<gtsam::Point3>>
+							(
+									gtsam::Symbol('l', 1), gtsam::Point3(1.0, 1.0, 1.0),
+									gtsam::noiseModel::Isotropic::Sigma(3, 0.01)
+							);
+				}
+			}
 
 
 		}
+
+		initial_values_.insert<gtsam::Pose3>(gtsam::Symbol('x', frame_id),
+		                                     gtsam::Pose3(Eigen::Matrix4d::Identity()));
+
 
 
 		// update
