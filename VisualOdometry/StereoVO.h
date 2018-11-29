@@ -122,6 +122,8 @@ namespace BaseSLAM {
 		gtsam::NonlinearFactorGraph graph_ = gtsam::NonlinearFactorGraph();
 		gtsam::Values initial_values_ = gtsam::Values();
 
+		bool initial_key_points_flag_ = false;
+
 		gtsam::noiseModel::Diagonal::shared_ptr pose_noise_ = gtsam::noiseModel::Diagonal::Sigmas(
 				(gtsam::Vector(6) << gtsam::Vector3::Constant(0.1), gtsam::Vector3::Constant(0.01)).finished(),
 				true

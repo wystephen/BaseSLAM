@@ -278,7 +278,13 @@ namespace BaseSLAM {
 		for (auto key_points:relate_key_points) {
 			points.push_back(key_points.pt);
 		}
+		assert(pre_points.size()==relate_key_points.size());
 
+
+//		assert(points.size()>0);
+		if(points.size()==0){
+			return false;
+		}
 		cv::undistort(points,
 		              corrected_points,
 		              camera_ptr_->M1,
@@ -321,12 +327,13 @@ namespace BaseSLAM {
 				                                      gtsam::Point3(0.0, 0.0, 0.0));
 
 
-				if (relate_key_points[i].class_id == 1) {
+				if (!initial_key_points_flag_) {
 					graph_.emplace_shared<gtsam::PriorFactor<gtsam::Point3>>
 							(
-									gtsam::Symbol('l', 1), gtsam::Point3(1.0, 1.0, 1.0),
+									gtsam::Symbol('l', relate_key_points[i].class_id), gtsam::Point3(1.0, 1.0, 1.0),
 									gtsam::noiseModel::Isotropic::Sigma(3, 0.01)
 							);
+					initial_key_points_flag_ = true;
 				}
 			}
 
@@ -339,18 +346,17 @@ namespace BaseSLAM {
 
 
 		// update
-		isam2_.update(graph_, initial_values_);
-		isam2_.update();
+		if (frame_id % 5 == 0) {
+			isam2_.update(graph_, initial_values_);
+			isam2_.update();
 
-		auto currentEstimate = isam2_.calculateEstimate();
-		currentEstimate.at(gtsam::Symbol('x', frame_id)).print("frame:" + frame_id);
+			auto currentEstimate = isam2_.calculateEstimate();
+			currentEstimate.at(gtsam::Symbol('x', frame_id)).print("frame:" + frame_id);
 
-
-
-
-		// clear graph and values
-		graph_.resize(0);
-		initial_values_.clear();
+			// clear graph and values
+			graph_.resize(0);
+			initial_values_.clear();
+		}
 
 
 	}
