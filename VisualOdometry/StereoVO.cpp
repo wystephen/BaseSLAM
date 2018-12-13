@@ -115,7 +115,6 @@ namespace BaseSLAM {
 
 						erased_counter++;
 
-
 					}
 
 				}
@@ -131,7 +130,7 @@ namespace BaseSLAM {
 //				std::cout << "state:" << left_track_inliers[i] << " out mask:" << out_mask.at< << std::endl;
 //			}
 //			std::cout << "left M1:" << camera_ptr_->M1 << std::endl;
-
+            
 			auto l_E = cv::findEssentialMat(
 					prev_left_points, curr_left_points,
 					camera_ptr_->M1,
@@ -187,9 +186,7 @@ namespace BaseSLAM {
 
 			}
 
-
 //			addNewFrameIsam(curr_left_key_points_, pre_points_selected, current_index_);
-
 			std::cout << "count out mask:" << count_out_mask << std::endl;
 
 
@@ -214,21 +211,14 @@ namespace BaseSLAM {
 					                         config_ptr_->get<int>("VO.LK.track_precision")
 			                         )
 			);
-            
-            
-
 
 			// Add new features to left image.
 			detector_ptr_->detect(*(data.get_left_image()), curr_left_key_points_, false);
-
-
 
 			//draw features
 
 
 		}
-
-
 		std::swap(prev_left_pyramid_, curr_left_pyramid_);
 		std::swap(prev_right_pyramid_, curr_right_pyramid_);
 
@@ -236,16 +226,9 @@ namespace BaseSLAM {
 		std::swap(prev_right_key_points_, curr_right_key_points_);
 		curr_left_key_points_.clear();
 		curr_right_key_points_.clear();
-
-
 //		*latest_frame_ptr_ = current_frame;
-
-
 		current_index_++;
-
-
 	}
-
 
 	void StereoVO::initial_isam() {
 		// initial isam
