@@ -214,7 +214,8 @@ namespace BaseSLAM {
 					                         config_ptr_->get<int>("VO.LK.track_precision")
 			                         )
 			);
-
+            
+            
 
 
 			// Add new features to left image.
