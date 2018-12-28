@@ -34,6 +34,7 @@ int main(int argc, char** argv )
 	try{
 
 		namedWindow("Display Image", WINDOW_AUTOSIZE );
+
 		cv::Mat tmp_mat(1000,1000,0,cv::Scalar(200));
 
 		for(int i(100);i<900;++i){
