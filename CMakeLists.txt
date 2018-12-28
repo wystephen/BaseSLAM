@@ -22,7 +22,6 @@ endif (CCACHE_FOUND)
 find_package(Eigen3 REQUIRED)
 
 
-
 #BLAS speed up library.
 find_package(BLAS)
 find_package(LAPACK)
@@ -97,6 +96,9 @@ target_link_libraries(image_gradient_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 add_executable(feature_extractor_test tester/FeatureExtractorTest.cpp)
 target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+
+add_executable(aruco_slam_tester tester/ArucoSLAMTester.cpp)
+target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${Boost_LIBRARIES} ${GTSAM_LIBRARIES})
 ####################################
 #MAIN EXEC
 ####################################
