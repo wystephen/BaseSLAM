@@ -97,7 +97,7 @@ add_executable(feature_extractor_test tester/FeatureExtractorTest.cpp)
 target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
-add_executable(aruco_slam_tester tester/ArucoSLAMTester.cpp)
+add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp)
 target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${Boost_LIBRARIES} ${GTSAM_LIBRARIES})
 ####################################
 #MAIN EXEC
