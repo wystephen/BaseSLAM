@@ -118,6 +118,8 @@ int main() {
 			std::cout << "finished" << std::endl;
 			break;
 		}
+
+
 //		std::cout << "readed image" << std::endl;
 //		cv::imshow("show left",*(data->left_img_ptr_));
 //		cv::imshow("show right", *(data->right_img_ptr_));
