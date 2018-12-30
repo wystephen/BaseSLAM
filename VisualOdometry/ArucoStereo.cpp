@@ -89,13 +89,13 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		if (ids.size() > 0) {
 
 
-			printf("time index: %d before insert",time_index);
+			printf("time index: %d before insert\n",time_index);
 
 			// central points
 			if (estimate_values_.find(gtsam::Symbol('x', time_index)) == estimate_values_.end() &&
 			    ingraph_values_.find(gtsam::Symbol('x', time_index)) == ingraph_values_.end()
 					) {
-				printf("into add points:%d", time_index);
+				printf("\ninto add points:%d", time_index);
 				//this symbol haven't been added.
 				estimate_values_.insert<gtsam::Pose3>(
 						gtsam::Symbol('x', time_index),
@@ -142,6 +142,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				if(estimate_values_.find(gtsam::Symbol('m',dict_index*dic_offset+ids[k]))==estimate_values_.end() &&
 				ingraph_values_.find(gtsam::Symbol('m',dict_index+dic_offset+ids[k])) == ingraph_values_.end()
 				){
+					printf("add m %d", dict_index*dic_offset+ids[k]);
 					estimate_values_.insert<gtsam::Pose3>(
 							gtsam::Symbol('m',dict_index*dic_offset+ids[k]),
 							gtsam::Pose3(Eigen::Matrix4d::Identity())
