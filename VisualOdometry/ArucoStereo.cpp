@@ -7,8 +7,11 @@
 
 ArucoStereo::ArucoStereo() {
 	aruco_parameters_ = cv::aruco::DetectorParameters::create();
-	dictionary_vec_.push_back(cv::aruco::getPredefinedDictionary(
-			cv::aruco::DICT_4X4_100));
+//	dictionary_vec_.push_back(cv::aruco::getPredefinedDictionary(
+//			cv::aruco::DICT_4X4_100));
+	dic_length_vec_.push_back(0.3);
+
+	add_dictionary(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_100), 0.3);
 
 	isam2_parameters_ = gtsam::ISAM2Params();
 	isam2_ = gtsam::ISAM2(isam2_parameters_);
@@ -51,20 +54,23 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 //					)
 
 
-			std::vector<cv::Vec3d> rvecs, tvecs;
+
 			try {
-				cv::aruco::estimatePoseSingleMarkers(image,
+				std::vector<cv::Vec3d> rvecs, tvecs;
+				cv::aruco::estimatePoseSingleMarkers(corners,
 				                                     dic_length_vec_.at(dict_index),
 				                                     cameraMatrix_vec_[camera_id],
 				                                     cameraCoeffs_vec_[camera_id],
 				                                     rvecs, tvecs);
+
 				for (int i = 0; i < ids.size(); ++i) {
 					cv::aruco::drawAxis(drawed_img,
 					                    cameraMatrix_vec_[camera_id],
 					                    cameraCoeffs_vec_[camera_id],
-					                    rvecs[i], tvecs[i], 0.1);
+					                    rvecs[i], tvecs[i], 0.3);
 				}
 			} catch (std::exception &e) {
+//				printf("rvecs size:%d tvecs size:%d corners size:%d\n", rvecs.size(), tvecs.size(), corners.size());
 				std::cerr << e.what() << std::endl;
 			}
 

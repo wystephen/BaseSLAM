@@ -14,6 +14,7 @@
 #include <Eigen/Geometry>
 
 
+
 int main() {
 
 	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco003.list";
@@ -40,7 +41,7 @@ int main() {
 	right_file.open(right_cam_file, cv::FileStorage::READ);
 	pose_file.open(pose_cam_file, cv::FileStorage::READ);
 
-	cv::Mat left_cam_matrix(3, 3, CV_32F);// =
+	cv::Mat left_cam_matrix;//(3, 3, CV_32F);// =
 	cv::Mat left_coeff(1, 5, CV_32F);// =
 	cv::Mat right_cam_matrix(3, 3, CV_32F);
 	cv::Mat right_coeff(1, 5, CV_32F);//
@@ -52,11 +53,29 @@ int main() {
 		return 1;
 	} else {
 //		for(auto it = left_file.getFirstTopLevelNode().begin())
-//std::cout << left_file["camera_matrix"].name() << std::endl;
-		(left_file["camera_matrix"]) >> left_cam_matrix;
-		(left_file["distortion_coefficients"]) >> left_coeff;
-	}
+//		for(auto it = left_file.getFirstTopLevelNode().begin();it != left_file.getFirstTopLevelNode().end();++it){
+//			std::cout << "it:"<< it->name()<< std::endl;
+//		}
 
+	cv::FileNode node = left_file["camera_matrix"];
+	if(node.isNone()){
+		std::cout << "node not exist" << std::endl;
+	}else{
+
+
+//		std::cout << node["data"] << std::endl;
+//		std::cout << left_file.operator[]("camera_matrix")["data"].name();
+//		left_cam_matrix = (cv::Mat) node;
+	}
+	std::string cam_name = "";
+	left_file["camera_name"] >> cam_name;
+	std::cout << "camera name:" << cam_name << std::endl;
+
+//std::cout << left_file["camera_matrix"].name() << std::endl;
+
+		left_file["rectification_matrix"]["data"] >> left_cam_matrix;
+		left_file["distortion_coefficients"] >> left_coeff;
+	}
 
 	if (!left_file.isOpened()) {
 		fprintf(stderr, "%s:%d:loadParams falied. 'right camera.yml' does not exist\n", __FILE__, __LINE__);
