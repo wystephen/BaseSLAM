@@ -89,7 +89,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		if (ids.size() > 0) {
 
 
-			printf("time index: %d before insert\n",time_index);
+			printf("time index: %d before insert\n", time_index);
 
 			// central points
 			if (estimate_values_.find(gtsam::Symbol('x', time_index)) == estimate_values_.end() &&
@@ -133,37 +133,37 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 								(gtsam::Vector(6) << 0.01, 0.01, 0.01, 0.05, 0.05, 0.05).finished()));
 
 
-				valid_pose_vec_.push_back(gtsam::Symbol('x',time_index));
+				valid_pose_vec_.push_back(gtsam::Symbol('x', time_index));
 			}
 
 
 			// add observated marker to
-			for(int k=0;k<ids.size();++k){
-				if(estimate_values_.find(gtsam::Symbol('m',dict_index*dic_offset+ids[k]))==estimate_values_.end() &&
-				ingraph_values_.find(gtsam::Symbol('m',dict_index+dic_offset+ids[k])) == ingraph_values_.end()
-				){
-					printf("add m %d", dict_index*dic_offset+ids[k]);
+			for (int k = 0; k < ids.size(); ++k) {
+				if (!estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) &&
+				    !ingraph_values_.exists(gtsam::Symbol('m', dict_index + dic_offset + ids[k]))
+						) {
+					printf("\nadd m %d", dict_index * dic_offset + ids[k]);
 					estimate_values_.insert<gtsam::Pose3>(
-							gtsam::Symbol('m',dict_index*dic_offset+ids[k]),
+							gtsam::Symbol('m', dict_index * dic_offset + ids[k]),
 							gtsam::Pose3(Eigen::Matrix4d::Identity())
-							);
+					);
 				}
 
 				//add between constraint
-				Eigen::Isometry3d t_m = rt2Matrix(rvecs[k],tvecs[k]);
+				Eigen::Isometry3d t_m = rt2Matrix(rvecs[k], tvecs[k]);
 
-				for(int i=0;i<3;i++){
-					t_m(i,3) = tvecs[k][i];
+				for (int i = 0; i < 3; i++) {
+					t_m(i, 3) = tvecs[k][i];
 				}
 
 				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
-						gtsam::Symbol('c',camera_id*cam_offset+time_index),
-						gtsam::Symbol('m',dict_index*dic_offset+ids[k]),
+						gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						gtsam::Symbol('m', dict_index * dic_offset + ids[k]),
 						gtsam::Pose3(t_m.matrix()),
 						gtsam::noiseModel::Isotropic::Sigmas(
-								(gtsam::Vector(6)<<0.1,0.1,0.1,0.05,0.05,0.05).finished()
-								)
-						);
+								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
+						)
+				);
 
 			}
 
