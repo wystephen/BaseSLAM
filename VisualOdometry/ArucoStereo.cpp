@@ -89,7 +89,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		if (ids.size() > 0) {
 
 
-			printf("time index: %d before insert\n", time_index);
+//			printf("time index: %d before insert\n", time_index);
 
 			// central points
 			if (estimate_values_.find(gtsam::Symbol('x', time_index)) == estimate_values_.end() &&
@@ -110,7 +110,6 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 					);
 					added_first_prior_ = true;
 				}
-
 
 			}
 
@@ -139,14 +138,27 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 			// add observated marker to
 			for (int k = 0; k < ids.size(); ++k) {
-				if (!estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) &&
-				    !ingraph_values_.exists(gtsam::Symbol('m', dict_index + dic_offset + ids[k]))
+				if ((estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == false) &&
+				    (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == false)
 						) {
 					printf("\nadd m %d", dict_index * dic_offset + ids[k]);
+					printf("\n estimate exists:%d, isam2 exist:%d",
+					       (estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == true) ,
+					       (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == ture)
+					       );
+
 					estimate_values_.insert<gtsam::Pose3>(
 							gtsam::Symbol('m', dict_index * dic_offset + ids[k]),
 							gtsam::Pose3(Eigen::Matrix4d::Identity())
 					);
+
+					printf("\n AFTER estimate exists:%d, isam2 exist:%d",
+					       (estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == true) ,
+					       (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == ture)
+					       );
+
+					auto flag = estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k]));
+					printf("\n id:%d", flag);
 				}
 
 				//add between constraint

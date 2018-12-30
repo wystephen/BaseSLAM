@@ -91,6 +91,7 @@ public:
 //			std::cout << "id pose:" << pose.pr
 
 			ingraph_values_ = isam2_.calculateEstimate();
+//			ingraph_values_ = isam2_.va
 
 			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size()-1));
 			pose.print("pose");
