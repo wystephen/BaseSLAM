@@ -30,13 +30,17 @@ public:
 	ArucoStereo();
 
 
+	bool add_new_image(cv::Mat image, int time_index, int camera_id);
+
 	/**
 	 * @brief add new dictionary to dictionary_vec_
 	 * @param dic
+	 * @param marker_size : 0.3m (for default).
 	 * @return
 	 */
-	bool add_dictionary(cv::Ptr<cv::aruco::Dictionary> dic) {
+	bool add_dictionary(cv::Ptr<cv::aruco::Dictionary> dic, double marker_size=0.3) {
 		dictionary_vec_.push_back(dic);
+		dic_length_vec_.push_back(marker_size);
 
 		return true;
 	}
@@ -47,9 +51,31 @@ public:
 
 	}
 
+
+	bool add_camera(cv::Mat cameraMatrix, cv::Mat coeffs, gtsam::Pose3 pose, int cam_id) {
+
+		std::cout << "added cam id:" << cam_id << " and vec size is:" << cameraMatrix.size() << std::endl;
+		cv::Mat cam_matrix, cam_coe;
+		cameraMatrix.copyTo(cam_matrix);
+		coeffs.copyTo(coeffs);
+		cameraMatrix_vec_.push_back(cam_matrix);
+		cameraCoeffs_vec_.push_back(coeffs);
+		cameraPose_vec_.push_back(pose);
+		assert(cameraPose_vec_.size() == cameraCoeffs_vec_.size() &&
+		       cameraCoeffs_vec_.size() == cameraPose_vec_.size());
+		return true;
+	}
+
+
+	//cv related
+	std::vector<cv::Mat> cameraMatrix_vec_;
+	std::vector<cv::Mat> cameraCoeffs_vec_;
+	std::vector<gtsam::Pose3> cameraPose_vec_;
+
 	// aruco related
 	cv::Ptr<cv::aruco::DetectorParameters> aruco_parameters_;
 	std::vector<cv::Ptr<cv::aruco::Dictionary>> dictionary_vec_;//! dictionary should be check in location process.
+	std::vector<double> dic_length_vec_;
 
 	//gtsam related
 	gtsam::ISAM2Params isam2_parameters_;
@@ -57,8 +83,6 @@ public:
 
 	gtsam::NonlinearFactorGraph graph_ = gtsam::NonlinearFactorGraph();
 	gtsam::Values estimate_values_ = gtsam::Values();
-
-
 
 
 };

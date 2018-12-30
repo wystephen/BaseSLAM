@@ -4,11 +4,11 @@ project(BaseSLAM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TOOL Release)
 
-#set(MKLROOT "/opt/intel/mkl/")
+set(MKLROOT "/opt/intel/mkl/")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g  -lpthread -fopenmp -mavx -mfma ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-lopencv_line_descriptor -lopencv_optflow -lopencv_plot  -lopencv_stereo   -lopencv_xfeatures2d  -lopencv_calib3d -lopencv_features2d ")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -m64 -I${MKLROOT}/include ")
 
 # CCACHE
@@ -48,7 +48,7 @@ include_directories(${OpenCV_INCLUDE_DIRS}
 					${Boost_INCLUDE_DIRS}
 					${Eigen_INCLUDE_DIRS}
 
-					/opt/intel/mkl/include
+#					/opt/intel/mkl/include
 
 					./
 
@@ -68,6 +68,10 @@ link_directories(
 #target_link_libraries(
 #
 #)
+
+aux_source_directory(
+		 ./VisualOdometry SRC_FILES
+)
 
 
 ############################################################
@@ -97,7 +101,7 @@ add_executable(feature_extractor_test tester/FeatureExtractorTest.cpp)
 target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
-add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp)
+add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp )#//${SRC_FILES})
 target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${Boost_LIBRARIES} ${GTSAM_LIBRARIES})
 ####################################
 #MAIN EXEC
