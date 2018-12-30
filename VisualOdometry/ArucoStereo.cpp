@@ -124,8 +124,8 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
 
-						gtsam::Symbol('x', time_index),
 						gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						gtsam::Symbol('x', time_index),
 						cameraPose_vec_[camera_id],
 						gtsam::noiseModel::Isotropic::Sigmas(
 								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()

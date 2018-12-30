@@ -141,7 +141,7 @@ int main() {
 		cv::imshow("right", right_img);
 
 		arucoStereo.add_new_image(left_img, index_counter, 0);
-//		arucoStereo.add_new_image(right_img, index_counter, 1);
+		arucoStereo.add_new_image(right_img, index_counter, 1);
 
 		arucoStereo.refresh_isam();
 
@@ -151,9 +151,23 @@ int main() {
 
 
 		index_counter++;
-		cv::waitKey(10);
+		cv::waitKey(1);
 
 
+	}
+
+
+	std::ofstream final_pose_file;
+	final_pose_file.open("/home/steve/temp/final_pose.csv");
+	auto final_value = arucoStereo.isam2_.calculateBestEstimate();
+	for (int i = 1; i < arucoStereo.valid_pose_vec_.size(); ++i) {
+
+		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
+	}
+	for (int i = 1; i < arucoStereo.valid_pose_vec_.size(); ++i) {
+		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
+		auto p = final_value.at<gtsam::Pose3>(arucoStereo.valid_pose_vec_[i]);
+		final_pose_file << p.x() << "," << p.y() << "," << p.z() << std::endl;
 	}
 
 
