@@ -47,9 +47,6 @@ include_directories(${OpenCV_INCLUDE_DIRS}
 					${GTSAM_INCLUDE_DIR}
 					${Boost_INCLUDE_DIRS}
 					${Eigen_INCLUDE_DIRS}
-
-#					/opt/intel/mkl/include
-
 					./
 
 					)
@@ -70,7 +67,7 @@ link_directories(
 #)
 
 aux_source_directory(
-		 ./VisualOdometry SRC_FILES
+		./VisualOdometry SRC_FILES
 )
 
 
@@ -101,8 +98,13 @@ add_executable(feature_extractor_test tester/FeatureExtractorTest.cpp)
 target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
-add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp )#//${SRC_FILES})
+add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp)#//${SRC_FILES})
 target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${Boost_LIBRARIES} ${GTSAM_LIBRARIES})
+
+add_executable(config_file_reader_test tester/config_file_reader_test.cpp)
+target_link_libraries(config_file_reader_test
+					  ${OpenCV_LIBS}
+					  )
 ####################################
 #MAIN EXEC
 ####################################
