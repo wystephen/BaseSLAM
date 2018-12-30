@@ -7,8 +7,8 @@
 
 ArucoStereo::ArucoStereo() {
 	aruco_parameters_ = cv::aruco::DetectorParameters::create();
-//	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_APRILTAG;
-	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_SUBPIX;
+	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_APRILTAG;//BEST ACCURACY in testing.
+//	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_CONTOUR;
 
 
 
@@ -38,7 +38,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		auto dict = dictionary_vec_.at(dict_index);
 		std::vector<int> ids;
 		std::vector<std::vector<cv::Point2f>> corners;
-
+		std::vector<cv::Vec3d> rvecs, tvecs;
 		cv::aruco::detectMarkers(
 				image, dict, corners, ids, aruco_parameters_, cv::noArray(),
 				cameraMatrix_vec_[camera_id],
@@ -56,7 +56,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 
 			try {
-				std::vector<cv::Vec3d> rvecs, tvecs;
+
 				cv::aruco::estimatePoseSingleMarkers(corners,
 				                                     dic_length_vec_.at(dict_index),
 				                                     cameraMatrix_vec_[camera_id],
@@ -83,6 +83,10 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		cv::imshow("aruco_detector dict id:" + std::to_string(dict_index)
 		           + "camera id:" + std::to_string(camera_id),
 		           drawed_img);
+
+		// add constraint based on current dictionary.
+
+
 
 	}
 

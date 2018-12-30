@@ -52,6 +52,14 @@ public:
 	}
 
 
+	/**
+	 * @brief Add camera to positioning system.
+	 * @param cameraMatrix
+	 * @param coeffs
+	 * @param pose
+	 * @param cam_id
+	 * @return
+	 */
 	bool add_camera(cv::Mat cameraMatrix, cv::Mat coeffs, gtsam::Pose3 pose, int cam_id) {
 
 		std::cout << "added cam id:" << cam_id << " and vec size is:" << cameraMatrix.size() << std::endl;
@@ -64,6 +72,19 @@ public:
 		assert(cameraPose_vec_.size() == cameraCoeffs_vec_.size() &&
 		       cameraCoeffs_vec_.size() == cameraPose_vec_.size());
 		return true;
+	}
+
+	bool refresh_isam(){
+		if(graph_.size()>0 || estimate_values_.size()>0){
+			isam2_.update(graph_,estimate_values_);
+
+
+			graph_ = gtsam::NonlinearFactorGraph();
+			estimate_values_ = gtsam::Values();
+
+			ingraph_values_ = isam2_.calculateEstimate();
+
+		}
 	}
 
 
@@ -83,6 +104,7 @@ public:
 
 	gtsam::NonlinearFactorGraph graph_ = gtsam::NonlinearFactorGraph();
 	gtsam::Values estimate_values_ = gtsam::Values();
+	gtsam::Values ingraph_values_ = gtsam::Values();
 
 
 };
