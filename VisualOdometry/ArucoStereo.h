@@ -77,16 +77,20 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief add
+	 * @return
+	 */
 	bool refresh_isam(){
 		if(!added_first_prior_){
 			return false;
 		}
 		if(graph_.size()>0 || estimate_values_.size()>0){
 			isam2_.update(graph_,estimate_values_);
+			isam2_.update();
 
 
-			graph_ = gtsam::NonlinearFactorGraph();
-			estimate_values_ = gtsam::Values();
+
 
 //			std::cout << "id pose:" << pose.pr
 
@@ -95,6 +99,9 @@ public:
 
 			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size()-1));
 			pose.print("pose");
+
+			graph_.resize(0);//gtsam::NonlinearFactorGraph();
+			estimate_values_.clear();// = gtsam::Values();
 			return true;
 
 		}

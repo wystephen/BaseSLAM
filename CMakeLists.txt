@@ -99,7 +99,7 @@ target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
 add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp)#//${SRC_FILES})
-target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${Boost_LIBRARIES} ${GTSAM_LIBRARIES})
+target_link_libraries(aruco_slam_tester ${OpenCV_LIBS}  ${GTSAM_LIBRARIES})
 
 add_executable(config_file_reader_test tester/config_file_reader_test.cpp)
 target_link_libraries(config_file_reader_test

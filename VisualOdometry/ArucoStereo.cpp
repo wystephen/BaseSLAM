@@ -138,27 +138,21 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 			// add observated marker to
 			for (int k = 0; k < ids.size(); ++k) {
-				if ((estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == false) &&
-				    (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == false)
-						) {
-					printf("\nadd m %d", dict_index * dic_offset + ids[k]);
-					printf("\n estimate exists:%d, isam2 exist:%d",
-					       (estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == true) ,
-					       (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == ture)
-					       );
+
+				int current_marker_id = dict_index * dic_offset + ids[k];
+
+
+				if ((estimate_values_.exists(gtsam::Symbol('m', current_marker_id)) == false) and
+				    (isam2_.valueExists(gtsam::Symbol('m', current_marker_id)) == false)) {
+
+					printf("\n added marker id:%d", current_marker_id);
 
 					estimate_values_.insert<gtsam::Pose3>(
-							gtsam::Symbol('m', dict_index * dic_offset + ids[k]),
+							gtsam::Symbol('m', current_marker_id),
 							gtsam::Pose3(Eigen::Matrix4d::Identity())
 					);
 
-					printf("\n AFTER estimate exists:%d, isam2 exist:%d",
-					       (estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k])) == true) ,
-					       (isam2_.valueExists(gtsam::Symbol('m', dict_index + dic_offset + ids[k])) == ture)
-					       );
 
-					auto flag = estimate_values_.exists(gtsam::Symbol('m', dict_index * dic_offset + ids[k]));
-					printf("\n id:%d", flag);
 				}
 
 				//add between constraint
@@ -169,8 +163,9 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				}
 
 				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
+
+						gtsam::Symbol('m', current_marker_id),
 						gtsam::Symbol('c', camera_id * cam_offset + time_index),
-						gtsam::Symbol('m', dict_index * dic_offset + ids[k]),
 						gtsam::Pose3(t_m.matrix()),
 						gtsam::noiseModel::Isotropic::Sigmas(
 								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
