@@ -124,12 +124,14 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
 
-						gtsam::Symbol('c', camera_id * cam_offset + time_index),
 						gtsam::Symbol('x', time_index),
+						gtsam::Symbol('c', camera_id * cam_offset + time_index),
 						cameraPose_vec_[camera_id],
-						gtsam::noiseModel::Isotropic::Sigmas(
-								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
-						)
+//						gtsam::noiseModel::Isotropic::Sigmas(
+//								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
+//						)
+
+						gtsam::noiseModel::Constrained::Sigmas((gtsam::Vector(6) << 0, 0, 0, 0, 0, 0).finished())
 				);
 
 
@@ -166,9 +168,9 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 							gtsam::Symbol('m', current_marker_id),
 							gtsam::Pose3(t_m.matrix()),
 							gtsam::noiseModel::Robust::Create(
-									gtsam::noiseModel::mEstimator::Huber::Create(1.345),
+									gtsam::noiseModel::mEstimator::Huber::Create(0.5),
 									gtsam::noiseModel::Isotropic::Sigmas(
-											(gtsam::Vector(6) << 0.01, 0.01, 0.01, 0.05, 0.05, 0.05).finished()
+											(gtsam::Vector(6) << 0.1, 0.1, 0.1, 1.0/180.0*M_PI, 1.0/180.0*M_PI, 1.0/180.0*M_PI).finished()
 									)
 							)
 					);

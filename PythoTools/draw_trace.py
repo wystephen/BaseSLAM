@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 if __name__ == '__main__':
-	pose = np.loadtxt('/home/steve/temp/final_pose.csv', delimiter=',')
-	# pose = np.loadtxt('/home/steve/temp/pose.csv', delimiter=',')
+	# pose = np.loadtxt('/home/steve/temp/final_pose.csv', delimiter=',')
+	pose = np.loadtxt('/home/steve/temp/pose.csv', delimiter=',')
 
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
