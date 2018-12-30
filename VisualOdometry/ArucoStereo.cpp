@@ -84,8 +84,89 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		           + "camera id:" + std::to_string(camera_id),
 		           drawed_img);
 
-		// add constraint based on current dictionary.
 
+		// add constraint based on current dictionary.
+		if (ids.size() > 0) {
+
+
+			printf("time index: %d before insert",time_index);
+
+			// central points
+			if (estimate_values_.find(gtsam::Symbol('x', time_index)) == estimate_values_.end() &&
+			    ingraph_values_.find(gtsam::Symbol('x', time_index)) == ingraph_values_.end()
+					) {
+				printf("into add points:%d", time_index);
+				//this symbol haven't been added.
+				estimate_values_.insert<gtsam::Pose3>(
+						gtsam::Symbol('x', time_index),
+						gtsam::Pose3(Eigen::Matrix4d::Identity())
+				);
+
+				if (!added_first_prior_) {
+					graph_.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+							gtsam::Symbol('x', time_index),
+							gtsam::Pose3(Eigen::Matrix4d::Identity()),
+							gtsam::noiseModel::Isotropic::Sigma(6, 0.1)
+					);
+					added_first_prior_ = true;
+				}
+
+
+			}
+
+			//first dictionary. so add camera id and camera to central constraint
+			if (estimate_values_.find(gtsam::Symbol('c', camera_id * cam_offset + time_index)) ==
+			    estimate_values_.end() &&
+			    ingraph_values_.find(gtsam::Symbol('c', camera_id * cam_offset + time_index)) ==
+			    ingraph_values_.end()) {
+
+				estimate_values_.insert<gtsam::Pose3>(
+						gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						gtsam::Pose3(Eigen::Matrix4d::Identity())
+				);
+
+				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
+
+						gtsam::Symbol('x', time_index), gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						cameraPose_vec_[camera_id],
+						gtsam::noiseModel::Isotropic::Sigmas(
+								(gtsam::Vector(6) << 0.01, 0.01, 0.01, 0.05, 0.05, 0.05).finished()));
+
+
+				valid_pose_vec_.push_back(gtsam::Symbol('x',time_index));
+			}
+
+
+			// add observated marker to
+			for(int k=0;k<ids.size();++k){
+				if(estimate_values_.find(gtsam::Symbol('m',dict_index*dic_offset+ids[k]))==estimate_values_.end() &&
+				ingraph_values_.find(gtsam::Symbol('m',dict_index+dic_offset+ids[k])) == ingraph_values_.end()
+				){
+					estimate_values_.insert<gtsam::Pose3>(
+							gtsam::Symbol('m',dict_index*dic_offset+ids[k]),
+							gtsam::Pose3(Eigen::Matrix4d::Identity())
+							);
+				}
+
+				//add between constraint
+				Eigen::Isometry3d t_m = rt2Matrix(rvecs[k],tvecs[k]);
+
+				for(int i=0;i<3;i++){
+					t_m(i,3) = tvecs[k][i];
+				}
+
+				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
+						gtsam::Symbol('c',camera_id*cam_offset+time_index),
+						gtsam::Symbol('m',dict_index*dic_offset+ids[k]),
+						gtsam::Pose3(t_m.matrix()),
+						gtsam::noiseModel::Isotropic::Sigmas(
+								(gtsam::Vector(6)<<0.1,0.1,0.1,0.05,0.05,0.05).finished()
+								)
+						);
+
+			}
+
+		}
 
 
 	}

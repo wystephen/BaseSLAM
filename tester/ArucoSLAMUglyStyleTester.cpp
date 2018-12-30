@@ -143,6 +143,8 @@ int main() {
 		arucoStereo.add_new_image(left_img, index_counter, 0);
 		arucoStereo.add_new_image(right_img, index_counter, 1);
 
+		arucoStereo.refresh_isam();
+
 
 
 //		arucoStereo.add_new_image(img, index_counter);

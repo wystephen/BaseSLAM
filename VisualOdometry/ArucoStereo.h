@@ -22,6 +22,9 @@
 #include <gtsam/slam/ProjectionFactor.h>
 #include <gtsam_unstable/slam/PoseBetweenFactor.h>
 
+
+#include <util/UtilTools.h>
+
 class ArucoStereo {
 public:
 	/**
@@ -75,6 +78,9 @@ public:
 	}
 
 	bool refresh_isam(){
+		if(!added_first_prior_){
+			return false;
+		}
 		if(graph_.size()>0 || estimate_values_.size()>0){
 			isam2_.update(graph_,estimate_values_);
 
@@ -82,9 +88,16 @@ public:
 			graph_ = gtsam::NonlinearFactorGraph();
 			estimate_values_ = gtsam::Values();
 
+//			std::cout << "id pose:" << pose.pr
+
 			ingraph_values_ = isam2_.calculateEstimate();
 
+			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size()-1));
+			pose.print("pose");
+			return true;
+
 		}
+
 	}
 
 
@@ -105,6 +118,17 @@ public:
 	gtsam::NonlinearFactorGraph graph_ = gtsam::NonlinearFactorGraph();
 	gtsam::Values estimate_values_ = gtsam::Values();
 	gtsam::Values ingraph_values_ = gtsam::Values();
+
+	bool added_first_prior_ = false;
+
+	int cam_offset = 100000000;
+	int dic_offset = 100000000;
+
+
+	std::vector<gtsam::Symbol> valid_pose_vec_;
+
+
+//	gtsam::NoiseModel
 
 
 };
