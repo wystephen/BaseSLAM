@@ -3,7 +3,7 @@
 //
 
 #include "ArucoStereo.h"
-
+#include <fstream>
 
 ArucoStereo::ArucoStereo() {
 	aruco_parameters_ = cv::aruco::DetectorParameters::create();
@@ -11,6 +11,7 @@ ArucoStereo::ArucoStereo() {
 //	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_CONTOUR;
 
 
+	out_pose_file.open("/home/steve/temp/pose.csv", std::ios_base::out);
 
 	dic_length_vec_.push_back(0.3);
 
@@ -88,13 +89,10 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		// add constraint based on current dictionary.
 		if (ids.size() > 0) {
 
+			// center points
+			if (!(estimate_values_.exists(gtsam::Symbol('x', time_index))) and
+			    !(isam2_.valueExists(gtsam::Symbol('x', time_index)))) {
 
-//			printf("time index: %d before insert\n", time_index);
-
-			// central points
-			if (estimate_values_.find(gtsam::Symbol('x', time_index)) == estimate_values_.end() &&
-			    ingraph_values_.find(gtsam::Symbol('x', time_index)) == ingraph_values_.end()
-					) {
 				printf("\ninto add points:%d", time_index);
 				//this symbol haven't been added.
 				estimate_values_.insert<gtsam::Pose3>(
@@ -102,11 +100,12 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 						gtsam::Pose3(Eigen::Matrix4d::Identity())
 				);
 
+				// add constraint for first pose
 				if (!added_first_prior_) {
 					graph_.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
 							gtsam::Symbol('x', time_index),
 							gtsam::Pose3(Eigen::Matrix4d::Identity()),
-							gtsam::noiseModel::Isotropic::Sigma(6, 0.1)
+							gtsam::noiseModel::Constrained::Sigmas((gtsam::Vector(6) << 0, 0, 0, 0, 0, 0).finished())
 					);
 					added_first_prior_ = true;
 				}
@@ -114,22 +113,24 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 			}
 
 			//first dictionary. so add camera id and camera to central constraint
-			if (estimate_values_.find(gtsam::Symbol('c', camera_id * cam_offset + time_index)) ==
-			    estimate_values_.end() &&
-			    ingraph_values_.find(gtsam::Symbol('c', camera_id * cam_offset + time_index)) ==
-			    ingraph_values_.end()) {
+			int current_cam_id = camera_id * cam_offset + time_index;
+			if (!(estimate_values_.exists(gtsam::Symbol('c', current_cam_id))) &&
+			    !(isam2_.valueExists(gtsam::Symbol('c', current_cam_id)))) {
 
 				estimate_values_.insert<gtsam::Pose3>(
-						gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						gtsam::Symbol('c', current_cam_id),
 						gtsam::Pose3(Eigen::Matrix4d::Identity())
 				);
 
 				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
 
-						gtsam::Symbol('x', time_index), gtsam::Symbol('c', camera_id * cam_offset + time_index),
+						gtsam::Symbol('x', time_index),
+						gtsam::Symbol('c', camera_id * cam_offset + time_index),
 						cameraPose_vec_[camera_id],
 						gtsam::noiseModel::Isotropic::Sigmas(
-								(gtsam::Vector(6) << 0.01, 0.01, 0.01, 0.05, 0.05, 0.05).finished()));
+								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
+						)
+				);
 
 
 				valid_pose_vec_.push_back(gtsam::Symbol('x', time_index));
@@ -145,7 +146,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				if ((estimate_values_.exists(gtsam::Symbol('m', current_marker_id)) == false) and
 				    (isam2_.valueExists(gtsam::Symbol('m', current_marker_id)) == false)) {
 
-					printf("\n added marker id:%d", current_marker_id);
+//					printf("\n added marker id:%d", current_marker_id);
 
 					estimate_values_.insert<gtsam::Pose3>(
 							gtsam::Symbol('m', current_marker_id),
@@ -158,20 +159,22 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				//add between constraint
 				Eigen::Isometry3d t_m = rt2Matrix(rvecs[k], tvecs[k]);
 
-				for (int i = 0; i < 3; i++) {
-					t_m(i, 3) = tvecs[k][i];
+				if (abs(tvecs[k][0]) + abs(tvecs[k][1]) + abs(tvecs[k][2]) < 10.0) {
+					printf("\ncam id:%d constrained.", current_cam_id);
+					graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
+							gtsam::Symbol('c', current_cam_id),
+							gtsam::Symbol('m', current_marker_id),
+							gtsam::Pose3(t_m.matrix()),
+							gtsam::noiseModel::Robust::Create(
+									gtsam::noiseModel::mEstimator::Huber::Create(1.345),
+									gtsam::noiseModel::Isotropic::Sigmas(
+											(gtsam::Vector(6) << 0.01, 0.01, 0.01, 0.05, 0.05, 0.05).finished()
+									)
+							)
+					);
+
+
 				}
-
-				graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
-
-						gtsam::Symbol('m', current_marker_id),
-						gtsam::Symbol('c', camera_id * cam_offset + time_index),
-						gtsam::Pose3(t_m.matrix()),
-						gtsam::noiseModel::Isotropic::Sigmas(
-								(gtsam::Vector(6) << 0.1, 0.1, 0.1, 0.05, 0.05, 0.05).finished()
-						)
-				);
-
 			}
 
 		}

@@ -28,7 +28,7 @@
 
 int main() {
 
-	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco002.list";
+	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco001.list";
 	std::fstream list_file_stream(list_file_name);
 
 
@@ -141,7 +141,7 @@ int main() {
 		cv::imshow("right", right_img);
 
 		arucoStereo.add_new_image(left_img, index_counter, 0);
-		arucoStereo.add_new_image(right_img, index_counter, 1);
+//		arucoStereo.add_new_image(right_img, index_counter, 1);
 
 		arucoStereo.refresh_isam();
 

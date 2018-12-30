@@ -94,11 +94,12 @@ public:
 
 //			std::cout << "id pose:" << pose.pr
 
-			ingraph_values_ = isam2_.calculateEstimate();
+			ingraph_values_ = isam2_.calculateBestEstimate();
 //			ingraph_values_ = isam2_.va
 
 			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size()-1));
-			pose.print("pose");
+//			pose.print("pose");
+			out_pose_file << pose.x() << "," <<pose.y() << "," <<pose.z() << std::endl;
 
 			graph_.resize(0);//gtsam::NonlinearFactorGraph();
 			estimate_values_.clear();// = gtsam::Values();
@@ -136,7 +137,8 @@ public:
 	std::vector<gtsam::Symbol> valid_pose_vec_;
 
 
-//	gtsam::NoiseModel
+	//for save data
+	std::fstream out_pose_file;
 
 
 };
