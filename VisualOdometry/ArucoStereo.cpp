@@ -7,8 +7,11 @@
 
 ArucoStereo::ArucoStereo() {
 	aruco_parameters_ = cv::aruco::DetectorParameters::create();
-//	dictionary_vec_.push_back(cv::aruco::getPredefinedDictionary(
-//			cv::aruco::DICT_4X4_100));
+//	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_APRILTAG;
+	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_SUBPIX;
+
+
+
 	dic_length_vec_.push_back(0.3);
 
 	add_dictionary(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_100), 0.3);
@@ -37,7 +40,9 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		std::vector<std::vector<cv::Point2f>> corners;
 
 		cv::aruco::detectMarkers(
-				image, dict, corners, ids, aruco_parameters_
+				image, dict, corners, ids, aruco_parameters_, cv::noArray(),
+				cameraMatrix_vec_[camera_id],
+				cameraCoeffs_vec_[camera_id]
 		);
 
 		cv::Mat drawed_img;
@@ -48,11 +53,6 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 			cv::aruco::drawDetectedMarkers(drawed_img,
 			                               corners,
 			                               ids);
-
-//TODO:			cv::aruco::refineDetectedMarkers(
-//					image,
-//					)
-
 
 
 			try {
