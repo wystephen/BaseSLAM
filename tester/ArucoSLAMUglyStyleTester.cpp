@@ -28,7 +28,7 @@
 
 int main() {
 
-	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco002.list";
+	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco003.list";
 	std::fstream list_file_stream(list_file_name);
 
 
