@@ -38,7 +38,7 @@ ArucoStereo::ArucoStereo() {
 //				new g2o::OptimizationAlgorithmLevenberg(std::move(blockSolver));
 //
 //		globalOptimizer_ptr_->setAlgorithm(optimizationAlgorithm);
-		out_graph_file_.open("/home/steve/temp/local_pose.csv", std::ios_base::out);
+		out_graph_file_.open("/home/steve/temp/local_pose.g2o", std::ios_base::out);
 
 	}
 
@@ -215,6 +215,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				int x_index = time_index + x_offset_;
 				int c_index = camera_id * cam_offset + c_offset_;
+
 				//add centre pose
 				if (added_id_map_.find(x_index) == added_id_map_.end()) {
 					out_graph_file_ << "VERTEX_SE3:QUAT " << x_index << " 0 0 0 0 0 0 1 " << std::endl;
@@ -252,7 +253,9 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				for (int k = 0; k < ids.size(); ++k) {
 					int m_index = dict_index * dic_offset + ids[k] + m_offset_;
-					std::cout << "m index :" << m_index << std::endl;
+					std::cout << "m index :" << m_index
+					          << "c_index:" << c_index
+					          << "x index:" << x_index << std::endl;
 
 					if (added_id_map_.find(m_index) != added_id_map_.end()) {
 						out_graph_file_ << "VERTEX_SE3:QUAT " << m_index << " 0 0 0 0 0 0 1" << std::endl;
