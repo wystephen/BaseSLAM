@@ -25,7 +25,7 @@ if __name__ == '__main__':
 			all_units = current_line.split(' ')
 			print('all units:', all_units)
 
-			if abs(int(all_units[1]) - x_offset_) < 1e6:
+			if abs(int(all_units[1]) - c_offset_) < 1e6:
 				# x (central points)
 				for i in range(3):
 					pos_buf.append(float(all_units[i + 2]))
@@ -57,6 +57,20 @@ if __name__ == '__main__':
 
 	from PythoTools.TrajectoryVisualization3D import *
 
-	visualize_trajectory(pos_array, 'pos array')
-	visualize_trajectory(tag_array)
-	mlab.show()
+	visualize_trajectory(pos_array, 'pos array', 1, 1)
+	visualize_trajectory(tag_array, 'tag', 2, 1)
+	mlab.sync_camera(mlab.figure(1),mlab.figure(2))
+	# mlab.draw()
+	from mpl_toolkits.mplot3d import Axes3D
+
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+	ax.plot(pos_array[:, 0], pos_array[:, 1], pos_array[:, 2], )
+
+	plt.figure()
+	plt.title('trace')
+	for i in range(3):
+		plt.plot(pos_array[:, i], label=str(i))
+	plt.legend()
+	plt.grid()
+	plt.show()

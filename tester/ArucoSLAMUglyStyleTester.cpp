@@ -26,9 +26,10 @@
 #include <VisualOdometry/ArucoStereo.h>
 #include <VisualOdometry/ArucoStereo.cpp>
 
+
 int main() {
 
-	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco005.list";
+	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco006.list";
 	std::fstream list_file_stream(list_file_name);
 
 
@@ -67,36 +68,34 @@ int main() {
 
 
 	auto temp_set_matri = [&] {
-		double l_cam_mat[] = {4.479868e+02, 0., 4.464542e+02,
-		                      0., 3.525954e+02, 2.270912e+02,
-		                      0., 0., 1.};
+		double l_cam_mat[] = {4.4919871709987029e+02, 0., 3.7046402273495602e+02, 0.,
+		                      4.4343923505604499e+02, 2.2692550451911748e+02, 0., 0., 1.};
 //		double l_cam_mat[] = {4.479868e+02, 0., 4.464542e+02,
 //		                      0., 3.525954e+02, 2.270912e+02,
 //		                      0., 0., 1.};
-		double l_coeff[] = {-3.2139954408162003e-01, 1.2693040436705980e-01,
-		                    9.6644661774876562e-05, -3.4656366451566638e-04,
-		                    -2.5283215143530800e-02};
+		double l_coeff[] = {-3.7021183843648281e-01, 2.1251021780517465e-01, 0., 0., 0.,
+		                    0., 0., 9.1358360001560904e-02, 0., 0., 0., 0., 0., 0.};
 //		double l_coeff[] = {-0.3408, 0.1653, -0.0497, 0.0, 0.0};
 
-		double r_cam_mat[] = {4.484796e+02, 0., 4.465039e+02,
-		                      0., 3.886833e+02, 2.502372e+02,
-		                      0., 0., 1.};
+		double r_cam_mat[] = {4.4919871709987029e+02, 0., 3.8689100169209354e+02, 0.,
+		                      4.4343923505604499e+02, 2.5512593439195530e+02, 0., 0., 1.
+		};
 //		double r_cam_mat[] = {4.484796e+02, 0., 4.465039e+02,
 //		                      0., 3.886833e+02, 2.502372e+02,
 //		                      0., 0., 1.};
 
-		double r_coeff[] = {-3.3381608860820916e-01, 1.5434135517707734e-01,
-		                    -5.0963768463831540e-04, 4.7037344962792225e-04,
-		                    -4.0833869001070812e-02};
+		double r_coeff[] = {-3.4087989646856526e-01, 1.7255717927362746e-01, 0., 0., 0.,
+		                    0., 0., 7.2491811822834040e-02, 0., 0., 0., 0., 0., 0.
+		};
 //		double r_coeff[] = {-0.3330, 0.1414, -0.0294, 0.0, 0.0};
 
-		double rot_mat[] = {9.9998170574239942e-01, -3.6524452356493445e-03,
-		                    4.8215997679057661e-03, 3.6346244999275390e-03,
-		                    9.9998655105251599e-01, 3.6996241482428419e-03,
-		                    -4.8350475970576571e-03, -3.6820317617203540e-03,
-		                    9.9998153230789211e-01};
-		double translate_mat[] = {-1.1768335131452297e-01, -4.1406239968678198e-05,
-		                          -1.4737785088459699e-03};
+		double rot_mat[] = {9.9909580713480883e-01, -2.6590770557087845e-03,
+		                    4.2432269263575656e-02, 3.1093426369361225e-03,
+		                    9.9993952422648724e-01, -1.0548927816254881e-02,
+		                    -4.2401652727351510e-02, 1.0671326014991199e-02,
+		                    9.9904365402472317e-01};
+		double translate_mat[] = {-1.1373913023561862e-01, 3.2631467348210284e-04,
+		                          1.8406917195078986e-03};
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
@@ -138,6 +137,9 @@ int main() {
 
 	int index_counter = 0;
 
+	cv::VideoWriter *vr_ptr = nullptr;
+
+
 	// READ FILE and PROCESS
 	while (!list_file_stream.eof()) {
 		list_file_stream >> file_name;
@@ -148,11 +150,22 @@ int main() {
 		left_img = img(cv::Rect(0, 0, width, height));
 		right_img = img(cv::Rect(width, 0, width, height));
 
+		if (vr_ptr == nullptr) {
+			vr_ptr = new cv::VideoWriter();
+//			int codec = CV_FOURCC('M', 'J', 'P', 'G');  // select desired codec (must be available at runtime)
+			double fps = 25.0;                          // framerate of the created video stream
+			std::string filename = "./live.avi";             // name of the output video file
+
+			vr_ptr->open("/home/steve/tmp/data.avi", 1, 25.0, left_img.size(),true);
+		}
+
+		vr_ptr->write(left_img);
+
 		cv::imshow("left", left_img);
-		cv::imshow("right", right_img);
+//		cv::imshow("right", right_img);
 
 		arucoStereo.add_new_image(left_img, index_counter, 0);
-//		arucoStereo.add_new_image(right_img, index_counter, 1);
+		arucoStereo.add_new_image(right_img, index_counter, 1);
 
 		arucoStereo.refresh_isam();
 
@@ -165,8 +178,9 @@ int main() {
 		cv::waitKey(1);
 
 
-
 	}
+
+
 
 
 	arucoStereo.out_graph_file_.close();
@@ -175,12 +189,12 @@ int main() {
 	std::ofstream final_pose_file;
 	final_pose_file.open("/home/steve/temp/final_pose.csv");
 	auto final_value = arucoStereo.isam2_.calculateBestEstimate();
-	for (int i = 1; i < arucoStereo.valid_pose_vec_.size(); ++i) {
+//	for (int i = 1; i < arucoStereo.valid_pose_vec_.size(); ++i) {
 
-		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
-	}
+//		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
+//	}
 	for (int i = 1; i < arucoStereo.valid_pose_vec_.size(); ++i) {
-		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
+//		std::cout << "vec id:" << arucoStereo.valid_pose_vec_[i] << std::endl;
 		auto p = final_value.at<gtsam::Pose3>(arucoStereo.valid_pose_vec_[i]);
 		final_pose_file << p.x() << "," << p.y() << "," << p.z() << std::endl;
 	}

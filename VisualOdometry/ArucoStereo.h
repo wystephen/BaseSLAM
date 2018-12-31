@@ -119,6 +119,8 @@ public:
 			} catch (std::exception &e) {
 				std::cout << e.what() << std::endl;
 				isam2_.gradientAtZero();
+				graph_.resize(0);
+				estimate_values_.clear();
 			}
 
 		}

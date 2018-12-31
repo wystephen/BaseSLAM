@@ -211,20 +211,20 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 		if (USE_G2O_FLAG) {
 			//add constraint to g2o.
-			if (ids.size() > 0) {
+			if (ids.size() > 3) {
 
 				int x_index = time_index + x_offset_;
 				int c_index = time_index + camera_id * cam_offset + c_offset_;
 
 				//add centre pose
 				if (added_id_map_.find(x_index) == added_id_map_.end()) {
-					out_graph_file_ << "VERTEX_SE3:QUAT " << x_index << " 0 0 0 0 0 0 1 " << std::endl;
-					added_id_map_.insert(std::pair<int, int>(x_index, 1));
-
-					if (g2o_not_initialized_) {
-						out_graph_file_ << "FIX " << x_index << " " << std::endl;
-						g2o_not_initialized_ = false;
-					}
+//					out_graph_file_ << "VERTEX_SE3:QUAT " << x_index << " 0 0 0 0 0 0 1 " << std::endl;
+//					added_id_map_.insert(std::pair<int, int>(x_index, 1));
+//
+//					if (g2o_not_initialized_) {
+//						out_graph_file_ << "FIX " << x_index << " " << std::endl;
+//						g2o_not_initialized_ = false;
+//					}
 
 				}
 
@@ -240,12 +240,17 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 						}
 					}
 
-					outEdgeSE3(out_graph_file_,
-					           c_index,
-					           x_index,
-					           iso_mat,
-					           0.01, 0.01 / 180.0 * M_PI
-					);
+					if(g2o_not_initialized_){
+						out_graph_file_ << "FIX " << c_index << std::endl;
+						g2o_not_initialized_ = false;
+					}
+
+//					outEdgeSE3(out_graph_file_,
+//					           c_index,
+//					           x_index,
+//					           iso_mat,
+//					           0.01, 0.01 / 180.0 * M_PI
+//					);
 
 					added_id_map_.insert(std::pair<int, int>(c_index, 0));
 				}
@@ -253,9 +258,9 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				for (int k = 0; k < ids.size(); ++k) {
 					int m_index = dict_index * dic_offset + ids[k] + m_offset_;
-					std::cout << "m index :" << m_index
-					          << "c_index:" << c_index
-					          << "x index:" << x_index << std::endl;
+//					std::cout << "m index :" << m_index
+//					          << "c_index:" << c_index
+//					          << "x index:" << x_index << std::endl;
 
 					if (added_id_map_.find(m_index) != added_id_map_.end()) {
 						out_graph_file_ << "VERTEX_SE3:QUAT " << m_index << " 0 0 0 0 0 0 1" << std::endl;
@@ -269,7 +274,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 					           m_index,
 					           c_index,
 					           t_m,
-					           0.1, 1.0 / 180.0 * M_PI);
+					           0.2, 2.0 / 180.0 * M_PI);
 
 
 				}
