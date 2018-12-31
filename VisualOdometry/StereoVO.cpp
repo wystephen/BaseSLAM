@@ -119,18 +119,9 @@ namespace BaseSLAM {
 
 				}
 			}
-//			std::cout << "erased counter :" << erased_counter << std::endl;
 
 			std::vector<uchar> out_mask;
-//			auto F = cv::findFundamentalMat(prev_left_points,curr_left_points,cv::FM_RANSAC,
-//					3.,0.99,out_mask);
-//			std::cout << "out mask type:"<< out_mask.type() << std::endl;
 
-//			for(int i(0);i<curr_left_points.size();++i){
-//				std::cout << "state:" << left_track_inliers[i] << " out mask:" << out_mask.at< << std::endl;
-//			}
-//			std::cout << "left M1:" << camera_ptr_->M1 << std::endl;
-            
 			auto l_E = cv::findEssentialMat(
 					prev_left_points, curr_left_points,
 					camera_ptr_->M1,

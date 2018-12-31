@@ -43,13 +43,41 @@ find_package(Boost REQUIRED COMPONENTS filesystem system)
 
 find_package(OpenCV REQUIRED)
 
+LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+
+# G2O
+# G2O
+SET(G2O_ROOT /usr/local/include/g2o)
+FIND_PACKAGE(G2O)
+FIND_PACKAGE(CSparse)
+if (CSPARSE_FOUND)
+	message("founded csparse")
+endif (CSPARSE_FOUND)
+
+#INCLUDE_DIRECTORIES(${G2O_INCLUDE_DIR} ${CSPARSE_INCLUDE_DIR})
+SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator
+	g2o_solver_slam2d_linear g2o_types_icp g2o_types_slam2d
+	g2o_core g2o_interface g2o_solver_csparse g2o_solver_structure_only
+	g2o_types_sba g2o_types_slam3d g2o_csparse_extension g2o_opengl_helper
+	g2o_solver_dense g2o_stuff g2o_types_sclam2d g2o_parser g2o_solver_pcg
+	g2o_types_data g2o_types_sim3 cxsparse
+	g2o_types_slam3d_addons)
+
+
 include_directories(${OpenCV_INCLUDE_DIRS}
 					${GTSAM_INCLUDE_DIR}
 					${Boost_INCLUDE_DIRS}
 					${Eigen_INCLUDE_DIRS}
 					./
-
+					./include
+					/usr/local/cuda/include
+					/usr/include
+					/usr/local/include
+					${CSPARSE_INCLUDE_DIR}
+					${G2O_INCLUDE_DIR}
 					)
+
+
 #add_executable( DisplayImage DisplayImage.cpp )
 #target_link_libraries( DisplayImage ${OpenCV_LIBS} )
 link_directories(
@@ -61,6 +89,7 @@ link_directories(
 		/usr/lib/x86_64-linux-gnu
 		${BLAS_LIBRARIES}
 		${LAPACK_LIBRARIES}
+
 )
 #target_link_libraries(
 #
@@ -99,7 +128,7 @@ target_link_libraries(feature_extractor_test ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 
 add_executable(aruco_slam_tester tester/ArucoSLAMUglyStyleTester.cpp)#//${SRC_FILES})
-target_link_libraries(aruco_slam_tester ${OpenCV_LIBS}  ${GTSAM_LIBRARIES})
+target_link_libraries(aruco_slam_tester ${OpenCV_LIBS} ${GTSAM_LIBRARIES} ${G2O_LIBS} ${CSPARSE_LIBRARY})
 
 add_executable(config_file_reader_test tester/config_file_reader_test.cpp)
 target_link_libraries(config_file_reader_test

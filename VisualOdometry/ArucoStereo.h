@@ -7,6 +7,7 @@
 
 
 #include <vector>
+#include <map>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
@@ -23,6 +24,14 @@
 #include <gtsam_unstable/slam/PoseBetweenFactor.h>
 
 
+#include "g2o/core/sparse_optimizer.h"
+#include "g2o/core/block_solver.h"
+#include "g2o/core/factory.h"
+#include "g2o/core/optimization_algorithm_levenberg.h"
+#include "g2o/solvers/csparse/linear_solver_csparse.h"
+#include "g2o/types/slam3d/types_slam3d.h"
+#include "g2o/types/slam3d_addons/types_slam3d_addons.h"
+
 #include <util/UtilTools.h>
 
 class ArucoStereo {
@@ -31,6 +40,10 @@ public:
 	 * @brief Default construct function. initial gtsam and detector
 	 */
 	ArucoStereo();
+
+	~ArucoStereo(){
+//		delete(globalOptimizer_ptr_);
+	}
 
 
 	bool add_new_image(cv::Mat image, int time_index, int camera_id);
@@ -82,30 +95,32 @@ public:
 	 * @return
 	 */
 	bool refresh_isam() {
-		if (!added_first_prior_) {
-			return false;
+		if (USE_GTSAM_FLAG) {
+			try {
+				if (!added_first_prior_) {
+					return false;
+				}
+				if (graph_.size() > 0 || estimate_values_.size() > 0) {
+					isam2_.update(graph_, estimate_values_);
+					isam2_.update();
+					ingraph_values_ = isam2_.calculateBestEstimate();
+
+					gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(
+							valid_pose_vec_.at(valid_pose_vec_.size() - 1));
+					out_pose_file << pose.x() << "," << pose.y() << "," << pose.z() << std::endl;
+
+					graph_.resize(0);//gtsam::NonlinearFactorGraph();
+					estimate_values_.clear();// = gtsam::Values();
+					return true;
+
+				}
+			} catch (std::exception &e) {
+				std::cout << e.what() << std::endl;
+				isam2_.gradientAtZero();
+			}
+
 		}
-		if (graph_.size() > 0 || estimate_values_.size() > 0) {
-			isam2_.update(graph_, estimate_values_);
-			isam2_.update();
 
-
-
-
-//			std::cout << "id pose:" << pose.pr
-
-			ingraph_values_ = isam2_.calculateBestEstimate();
-//			ingraph_values_ = isam2_.va
-
-			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size() - 1));
-//			pose.print("pose");
-			out_pose_file << pose.x() << "," << pose.y() << "," << pose.z() << std::endl;
-
-			graph_.resize(0);//gtsam::NonlinearFactorGraph();
-			estimate_values_.clear();// = gtsam::Values();
-			return true;
-
-		}
 
 	}
 
@@ -142,8 +157,21 @@ public:
 
 
 	//method selected
-	bool USE_GTSAM_FLAG = false;
-	bool USE_G2O_FLAG = true;
+	bool USE_GTSAM_FLAG = true;
+	bool USE_G2O_FLAG = false;
+
+
+	//g2o related
+//	g2o::SparseOptimizer* globalOptimizer_ptr_ = nullptr ;//= g2o::SparseOptimizer();
+
+	int x_offset_ = 1000000000;
+	int c_offset_ = 2000000000;
+	int m_offset_ = 3000000000;
+
+//	std::map<int,int> added_id_map_;
+
+
+
 
 
 };
