@@ -41,7 +41,7 @@ public:
 	 * @param marker_size : 0.3m (for default).
 	 * @return
 	 */
-	bool add_dictionary(cv::Ptr<cv::aruco::Dictionary> dic, double marker_size=0.3) {
+	bool add_dictionary(cv::Ptr<cv::aruco::Dictionary> dic, double marker_size = 0.3) {
 		dictionary_vec_.push_back(dic);
 		dic_length_vec_.push_back(marker_size);
 
@@ -81,12 +81,12 @@ public:
 	 * @brief add
 	 * @return
 	 */
-	bool refresh_isam(){
-		if(!added_first_prior_){
+	bool refresh_isam() {
+		if (!added_first_prior_) {
 			return false;
 		}
-		if(graph_.size()>0 || estimate_values_.size()>0){
-			isam2_.update(graph_,estimate_values_);
+		if (graph_.size() > 0 || estimate_values_.size() > 0) {
+			isam2_.update(graph_, estimate_values_);
 			isam2_.update();
 
 
@@ -97,9 +97,9 @@ public:
 			ingraph_values_ = isam2_.calculateBestEstimate();
 //			ingraph_values_ = isam2_.va
 
-			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size()-1));
+			gtsam::Pose3 pose = ingraph_values_.at<gtsam::Pose3>(valid_pose_vec_.at(valid_pose_vec_.size() - 1));
 //			pose.print("pose");
-			out_pose_file << pose.x() << "," <<pose.y() << "," <<pose.z() << std::endl;
+			out_pose_file << pose.x() << "," << pose.y() << "," << pose.z() << std::endl;
 
 			graph_.resize(0);//gtsam::NonlinearFactorGraph();
 			estimate_values_.clear();// = gtsam::Values();
@@ -139,6 +139,11 @@ public:
 
 	//for save data
 	std::fstream out_pose_file;
+
+
+	//method selected
+	bool USE_GTSAM_FLAG = false;
+	bool USE_G2O_FLAG = true;
 
 
 };

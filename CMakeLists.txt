@@ -105,6 +105,10 @@ add_executable(config_file_reader_test tester/config_file_reader_test.cpp)
 target_link_libraries(config_file_reader_test
 					  ${OpenCV_LIBS}
 					  )
+
+
+add_executable(aruco_calib tester/ArucoBoardCalibrate.cpp)
+target_link_libraries(aruco_calib ${OpenCV_LIBS})
 ####################################
 #MAIN EXEC
 ####################################
