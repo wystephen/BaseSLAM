@@ -165,7 +165,11 @@ int main() {
 		cv::waitKey(1);
 
 
+
 	}
+
+
+	arucoStereo.out_graph_file_.close();
 
 
 	std::ofstream final_pose_file;

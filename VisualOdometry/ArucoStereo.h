@@ -160,7 +160,7 @@ public:
 
 	//method selected
 	bool USE_GTSAM_FLAG = true;
-	bool USE_G2O_FLAG = false;
+	bool USE_G2O_FLAG = true;
 
 
 	//g2o related
@@ -170,7 +170,11 @@ public:
 	int c_offset_ = 2000000000;
 	int m_offset_ = 3000000000;
 
-//	std::map<int,int> added_id_map_;
+	std::map<int,int> added_id_map_;
+	std::fstream out_graph_file_;
+
+
+	bool g2o_not_initialized_ = true;
 
 
 

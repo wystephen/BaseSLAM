@@ -38,6 +38,8 @@ ArucoStereo::ArucoStereo() {
 //				new g2o::OptimizationAlgorithmLevenberg(std::move(blockSolver));
 //
 //		globalOptimizer_ptr_->setAlgorithm(optimizationAlgorithm);
+		out_graph_file_.open("/home/steve/temp/local_pose.csv", std::ios_base::out);
+
 	}
 
 
@@ -117,7 +119,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				if ((estimate_values_.exists(gtsam::Symbol('x', time_index)) == false) and
 				    (isam2_.valueExists(gtsam::Symbol('x', time_index)) == false)) {
 
-					printf("\ninto add points:%d", time_index);
+//					printf("\ninto add points:%d", time_index);
 					//this symbol haven't been added.
 					estimate_values_.insert<gtsam::Pose3>(
 							gtsam::Symbol('x', time_index),
@@ -183,7 +185,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 					Eigen::Isometry3d t_m = rt2Matrix(rvecs[k], tvecs[k]);
 
 					if (abs(tvecs[k][0]) + abs(tvecs[k][1]) + abs(tvecs[k][2]) < 5.0) {
-						printf("\ncam id:%d constrained.", current_cam_id);
+//						printf("\ncam id:%d constrained.", current_cam_id);
 						graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
 								gtsam::Symbol('c', current_cam_id),
 								gtsam::Symbol('m', current_marker_id),
@@ -210,6 +212,38 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 		if (USE_G2O_FLAG) {
 			//add constraint to g2o.
 			if (ids.size() > 0) {
+
+				int x_index = time_index + x_offset_;
+				int c_index = camera_id * cam_offset + c_offset_;
+				//add centre pose
+				if(added_id_map_.find(x_index)==added_id_map_.end()){
+					out_graph_file_ << "VERTEX_SE3:QUAT " << x_index << " 0 0 0 0 0 0 1 " << std::endl;
+					added_id_map_.insert(std::pair<int,int>(x_index,1));
+
+					if(g2o_not_initialized_){
+						out_graph_file_ << "FIX " << x_index << " " << std::endl;
+					}
+
+				}
+
+				//add cam
+				if(added_id_map_.find(c_index)==added_id_map_.end()){
+					out_graph_file_ << "VERTEX_SE3:QUAT " << c_index << " 0 0 0 0 0 0 1 " << std::endl;
+					out_graph_file_ << "EDGE_SE3:QUAT " << x_index << " " << c_index << " ";
+
+					added_id_map_.insert(std::pair<int,int>(c_index,0));
+				}
+
+
+				for(int k=0;k<ids.size();++k){
+					int m_index = dict_index * dic_offset + ids[k]+m_offset_;
+
+					if(added_id_map_.find(m_index)!=added_id_map_.end()){
+
+					}
+				}
+
+
 
 			}
 
