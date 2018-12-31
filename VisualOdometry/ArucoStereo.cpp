@@ -168,9 +168,11 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 							gtsam::Symbol('m', current_marker_id),
 							gtsam::Pose3(t_m.matrix()),
 							gtsam::noiseModel::Robust::Create(
-									gtsam::noiseModel::mEstimator::Huber::Create(0.3),
+									gtsam::noiseModel::mEstimator::Huber::Create(0.5),
 									gtsam::noiseModel::Isotropic::Sigmas(
-											(gtsam::Vector(6) << 0.1, 0.1, 0.1, 1.0 / 180.0 * M_PI, 1.0 / 180.0 * M_PI,
+											(gtsam::Vector(6) << 0.1, 0.1, 0.1,
+													1.0 / 180.0 * M_PI,
+													1.0 / 180.0 * M_PI,
 													1.0 / 180.0 * M_PI).finished()
 									)
 							)
