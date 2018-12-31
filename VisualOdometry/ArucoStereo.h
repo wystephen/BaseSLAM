@@ -147,8 +147,8 @@ public:
 
 	bool added_first_prior_ = false;
 
-	int cam_offset = 100000000;
-	int dic_offset = 100000000;
+	int cam_offset = 10000000;
+	int dic_offset = 20000000;
 
 
 	std::vector<gtsam::Symbol> valid_pose_vec_;
@@ -166,9 +166,9 @@ public:
 	//g2o related
 //	g2o::SparseOptimizer* globalOptimizer_ptr_ = nullptr ;//= g2o::SparseOptimizer();
 
-	int x_offset_ = 1000000000;
-	int c_offset_ = 2000000000;
-	int m_offset_ = 3000000000;
+	int x_offset_ = 100000000;
+	int c_offset_ = 200000000;
+	int m_offset_ = 300000000;
 
 	std::map<int,int> added_id_map_;
 	std::fstream out_graph_file_;

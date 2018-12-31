@@ -1,10 +1,8 @@
 //
 // Created by steve on 12/30/18.
-//
 
-#ifndef BASESLAM_UTILTOOLS_H
-#define BASESLAM_UTILTOOLS_H
-
+ #ifndef BASESLAM_UTILTOOLS_H
+ #define BASESLAM_UTILTOOLS_H
 #include <opencv2/opencv.hpp>
 
 #include <Eigen/Geometry>
@@ -46,12 +44,45 @@ Eigen::Isometry3d rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec) {
  * @param ang_sigma
  * @return
  */
-bool outEdgeSE3(std::ostream &os,
+bool outEdgeSE3(std::fstream &os,
                 int to_index,
                 int from_index,
                 Eigen::Isometry3d iso_mat,
                 double pos_sigma,
                 double ang_sigma) {
+	os << "EDGE_SE3:QUAT " << from_index
+	   << " " << to_index;
+	for (int i = 0; i < 3; ++i) {
+		os << " " << iso_mat(i, 3);
+	}
+
+	Eigen::Matrix3d rot_mat;
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			rot_mat(i, j) = iso_mat(i, j);
+		}
+	}
+	Eigen::Quaterniond q(rot_mat);
+	os << " " << q.x()
+	   << " " << q.y()
+	   << " " << q.z()
+	   << " " << q.w();
+
+	Eigen::Matrix<double,6,6> info_mat ;
+	for(int i=0;i<6;++i){
+		for(int j=0;j<6;++j){
+			info_mat(i,j) = 0.0;
+			if(i==j && i < 3){
+				info_mat(i,j) = 1.0 / pos_sigma;
+			}
+			if(i==j && i>=3){
+				info_mat(i,j) = 1.0 / ang_sigma;
+			}
+			os << " " << info_mat(i,j);
+		}
+	}
+	os << std::endl;
+
 
 }
 
