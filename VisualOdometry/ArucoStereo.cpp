@@ -7,7 +7,7 @@
 
 ArucoStereo::ArucoStereo() {
 	aruco_parameters_ = cv::aruco::DetectorParameters::create();
-	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_APRILTAG;//BEST ACCURACY in testing.
+//	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_APRILTAG;//BEST ACCURACY in testing.
 //	aruco_parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_CONTOUR;
 
 
@@ -139,6 +139,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 
 				//first dictionary. so add camera id and camera to central constraint
 				int current_cam_id = camera_id * cam_offset + time_index;
+
 				if ((estimate_values_.exists(gtsam::Symbol('c', current_cam_id)) == false) &&
 				    (isam2_.valueExists(gtsam::Symbol('c', current_cam_id))) == false) {
 
@@ -188,12 +189,12 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 								gtsam::Symbol('m', current_marker_id),
 								gtsam::Pose3(t_m.matrix()),
 								gtsam::noiseModel::Robust::Create(
-										gtsam::noiseModel::mEstimator::Huber::Create(0.5),
+										gtsam::noiseModel::mEstimator::Huber::Create(1.0),
 										gtsam::noiseModel::Isotropic::Sigmas(
 												(gtsam::Vector(6) << 0.1, 0.1, 0.1,
 														1.0 / 180.0 * M_PI,
 														1.0 / 180.0 * M_PI,
-														1.0 / 180.0 * M_PI).finished()
+														1.0 / 180.0 * M_PI).finished() * 0.5
 										)
 								)
 						);

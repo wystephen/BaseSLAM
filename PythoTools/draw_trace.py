@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
 
-	ax.plot(pose[:, 0], pose[:, 1], pose[:, 2], '-+')
+	ax.plot(pose[:, 0], pose[:, 1], pose[:, 2], '+')
 
 
 	plt.figure()

@@ -23,16 +23,18 @@
 #include <gtsam/slam/ProjectionFactor.h>
 #include <gtsam_unstable/slam/PoseBetweenFactor.h>
 
-
-#include "g2o/core/sparse_optimizer.h"
-#include "g2o/core/block_solver.h"
-#include "g2o/core/factory.h"
-#include "g2o/core/optimization_algorithm_levenberg.h"
-#include "g2o/solvers/csparse/linear_solver_csparse.h"
-#include "g2o/types/slam3d/types_slam3d.h"
-#include "g2o/types/slam3d_addons/types_slam3d_addons.h"
+//
+//#include "g2o/core/sparse_optimizer.h"
+//#include "g2o/core/block_solver.h"
+////#include "g2o/core/factory.h"
+////#include "g2o/core/optimization_algorithm_levenberg.h"
+//#include "g2o/solvers/csparse/linear_solver_csparse.h"
+//#include "g2o/types/slam3d/types_slam3d.h"
+//#include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 
 #include <util/UtilTools.h>
+
+//G2O_USE_TYPE_GROUP(slam3d);
 
 class ArucoStereo {
 public:
