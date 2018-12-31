@@ -266,8 +266,8 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 					Eigen::Isometry3d t_m = rt2Matrix(rvecs[k], tvecs[k]);
 
 					outEdgeSE3(out_graph_file_,
-					           c_index,
 					           m_index,
+					           c_index,
 					           t_m,
 					           0.1, 1.0 / 180.0 * M_PI);
 
