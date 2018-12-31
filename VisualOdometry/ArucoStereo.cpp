@@ -161,7 +161,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 				//add between constraint
 				Eigen::Isometry3d t_m = rt2Matrix(rvecs[k], tvecs[k]);
 
-				if (abs(tvecs[k][0]) + abs(tvecs[k][1]) + abs(tvecs[k][2]) < 10.0) {
+				if (abs(tvecs[k][0]) + abs(tvecs[k][1]) + abs(tvecs[k][2]) < 100.0) {
 					printf("\ncam id:%d constrained.", current_cam_id);
 					graph_.emplace_shared<gtsam::PoseBetweenFactor<gtsam::Pose3>>(
 							gtsam::Symbol('c', current_cam_id),
