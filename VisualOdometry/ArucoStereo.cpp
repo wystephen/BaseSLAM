@@ -214,7 +214,7 @@ bool ArucoStereo::add_new_image(cv::Mat image,
 			if (ids.size() > 0) {
 
 				int x_index = time_index + x_offset_;
-				int c_index = camera_id * cam_offset + c_offset_;
+				int c_index = time_index + camera_id * cam_offset + c_offset_;
 
 				//add centre pose
 				if (added_id_map_.find(x_index) == added_id_map_.end()) {
