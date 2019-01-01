@@ -8,6 +8,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 
+#include <opencv2/videoio.hpp>
+
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
@@ -29,7 +31,7 @@
 
 int main() {
 
-	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco006.list";
+	std::string list_file_name = "/home/steve/SourceData/MYNTEYEData/aruco007.list";
 	std::fstream list_file_stream(list_file_name);
 
 
@@ -156,9 +158,10 @@ int main() {
 			double fps = 25.0;                          // framerate of the created video stream
 			std::string filename = "./live.avi";             // name of the output video file
 
-			vr_ptr->open("/home/steve/tmp/data.avi", 1, 25.0, left_img.size(),true);
+			vr_ptr->open("./data.mp4", cv::VideoWriter::fourcc('m','p','4','v'), 25.0, left_img.size(), true);
 		}
 
+		printf(" vr ptr is opened :%d",vr_ptr->isOpened());
 		vr_ptr->write(left_img);
 
 		cv::imshow("left", left_img);
@@ -179,8 +182,7 @@ int main() {
 
 
 	}
-
-
+	vr_ptr->release();
 
 
 	arucoStereo.out_graph_file_.close();
