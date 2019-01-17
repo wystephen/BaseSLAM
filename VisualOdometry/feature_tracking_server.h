@@ -5,8 +5,34 @@
 #ifndef BASESLAM_FEATURE_TRACKING_SERVER_H
 #define BASESLAM_FEATURE_TRACKING_SERVER_H
 
+#include <iostream>
+#include <map>
+#include <vector>
+
+#include <opencv2/opencv.hpp>
+
+
 
 class feature_tracking_server {
+public:
+	feature_tracking_server();
+
+	~feature_tracking_server();
+
+
+
+	// auxiliary mat
+	cv::Mat mask_;
+	cv::Mat prev_img_, cur_img_, forw_img_;
+
+	std::vector<cv::Point2f> n_pts_;
+	std::vector<
+
+
+
+	int curr_feature_id=1000000;
+
+
 
 };
 

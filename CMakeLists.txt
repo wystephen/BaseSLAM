@@ -140,6 +140,9 @@ target_link_libraries(config_file_reader_test
 
 add_executable(aruco_calib tester/ArucoBoardCalibrate.cpp)
 target_link_libraries(aruco_calib ${OpenCV_LIBS})
+
+add_executable(feature_track_server_test tester/feature_tracker_server_tester.cpp)
+target_link_libraries(feature_track_server_test ${OpenCV_LIBS} ${G2O_LIBS} ${CSPARSE_LIBRARY})
 ####################################
 #MAIN EXEC
 ####################################
