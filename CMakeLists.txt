@@ -4,11 +4,11 @@ project(BaseSLAM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TOOL Release)
 
-set(MKLROOT "/opt/intel/mkl/")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g  -lpthread -fopenmp -mavx -mfma ")
+#set(MKLROOT "/opt/intel/mkl/")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -fopenacc -lpthread -fopenmp -mavx -mfma ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g  -lpthread -fopenmp -mavx -mfma ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-lopencv_line_descriptor -lopencv_optflow -lopencv_plot  -lopencv_stereo   -lopencv_xfeatures2d  -lopencv_calib3d -lopencv_features2d ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl ")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -m64 -I${MKLROOT}/include ")
 
 # CCACHE
@@ -81,8 +81,8 @@ include_directories(${OpenCV_INCLUDE_DIRS}
 #add_executable( DisplayImage DisplayImage.cpp )
 #target_link_libraries( DisplayImage ${OpenCV_LIBS} )
 link_directories(
-		/opt/intel/mkl/lib/intel64/
-		/opt/intel/mkl/lib/intel64_lin/
+#		/opt/intel/mkl/lib/intel64/
+#		/opt/intel/mkl/lib/intel64_lin/
 		${Boost_LIBRARY_DIRS}
 		/usr/local/lib
 		/usr/lib

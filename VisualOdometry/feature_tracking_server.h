@@ -26,11 +26,11 @@ public:
 	cv::Mat prev_img_, cur_img_, forw_img_;
 
 	std::vector<cv::Point2f> n_pts_;
-	std::vector<
+	std::vector<cv::Point2f> curr_feature_points_, prev_feature_points_;
 
 
 
-	int curr_feature_id=1000000;
+	int curr_feature_id_ = 1000000;
 
 
 
