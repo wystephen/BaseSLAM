@@ -57,6 +57,7 @@ int main() {
 	std::vector<cv::KeyPoint> left_key_points, right_key_points;
 	cv::Mat left_key_img, right_key_img;
 
+
 //	cv::Ptr<cv::FastFeatureDetector> fast_detector = cv::FastFeatureDetector::create(5);
 //	cv::Ptr<cv::AgastFeatureDetector> agast_detector = cv::AgastFeatureDetector::create(3);
 //	cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create();
