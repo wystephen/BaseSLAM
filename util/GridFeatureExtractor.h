@@ -325,6 +325,7 @@ namespace BaseSLAM {
 				int grid_y = y / row_size;
 
 				grid_id = grid_x + grid_y * this->grid_cols_;
+				
 
 				return grid_id;
 
