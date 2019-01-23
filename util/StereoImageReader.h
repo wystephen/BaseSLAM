@@ -106,6 +106,11 @@ namespace BaseSLAM {
 
 	};
 
+	/**
+	 * @brief Load data from disk to RAM.
+	 * @param async
+	 * @return
+	 */
 	bool MYNTVIDataReader::load_data(bool async) {
 
 		/**
