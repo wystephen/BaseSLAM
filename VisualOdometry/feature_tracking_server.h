@@ -18,8 +18,11 @@ public:
 	feature_tracking_server();
 
 	~feature_tracking_server();
+	
+	
 
 
+//private:
 
 	// auxiliary mat
 	cv::Mat mask_;
