@@ -83,9 +83,9 @@ namespace BaseSLAM {
 						return nullptr;
 					}
 
-//				} else {
-//					return nullptr;
-//				}
+				} else {
+					return nullptr;
+				}
 			}
 		}
 
