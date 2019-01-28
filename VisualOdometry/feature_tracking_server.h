@@ -23,15 +23,12 @@ public:
 
 
 //private:
-
 	// auxiliary mat
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
 
 	std::vector<cv::Point2f> n_pts_;
 	std::vector<cv::Point2f> curr_feature_points_, prev_feature_points_;
-
-
 
 	long curr_feature_id_ = 0; // offset
 
