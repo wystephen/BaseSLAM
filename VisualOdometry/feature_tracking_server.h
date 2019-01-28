@@ -33,7 +33,7 @@ public:
 
 
 
-	int curr_feature_id_ = 1000000;
+	long curr_feature_id_ = 0; // offset
 
 
 
