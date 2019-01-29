@@ -44,6 +44,7 @@ namespace BaseSLAM {
 					}
 
 				}
+				vec_size_ = file_name_vec_.size();// image
 
 			} catch (std::exception &e) {
 				std::cout << e.what() << std::endl;
@@ -65,12 +66,12 @@ namespace BaseSLAM {
 		 * @param img
 		 * @return left part of image.
 		 */
-		cv::Mat copy_left_img(const cv::Mat &img){
+		cv::Mat copy_left_img(const cv::Mat &img) {
 			cv::Mat left_img;
-			int width = img.cols/2;
+			int width = img.cols / 2;
 			int height = img.rows;
 
-			left_img = img(cv::Rect(0,0,width,height));
+			left_img = img(cv::Rect(0, 0, width, height));
 			return left_img;
 		}
 
@@ -79,17 +80,18 @@ namespace BaseSLAM {
 		 * @param img
 		 * @return right part of image.
 		 */
-		cv::Mat copy_right_img(const cv::Mat &img){
+		cv::Mat copy_right_img(const cv::Mat &img) {
 			cv::Mat right_img;
-			int width = img.cols/2;
+			int width = img.cols / 2;
 			int height = img.rows;
 
-			right_img = img(cv::Rect(width,0,width,height));
+			right_img = img(cv::Rect(width, 0, width, height));
 			return right_img;
 		}
 
 		std::vector<std::string> file_name_vec_; // save image names
 		std::string img_name_file_name_;// file name and file directory of list file.
+		int vec_size_ = 0; // size of vector
 	};
 }
 
