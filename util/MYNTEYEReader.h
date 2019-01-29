@@ -17,41 +17,41 @@
 #include <opencv2/opencv.hpp>
 
 
-namespace BaseSLAM{
+namespace BaseSLAM {
 
-	class MYNTEYEReader{
+	class MYNTEYEReader {
 	public:
 		/**
 		 * @brief Read list file(contained name of all file )
 		 * @param image_name_file
 		 */
-		MYNTEYEReader(std::string image_name_file){
+		MYNTEYEReader(std::string image_name_file) {
 
 			img_name_file_name_ = image_name_file;
 
 			std::fstream img_list_file;
-			try{
+			try {
 
-				img_list_file.open(img_name_file_name_, std::ios_base::in|std::ios_base::trunc);
+				img_list_file.open(img_name_file_name_, std::ios_base::in | std::ios_base::trunc);
 				std::string cur_name_;
 				// read file from list file and save to vector.
-				while(!img_list_file.eof()){
-					try{
-					img_list_file>>cur_name_;
-					file_name_vec_.push_back(cur_name_);
-					}catch(std::exception &e){
+				while (!img_list_file.eof()) {
+					try {
+						img_list_file >> cur_name_;
+						file_name_vec_.push_back(cur_name_);
+					} catch (std::exception &e) {
 						std::cout << e.what() << std::endl;
 					}
 
 				}
 
-			}catch(std::exception &e){
+			} catch (std::exception &e) {
 				std::cout << e.what() << std::endl;
 			}
 
 		}
 
-		cv::Mat imread_left(int i){
+		cv::Mat imread_left(int i) {
 
 		}
 
