@@ -14,7 +14,7 @@
 #include <boost/system/system_error.hpp>
 #include <boost/filesystem.hpp>
 
-#include <opencv2/opencv.hpp>
+#include <opencv4/opencv2/opencv.hpp>
 
 
 namespace BaseSLAM {
@@ -51,7 +51,13 @@ namespace BaseSLAM {
 
 		}
 
-		cv::Mat imread_left(int i) {
+		/**
+		 * @brief
+		 * @param i
+		 * @return
+		 */
+		cv::Mat get_image(int i) {
+			return cv2::imread(file_name_vec_[i]);
 
 		}
 
