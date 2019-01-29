@@ -57,7 +57,6 @@ namespace BaseSLAM {
 		 */
 		cv::Mat *get_left_image() {
 			if (left_img_ptr_ == nullptr) {//} || left_img_ptr_->rows < 1) {
-
 				std::cout << "RELOAD IMAGE LEFT" << std::endl;
 				loadImage();
 			}
@@ -77,6 +76,23 @@ namespace BaseSLAM {
 			}
 
 			return right_img_ptr_;
+		}
+
+
+		/**
+		 * @brief load image from disk rather than read from RAM.
+		 * @return
+		 */
+		cv::Mat read_right_image_inplace(){
+			return cv::imread(right_image_file_,imread_flag_);
+		}
+
+		/**
+		 * @brief load image from disk rather than read from RAM.
+		 * @return
+		 */
+		cv::Mat read_left_image_inplace(){
+			return cv::imread(left_image_file_,imread_flag_);
 		}
 
 

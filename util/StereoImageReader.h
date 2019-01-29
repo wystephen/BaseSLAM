@@ -73,15 +73,15 @@ namespace BaseSLAM {
 			} else {
 				// index i out of range.
 //				if (!thread_finished_) {
-					// wait until i-th image is loaded or loading data thread is end.
-					while (!thread_finished_ && i >= image_number_) {
-						usleep(100);
-					}
-					if (i < image_number_) {
-						return data_set_[i];
-					} else {
-						return nullptr;
-					}
+				// wait until i-th image is loaded or loading data thread is end.
+				while (!thread_finished_ && i >= image_number_) {
+					usleep(100);
+				}
+				if (i < image_number_) {
+					return data_set_[i];
+				} else {
+					return nullptr;
+				}
 
 //				} else {
 //					return nullptr;
@@ -111,7 +111,7 @@ namespace BaseSLAM {
 	 * @param async
 	 * @return
 	 */
-	bool MYNTVIDataReader::load_data(bool async) {
+	bool MYNTVIDataReader::load_data(bool async = true) {
 
 		/**
 		 * @brief Just modified this function for different dataset.
@@ -137,7 +137,10 @@ namespace BaseSLAM {
 
 					auto *data = new StereoINSData();
 					cv::Mat tmp;
-					data->loadImage(left_file_name,right_file_name,cv::IMREAD_GRAYSCALE);
+					if (async) {
+
+						data->loadImage(left_file_name, right_file_name, cv::IMREAD_GRAYSCALE);
+					}
 
 					data_set_.push_back(data);
 					image_number_ = data_set_.size();
