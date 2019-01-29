@@ -58,7 +58,34 @@ namespace BaseSLAM {
 		 */
 		cv::Mat get_image(int i) {
 			return cv::imread(file_name_vec_[i]);
+		}
 
+		/**
+		 * @brief copy left image from whole image
+		 * @param img
+		 * @return left part of image.
+		 */
+		cv::Mat copy_left_img(const cv::Mat &img){
+			cv::Mat left_img;
+			int width = img.cols/2;
+			int height = img.rows;
+
+			left_img = img(cv::Rect(0,0,width,height));
+			return left_img;
+		}
+
+		/**
+		 * @brief copy right image from whole image
+		 * @param img
+		 * @return right part of image.
+		 */
+		cv::Mat copy_right_img(const cv::Mat &img){
+			cv::Mat right_img;
+			int width = img.cols/2;
+			int height = img.rows;
+
+			right_img = img(cv::Rect(width,0,width,height));
+			return right_img;
 		}
 
 		std::vector<std::string> file_name_vec_; // save image names

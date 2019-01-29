@@ -139,7 +139,7 @@ namespace BaseSLAM {
 					cv::Mat tmp;
 //					if (async == true) {
 
-						data->loadImage(left_file_name, right_file_name, cv::IMREAD_GRAYSCALE);
+					data->loadImage(left_file_name, right_file_name, cv::IMREAD_GRAYSCALE);
 //					}
 
 					data_set_.push_back(data);
