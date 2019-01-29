@@ -81,8 +81,8 @@ include_directories(${OpenCV_INCLUDE_DIRS}
 #add_executable( DisplayImage DisplayImage.cpp )
 #target_link_libraries( DisplayImage ${OpenCV_LIBS} )
 link_directories(
-#		/opt/intel/mkl/lib/intel64/
-#		/opt/intel/mkl/lib/intel64_lin/
+		#		/opt/intel/mkl/lib/intel64/
+		#		/opt/intel/mkl/lib/intel64_lin/
 		${Boost_LIBRARY_DIRS}
 		/usr/local/lib
 		/usr/lib
@@ -142,7 +142,11 @@ add_executable(aruco_calib tester/ArucoBoardCalibrate.cpp)
 target_link_libraries(aruco_calib ${OpenCV_LIBS})
 
 add_executable(feature_track_server_test tester/feature_tracker_server_tester.cpp)
-target_link_libraries(feature_track_server_test ${OpenCV_LIBS} ${G2O_LIBS} ${CSPARSE_LIBRARY} ${Boost_LIBRARIES})
+target_link_libraries(feature_track_server_test
+					  ${OpenCV_LIBS}
+					  ${G2O_LIBS} ${CSPARSE_LIBRARY}
+					  ${Boost_LIBRARIES}
+					  )
 ####################################
 #MAIN EXEC
 ####################################

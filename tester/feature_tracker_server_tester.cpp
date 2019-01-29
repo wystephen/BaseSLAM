@@ -12,23 +12,24 @@
 
 int main(){
 
-	BaseSLAM::MYNTEYEReader img_reader("/home/steve/SourceData/MYNTEYEData/aruco0009.list");
-	
+	BaseSLAM::MYNTEYEReader img_reader("/home/steve/SourceData/MYNTEYEData/aruco009.list");
+
 	cv::Mat whole_img, left_img,right_img;
 	for(int i=0;i<img_reader.vec_size_;++i){
 		whole_img = img_reader.get_image(i);
-		
+		std::cout << " readed " << i << "-th image" << std::endl;
+
 		left_img = img_reader.copy_left_img(whole_img);
 		right_img = img_reader.copy_right_img(whole_img);
-		
-		
+
+
 		cv::imshow("left_src",left_img);
 		cv::imshow("right_src", right_img);
-		
+
 		cv::waitKey(10);
-		
+
 	}
-	
+
 	cv::waitKey();
 
 

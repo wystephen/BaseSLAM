@@ -32,7 +32,11 @@ namespace BaseSLAM {
 			std::fstream img_list_file;
 			try {
 
-				img_list_file.open(img_name_file_name_, std::ios_base::in | std::ios_base::trunc);
+				img_list_file.open(img_name_file_name_, std::ios_base::in );
+				if (!img_list_file.is_open()) {
+					std::cout << __FILE__ << ":" << __LINE__
+					          << ": img list file isn't open:" << std::endl;
+				}
 				std::string cur_name_;
 				// read file from list file and save to vector.
 				while (!img_list_file.eof()) {
@@ -40,7 +44,13 @@ namespace BaseSLAM {
 						img_list_file >> cur_name_;
 						file_name_vec_.push_back(cur_name_);
 					} catch (std::exception &e) {
+
+						std::cout
+								<< "some error with read image file name from list file"
+
+								<< std::endl;
 						std::cout << e.what() << std::endl;
+						break;
 					}
 
 				}
