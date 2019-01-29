@@ -57,7 +57,6 @@ namespace BaseSLAM {
 		 * @return
 		 */
 		cv::Mat get_image(int i) {
-
 			return cv::imread(file_name_vec_[i]);
 
 		}
