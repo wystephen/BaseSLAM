@@ -25,8 +25,8 @@
 #include <gtsam_unstable/slam/PoseBetweenFactor.h>
 
 
-#include <VisualOdometry/ArucoStereo.h>
-#include <VisualOdometry/ArucoStereo.cpp>
+#include <VisualOdometry/ArucoStereo-invalid.h>
+#include <VisualOdometry/ArucoStereo-invalid.cpp>
 
 
 int main() {

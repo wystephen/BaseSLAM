@@ -111,7 +111,7 @@ namespace BaseSLAM {
 	 * @param async
 	 * @return
 	 */
-	bool MYNTVIDataReader::load_data(bool async = true) {
+	bool MYNTVIDataReader::load_data(bool async) {
 
 		/**
 		 * @brief Just modified this function for different dataset.
@@ -137,10 +137,10 @@ namespace BaseSLAM {
 
 					auto *data = new StereoINSData();
 					cv::Mat tmp;
-					if (async) {
+//					if (async == true) {
 
 						data->loadImage(left_file_name, right_file_name, cv::IMREAD_GRAYSCALE);
-					}
+//					}
 
 					data_set_.push_back(data);
 					image_number_ = data_set_.size();

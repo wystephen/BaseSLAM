@@ -2,7 +2,7 @@
 // Created by steve on 12/29/18.
 //
 
-#include "ArucoStereo.h"
+#include "ArucoStereo-invalid.h"
 #include <fstream>
 
 ArucoStereo::ArucoStereo() {
