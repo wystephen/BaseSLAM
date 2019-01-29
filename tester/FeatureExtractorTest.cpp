@@ -148,9 +148,6 @@ int main() {
 
 //		std::cout << "score :" << score << std::endl;
 
-
-
-
 		++i;
 	}
 

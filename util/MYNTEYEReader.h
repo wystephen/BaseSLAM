@@ -89,6 +89,7 @@ namespace BaseSLAM {
 			return right_img;
 		}
 
+
 		std::vector<std::string> file_name_vec_; // save image names
 		std::string img_name_file_name_;// file name and file directory of list file.
 		int vec_size_ = 0; // size of vector
