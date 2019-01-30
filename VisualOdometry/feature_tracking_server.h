@@ -19,7 +19,7 @@ public:
 
 	~feature_tracking_server();
 	
-	
+	bool addNewFrame(cv::Mat img);
 
 
 //private:
