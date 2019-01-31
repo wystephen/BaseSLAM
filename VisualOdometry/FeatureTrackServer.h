@@ -13,11 +13,11 @@
 
 
 
-class feature_tracking_server {
+class FeatureTrackServer {
 public:
-	feature_tracking_server();
+	FeatureTrackServer();
 
-	~feature_tracking_server();
+	~FeatureTrackServer();
 	
 	bool addNewFrame(cv::Mat img);
 
