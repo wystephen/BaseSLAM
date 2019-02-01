@@ -32,7 +32,7 @@ namespace BaseSLAM {
 			std::fstream img_list_file;
 			try {
 
-				img_list_file.open(img_name_file_name_, std::ios_base::in );
+				img_list_file.open(img_name_file_name_, std::ios_base::in);
 				if (!img_list_file.is_open()) {
 					std::cout << __FILE__ << ":" << __LINE__
 					          << ": img list file isn't open:" << std::endl;

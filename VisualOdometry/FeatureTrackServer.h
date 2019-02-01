@@ -12,13 +12,12 @@
 #include <opencv2/opencv.hpp>
 
 
-
 class FeatureTrackServer {
 public:
 	FeatureTrackServer();
 
 	~FeatureTrackServer();
-	
+
 	bool addNewFrame(cv::Mat img);
 
 
