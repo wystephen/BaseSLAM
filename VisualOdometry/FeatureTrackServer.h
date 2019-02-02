@@ -4,6 +4,7 @@
 
 #ifndef BASESLAM_FEATURE_TRACKING_SERVER_H
 #define BASESLAM_FEATURE_TRACKING_SERVER_H
+#include <gtest/gtest.h>
 
 #include <iostream>
 #include <map>
@@ -26,6 +27,8 @@ public:
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
 
+
+
 	std::vector<cv::Point2f> n_pts_;
 	std::vector<cv::Point2f> curr_feature_points_, prev_feature_points_;
 
@@ -34,6 +37,19 @@ public:
 
 
 };
+
+template <typename VecType>
+void reduceVector(std::vector<VecType> &v, std::vector<uchar> status){
+	int j=0;
+	for(int i=0;i<int(v.size());++i){
+		if(status[i]) {
+			v[j++] = v[i];
+		}
+		v.resize(j);
+	}
+}
+
+
 
 
 #endif //BASESLAM_FEATURE_TRACKING_SERVER_H

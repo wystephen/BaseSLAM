@@ -75,6 +75,7 @@ include_directories(${OpenCV_INCLUDE_DIRS}
 					/usr/local/include
 					${CSPARSE_INCLUDE_DIR}
 					${G2O_INCLUDE_DIR}
+					/home/steve/Code/googletest/googletest/include
 					)
 
 
@@ -89,6 +90,7 @@ link_directories(
 		/usr/lib/x86_64-linux-gnu
 		${BLAS_LIBRARIES}
 		${LAPACK_LIBRARIES}
+
 
 )
 #target_link_libraries(
