@@ -5,7 +5,6 @@
 #include "FeatureTrackServer.h"
 
 
-
 bool FeatureTrackServer::addNewFrame(cv::Mat img) {
 
 
