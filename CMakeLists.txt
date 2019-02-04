@@ -149,6 +149,17 @@ target_link_libraries(feature_track_server_test
 					  ${G2O_LIBS} ${CSPARSE_LIBRARY}
 					  ${Boost_LIBRARIES}
 					  )
+######################################################
+# UNIT TESTING
+######################################################
+add_executable(
+		runFeatureTrackServerTests
+		Unit_Test/TEST_FeatureTrackServer.cpp
+)
+
+target_link_libraries(runFeatureTrackServerTests gtest gtest_main)
+
+
 ####################################
 #MAIN EXEC
 ####################################
