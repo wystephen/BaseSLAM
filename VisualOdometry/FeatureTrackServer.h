@@ -23,6 +23,8 @@ public:
 
 	bool setMask();
 
+	bool in_image(cv::Point2f &pt);
+
 
 //private:
 	// auxiliary mat

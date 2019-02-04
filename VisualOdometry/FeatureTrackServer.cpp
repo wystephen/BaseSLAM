@@ -40,3 +40,10 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 
 }
+
+
+bool FeatureTrackServer::in_image(cv::Point2f &pt) {
+	int width = forw_img_.rows;
+	int height = forw_img_.cols;
+	return
+}
