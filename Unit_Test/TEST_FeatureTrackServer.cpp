@@ -13,7 +13,7 @@ public:
 
 };
 
-TEST_F(FeatureTrackServertest, test_reduce_vec) {
+TEST_F(FeatureTrackServertest, test_reduce_vector_operate) {
 	std::vector<int> in_vec;
 	std::vector<uchar> mask_vec;
 	std::vector<int> ref_out_vec;

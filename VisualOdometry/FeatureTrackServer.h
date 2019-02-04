@@ -43,7 +43,7 @@ public:
  * @tparam VecType recommended type is int float and uchar.
  * @param v vector<VecType> input array .
  * @param status vector<uchar> mask array, size of which should equal to v.
- * statu == 0 while deleted from v vector.
+ * The element which's mask == 0 is deleted from the input vector
  */
 template <typename VecType>
 void reduceVector(std::vector<VecType> &v, std::vector<uchar> status){
