@@ -4,7 +4,8 @@
 #include <gtest/gtest.h>
 
 
-TEST_F("a","RECUDEVECTORTEST"){
+TEST_F(FEATURE_TEST, ALL_test){
+
 
 
 }
