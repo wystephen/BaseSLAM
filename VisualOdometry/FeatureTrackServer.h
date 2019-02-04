@@ -19,7 +19,9 @@ public:
 
 	~FeatureTrackServer();
 
-	bool addNewFrame(cv::Mat img);
+	bool addNewFrame(cv::Mat &_img);
+
+	bool setMask();
 
 
 //private:
@@ -30,7 +32,7 @@ public:
 
 
 	std::vector<cv::Point2f> n_pts_;
-	std::vector<cv::Point2f> curr_feature_points_, prev_feature_points_;
+	std::vector<cv::Point2f> cur_pts_,forw_pts_,pre_pts_;
 
 	long curr_feature_id_ = 0; // offset
 
