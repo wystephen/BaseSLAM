@@ -38,6 +38,13 @@ public:
 
 };
 
+/**
+ * @brief reduce some element from the vecotr<VecType>
+ * @tparam VecType recommended type is int float and uchar.
+ * @param v vector<VecType> input array .
+ * @param status vector<uchar> mask array, size of which should equal to v.
+ * statu == 0 while deleted from v vector.
+ */
 template <typename VecType>
 void reduceVector(std::vector<VecType> &v, std::vector<uchar> status){
 	int j=0;
@@ -45,8 +52,8 @@ void reduceVector(std::vector<VecType> &v, std::vector<uchar> status){
 		if(status[i]) {
 			v[j++] = v[i];
 		}
-		v.resize(j);
 	}
+	v.resize(j);
 }
 
 
