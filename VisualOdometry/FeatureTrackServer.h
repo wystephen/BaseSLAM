@@ -21,14 +21,26 @@ public:
 
 	bool addNewFrame(cv::Mat &_img);
 
+	/**
+	 * @brief set mask according to camera model and tracked points from previous frame.
+	 * @return
+	 */
 	bool setMask();
 
 	/**
-	 * @brief detect point
+	 * @brief reject error pairs based on RANSAC-based method to estimate fundemental matrix.
+	 * @return
+	 */
+	bool rejectWithF();
+
+	bool undistortedPoints();
+
+	/**
+	 * @brief detect whether the point pt in the forw_img_.
 	 * @param pt
 	 * @return
 	 */
-	bool in_image(cv::Point2f &pt);
+	bool isInImage(cv::Point2f &pt);
 
 
 //private:
@@ -36,10 +48,13 @@ public:
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
 
+	int max_features_ = 2000;
+	double min_feature_dis_ = 10.0;
 
 
 	std::vector<cv::Point2f> n_pts_;
 	std::vector<cv::Point2f> cur_pts_,forw_pts_,pre_pts_;
+	std::vector<int> ids_,prev_un_pts_,cur_un_pts_,track_cnt_;
 
 	long curr_feature_id_ = 0; // offset
 
