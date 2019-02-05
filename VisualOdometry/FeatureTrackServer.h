@@ -17,7 +17,7 @@
 
 class FeatureTrackServer {
 public:
-	FeatureTrackServer();
+	FeatureTrackServer(const std::string &camera_param_file);
 
 	~FeatureTrackServer();
 

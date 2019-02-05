@@ -5,6 +5,12 @@
 #include "FeatureTrackServer.h"
 
 
+FeatureTrackServer::FeatureTrackServer(const std::string &camera_param_file) {
+
+
+
+};
+
 bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::Mat img;
 
