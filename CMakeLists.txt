@@ -159,6 +159,10 @@ add_executable(
 
 target_link_libraries(runFeatureTrackServerTests gtest gtest_main)
 
+add_executable(runConfigServerTests
+			   Unit_Test/TEST_ConfigServer.cpp)
+target_link_libraries(runConfigServerTests
+					  gtest gtest_main)
 
 ####################################
 #MAIN EXEC
