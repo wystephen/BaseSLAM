@@ -102,7 +102,10 @@ bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 
 bool FeatureTrackServer::rejectWithF() {
 	if(forw_pts_.size()>=8){
-		std::vector
+		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()),un_forw_pts(forw_pts_.size());
+		for(int i=0;i<cur_pts_.size();++i){
+			Eigen::Vector3d tmp_p;
+		}
 
 	}
 }

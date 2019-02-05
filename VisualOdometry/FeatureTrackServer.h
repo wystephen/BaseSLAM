@@ -12,6 +12,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <Eigen/Dense>
+
 
 class FeatureTrackServer {
 public:
@@ -48,8 +50,12 @@ public:
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
 
+	/**
+	 * @brief  hyper parameters
+	 */
 	int max_features_ = 2000;
 	double min_feature_dis_ = 10.0;
+	/////////////////////////////////////////////
 
 
 	std::vector<cv::Point2f> n_pts_;
