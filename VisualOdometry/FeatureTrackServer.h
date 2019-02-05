@@ -23,6 +23,11 @@ public:
 
 	bool setMask();
 
+	/**
+	 * @brief detect point
+	 * @param pt
+	 * @return
+	 */
 	bool in_image(cv::Point2f &pt);
 
 
