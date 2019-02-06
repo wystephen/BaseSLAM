@@ -8,7 +8,6 @@
 FeatureTrackServer::FeatureTrackServer(const std::string &camera_param_file) {
 
 
-
 };
 
 bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
@@ -96,9 +95,6 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 }
 
 
-
-
-
 bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 	int width = forw_img_.cols;
 	int height = forw_img_.rows;
@@ -107,9 +103,9 @@ bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 
 
 bool FeatureTrackServer::rejectWithF() {
-	if(forw_pts_.size()>=8){
-		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()),un_forw_pts(forw_pts_.size());
-		for(int i=0;i<cur_pts_.size();++i){
+	if (forw_pts_.size() >= 8) {
+		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()), un_forw_pts(forw_pts_.size());
+		for (int i = 0; i < cur_pts_.size(); ++i) {
 			Eigen::Vector3d tmp_p;
 		}
 
