@@ -277,7 +277,8 @@ namespace BaseSLAM {
 
 	}
 
-	bool StereoVO::addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points, std::vector<cv::Point2f> pre_points,
+	bool StereoVO::addNewFrameIsam(std::vector<cv::KeyPoint> relate_key_points,
+			std::vector<cv::Point2f> pre_points,
 	                               int frame_id) {
 
 		// undistort points

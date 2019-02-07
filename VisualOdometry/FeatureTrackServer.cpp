@@ -10,6 +10,11 @@ FeatureTrackServer::FeatureTrackServer(const std::string &camera_param_file) {
 
 };
 
+FeatureTrackServer::~FeatureTrackServer() {
+
+};
+
+
 bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::Mat img;
 
