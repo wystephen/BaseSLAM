@@ -61,6 +61,7 @@ int main() {
 
 	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-6f-simple");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-easy");
+//	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-5f-6f-medium");
 //	BaseSLAM::MYNTVIDataReader data_reader("/home/steve/Data/MYNTVI/dataset-room-modified");
 
 	cv::namedWindow("show left");
