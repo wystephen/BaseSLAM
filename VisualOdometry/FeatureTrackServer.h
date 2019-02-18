@@ -44,11 +44,22 @@ public:
 	 */
 	bool isInImage(cv::Point2f &pt);
 
+	bool setCameraParameter(cv::Mat &cam_mat, cv::Mat &dist_coeff){
+		cam_mat.copyTo(cam_mat_);
+		dist_coeff.copyTo(dist_coeff_);
+		return true;
+	}
+
 
 //private:
 	// auxiliary mat
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
+
+
+	//camera parameters
+	cv::Mat cam_mat_;
+	cv::Mat dist_coeff_;
 
 	/**
 	 * @brief  hyper parameters
