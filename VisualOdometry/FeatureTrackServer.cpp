@@ -113,13 +113,38 @@ bool FeatureTrackServer::rejectWithF() {
 	}
 	if (forw_pts_.size() >= 8) {
 		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()), un_forw_pts(forw_pts_.size());
-		for (int i = 0; i < cur_pts_.size(); ++i) {
-			Eigen::Vector3d tmp_p;
-			cv::undistortPoints(
-					forw_pts_,
-					)
+		std::vector<uchar> mask_
+//		for (int i = 0; i < cur_pts_.size(); ++i) {
+//			Eigen::Vector3d tmp_p;
+//			cv::undistortPoints(
+//					forw_pts_,
+//					)
+//
+//		}
+		cv::undistortPoints(
+				cur_pts_,
+				un_cur_pts,
+				cam_mat_,
+				dist_coeff_,
+				cv::noArray(),
+				cam_mat_
+				);
 
-		}
+		cv::undistortPoints(
+				forw_pts_,
+				un_forw_pts,
+				cam_mat_,
+				dist_coeff_,
+				cv::noArray(),
+				cam_mat_
+				);
+
+		cv::findFundamentalMat(
+				un_cur_pts,
+				un_forw_pts,
+				cv::FM_RANSAC,
+
+				)
 
 	}else{
 		std::cout << "founded key points less than 8" << std::endl;
