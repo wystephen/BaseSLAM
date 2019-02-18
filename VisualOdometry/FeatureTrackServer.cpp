@@ -112,8 +112,16 @@ bool FeatureTrackServer::rejectWithF() {
 		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()), un_forw_pts(forw_pts_.size());
 		for (int i = 0; i < cur_pts_.size(); ++i) {
 			Eigen::Vector3d tmp_p;
-			cv::undistortPoints()
+//			cv::undistortPoints()
 		}
 
 	}
+}
+
+bool FeatureTrackServer::setMask() {
+
+}
+
+bool FeatureTrackServer::undistortedPoints() {
+
 }

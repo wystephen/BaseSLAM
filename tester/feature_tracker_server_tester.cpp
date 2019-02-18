@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include <opencv2/opencv.hpp>
+#include <VisualOdometry/StereoCamera.h>
+
 
 #include "VisualOdometry/FeatureTrackServer.h"
 #include "VisualOdometry/FeatureTrackServer.cpp"
@@ -11,7 +13,8 @@
 #include "util/MYNTEYEReader.h"
 
 int main(){
-
+	auto *stereo_camera_ptr = new BaseSLAM::StereoCamera("/home/steve/Data/MYNTVI/camera_parameter1.yaml");
+	stereo_camera_ptr->print("camera");
 	BaseSLAM::MYNTEYEReader img_reader("/home/steve/SourceData/MYNTEYEData/aruco009.list");
 
 	cv::Mat whole_img, left_img,right_img;
