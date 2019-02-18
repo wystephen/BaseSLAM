@@ -5,7 +5,7 @@
 #include "FeatureTrackServer.h"
 
 
-FeatureTrackServer::FeatureTrackServer(const std::string &camera_param_file) {
+FeatureTrackServer::FeatureTrackServer() {
 
 
 };
@@ -108,13 +108,21 @@ bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 
 
 bool FeatureTrackServer::rejectWithF() {
+	if(cam_mat_.empty()&&dist_coeff_.empty()){
+		std::cout << "cam_mat_ or dist_coeff_ with some problem(may be empty()" << std::endl;
+	}
 	if (forw_pts_.size() >= 8) {
 		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()), un_forw_pts(forw_pts_.size());
 		for (int i = 0; i < cur_pts_.size(); ++i) {
 			Eigen::Vector3d tmp_p;
-//			cv::undistortPoints()
+			cv::undistortPoints(
+					forw_pts_,
+					)
+
 		}
 
+	}else{
+		std::cout << "founded key points less than 8" << std::endl;
 	}
 }
 
