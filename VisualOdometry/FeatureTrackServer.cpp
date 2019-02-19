@@ -80,9 +80,13 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 			                        min_feature_dis_,
 			                        mask_);
 
+
 		} else {
 			n_pts_.clear();
 		}
+
+		//add points to
+		addPoints2forw();
 
 
 	}
@@ -94,6 +98,19 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cur_pts_ = forw_pts_;
 
 	undistortedPoints();
+
+
+	// display
+	cv::Mat col_mat;
+	cv::cvtColor(forw_img_,col_mat,cv::COLOR_GRAY2BGR);
+	for(int i=0;i<forw_pts_.size();++i){
+		if(track_cnt_[i] > 1){
+			cv::circle(col_mat,forw_pts_[i],track_cnt_[i],cv::Scalar(0,200,200));
+		}else{
+			cv::circle(col_mat,forw_pts_[i],1,cv::Scalar(200,100,0));
+		}
+	}
+	cv::imshow("feature img",col_mat);
 
 	return true;
 

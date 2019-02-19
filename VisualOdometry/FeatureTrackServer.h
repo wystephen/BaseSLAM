@@ -37,6 +37,20 @@ public:
 
 	bool undistortedPoints();
 
+	bool addPoints2forw(){
+		if(n_pts_.size()>0){
+			for(auto &p:n_pts_){
+				forw_pts_.push_back(p);
+				ids_.push_back(-1);
+				track_cnt_.push_back(1);
+			}
+			return true;
+		}else{
+//			std::cout << "some problem that n_pts_ is empty" << std::endl;
+			return false;
+		}
+	}
+
 	/**
 	 * @brief detect whether the point pt in the forw_img_.
 	 * @param pt
@@ -65,7 +79,7 @@ public:
 	 * @brief  hyper parameters
 	 */
 	int max_features_ = 2000;
-	double min_feature_dis_ = 10.0;
+	double min_feature_dis_ = 5.0;
 	/////////////////////////////////////////////
 
 

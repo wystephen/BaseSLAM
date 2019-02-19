@@ -25,9 +25,13 @@ int main(){
 		whole_img = img_reader.get_image(i);
 		std::cout << " readed " << i << "-th image" << std::endl;
 
+
 		left_img = img_reader.copy_left_img(whole_img);
 		right_img = img_reader.copy_right_img(whole_img);
 
+		cv::cvtColor(left_img,left_img,cv::COLOR_BGR2GRAY);
+
+		featureTrackServer.addNewFrame(left_img);
 
 		cv::imshow("left_src",left_img);
 		cv::imshow("right_src", right_img);
