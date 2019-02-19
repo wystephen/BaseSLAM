@@ -70,8 +70,8 @@ public:
 
 
 	std::vector<cv::Point2f> n_pts_;
-	std::vector<cv::Point2f> cur_pts_,forw_pts_,pre_pts_;
-	std::vector<int> ids_,prev_un_pts_,cur_un_pts_,track_cnt_;
+	std::vector<cv::Point2f> cur_pts_,forw_pts_,pre_pts_,prev_un_pts_,cur_un_pts_;
+	std::vector<int> ids_,track_cnt_;
 
 	long curr_feature_id_ = 0; // offset
 

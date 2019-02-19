@@ -108,12 +108,12 @@ bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 
 
 bool FeatureTrackServer::rejectWithF() {
-	if(cam_mat_.empty()&&dist_coeff_.empty()){
+	if (cam_mat_.empty() && dist_coeff_.empty()) {
 		std::cout << "cam_mat_ or dist_coeff_ with some problem(may be empty()" << std::endl;
 	}
 	if (forw_pts_.size() >= 8) {
 		std::vector<cv::Point2f> un_cur_pts(cur_pts_.size()), un_forw_pts(forw_pts_.size());
-		std::vector<uchar> mask_
+		std::vector<uchar> mask_status;
 //		for (int i = 0; i < cur_pts_.size(); ++i) {
 //			Eigen::Vector3d tmp_p;
 //			cv::undistortPoints(
@@ -128,7 +128,7 @@ bool FeatureTrackServer::rejectWithF() {
 				dist_coeff_,
 				cv::noArray(),
 				cam_mat_
-				);
+		);
 
 		cv::undistortPoints(
 				forw_pts_,
@@ -137,16 +137,26 @@ bool FeatureTrackServer::rejectWithF() {
 				dist_coeff_,
 				cv::noArray(),
 				cam_mat_
-				);
+		);
+
 
 		cv::findFundamentalMat(
 				un_cur_pts,
 				un_forw_pts,
 				cv::FM_RANSAC,
+				3,
+				0.99,
+				mask_status
+		);
 
-				)
+		reduceVector<cv::Point2f>(pre_pts_, mask_status);
+		reduceVector<cv::Point2f>(cur_pts_, mask_status);
+		reduceVector<cv::Point2f>(forw_pts_, mask_status);
+		reduceVector<cv::Point2f>(cur_un_pts_, mask_status);
+		reduceVector<int>(ids_, mask_status);
+		reduceVector<int>(track_cnt_, mask_status);
 
-	}else{
+	} else {
 		std::cout << "founded key points less than 8" << std::endl;
 	}
 }
