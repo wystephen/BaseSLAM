@@ -45,8 +45,8 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 			reduceVector<cv::Point2f>(pre_pts_, status);
 			reduceVector<cv::Point2f>(cur_pts_, status);
 			reduceVector<cv::Point2f>(forw_pts_, status);
+			reduceVector<cv::Point2f>(cur_un_pts_, status);
 			reduceVector<int>(ids_, status);
-			reduceVector<int>(cur_un_pts_, status);
 			reduceVector<int>(track_cnt_, status);
 		}
 	}
