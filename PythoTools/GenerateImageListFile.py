@@ -3,7 +3,8 @@ import os
 if __name__ == '__main__':
 	dir_name = '/home/steve/SourceData/MYNTEYEData/'
 
-	sub_dir = 'aruco009/'
+	# sub_dir = 'aruco009/'
+	sub_dir = 'aruco-hard1/'
 
 	list_file_name = sub_dir[:-1] + '.list'
 
