@@ -39,8 +39,8 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		cv::calcOpticalFlowPyrLK(cur_img_, forw_img_, cur_pts_, forw_pts_, status, err, cv::Size(21, 21), 3);
 
 		int un_valid_cnt = 0;
-		for(int i=0;i<status.size();++i){
-			if(status[i] == 0){
+		for (int i = 0; i < status.size(); ++i) {
+			if (status[i] == 0) {
 				un_valid_cnt++;
 			}
 		}
@@ -110,15 +110,15 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	// display
 	cv::Mat col_mat;
-	cv::cvtColor(forw_img_,col_mat,cv::COLOR_GRAY2BGR);
-	for(int i=0;i<forw_pts_.size();++i){
-		if(track_cnt_[i] > 1){
-			cv::circle(col_mat,forw_pts_[i],track_cnt_[i],cv::Scalar(0,200,200));
-		}else{
-			cv::circle(col_mat,forw_pts_[i],1,cv::Scalar(200,100,0));
+	cv::cvtColor(forw_img_, col_mat, cv::COLOR_GRAY2BGR);
+	for (int i = 0; i < forw_pts_.size(); ++i) {
+		if (track_cnt_[i] > 1) {
+			cv::circle(col_mat, forw_pts_[i], track_cnt_[i], cv::Scalar(0, 200, 200));
+		} else {
+			cv::circle(col_mat, forw_pts_[i], 1, cv::Scalar(200, 100, 0));
 		}
 	}
-	cv::imshow("feature img",col_mat);
+	cv::imshow("feature img", col_mat);
 
 	return true;
 
