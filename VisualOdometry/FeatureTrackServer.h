@@ -4,6 +4,7 @@
 
 #ifndef BASESLAM_FEATURE_TRACKING_SERVER_H
 #define BASESLAM_FEATURE_TRACKING_SERVER_H
+
 #include <gtest/gtest.h>
 
 #include <iostream>
@@ -38,15 +39,15 @@ public:
 
 	bool undistortedPoints();
 
-	bool addPoints2forw(){
-		if(n_pts_.size()>0){
-			for(auto &p:n_pts_){
+	bool addPoints2forw() {
+		if (n_pts_.size() > 0) {
+			for (auto &p:n_pts_) {
 				forw_pts_.push_back(p);
 				ids_.push_back(-1);
 				track_cnt_.push_back(1);
 			}
 			return true;
-		}else{
+		} else {
 //			std::cout << "some problem that n_pts_ is empty" << std::endl;
 			return false;
 		}
@@ -65,7 +66,7 @@ public:
 	 * @param dist_coeff
 	 * @return
 	 */
-	bool setCameraParameter(cv::Mat &cam_mat, cv::Mat &dist_coeff){
+	bool setCameraParameter(cv::Mat &cam_mat, cv::Mat &dist_coeff) {
 		cam_mat.copyTo(cam_mat_);
 		dist_coeff.copyTo(dist_coeff_);
 		return true;
@@ -94,8 +95,8 @@ public:
 
 
 	std::vector<cv::Point2f> n_pts_;
-	std::vector<cv::Point2f> cur_pts_,forw_pts_,pre_pts_,prev_un_pts_,cur_un_pts_;
-	std::vector<int> ids_,track_cnt_;
+	std::vector<cv::Point2f> cur_pts_, forw_pts_, pre_pts_, prev_un_pts_, cur_un_pts_;
+	std::vector<int> ids_, track_cnt_;
 
 	long curr_feature_id_ = 0; // offset
 	int cur_frame_id_ = 0; // id of readed img
@@ -111,18 +112,16 @@ public:
  * @param status vector<uchar> mask array, size of which should equal to v.
  * The element which's mask == 0 is deleted from the input vector
  */
-template <typename VecType>
-void reduceVector(std::vector<VecType> &v, std::vector<uchar> status){
-	int j=0;
-	for(int i=0;i<int(v.size());++i){
-		if(status[i]) {
+template<typename VecType>
+void reduceVector(std::vector<VecType> &v, std::vector<uchar> status) {
+	int j = 0;
+	for (int i = 0; i < int(v.size()); ++i) {
+		if (status[i]) {
 			v[j++] = v[i];
 		}
 	}
 	v.resize(j);
 }
-
-
 
 
 #endif //BASESLAM_FEATURE_TRACKING_SERVER_H
