@@ -188,6 +188,7 @@ bool FeatureTrackServer::rejectWithF() {
 
 bool FeatureTrackServer::setMask() {
 
+
 }
 
 bool FeatureTrackServer::undistortedPoints() {
