@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <vector>
 
@@ -58,6 +59,12 @@ public:
 	 */
 	bool isInImage(cv::Point2f &pt);
 
+	/**
+	 * @brief set camera parameter.
+	 * @param cam_mat
+	 * @param dist_coeff
+	 * @return
+	 */
 	bool setCameraParameter(cv::Mat &cam_mat, cv::Mat &dist_coeff){
 		cam_mat.copyTo(cam_mat_);
 		dist_coeff.copyTo(dist_coeff_);
@@ -80,6 +87,9 @@ public:
 	 */
 	int max_features_ = 500;
 	int min_feature_dis_ = 5;// pixel
+
+	bool debug_flag_ = true; // for debug
+	std::ofstream out_file_stream_;// output file.
 	/////////////////////////////////////////////
 
 
@@ -88,6 +98,7 @@ public:
 	std::vector<int> ids_,track_cnt_;
 
 	long curr_feature_id_ = 0; // offset
+	int cur_frame_id_ = 0; // id of readed img
 
 
 

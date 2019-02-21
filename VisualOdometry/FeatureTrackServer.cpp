@@ -6,17 +6,25 @@
 
 
 FeatureTrackServer::FeatureTrackServer() {
+	out_file_stream_.open("/home/steve/temp/feature_track_server_out.txt");
+	if(!out_file_stream_.is_open()){
+		std::cout << "out_file_stream_ not openned!" << std::endl;
+	}
+	out_file_stream_ << "BEGIN" << std::endl;
 
 
 };
 
 FeatureTrackServer::~FeatureTrackServer() {
 
+	out_file_stream_ << "END" << std::endl;
 };
 
 
 bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::Mat img;
+
+	cur_frame_id_++;
 
 	// constraint limited histgram Equalization (easy to track feature).
 	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
@@ -222,7 +230,7 @@ bool FeatureTrackServer::setMask() {
 			forw_pts_.push_back(it.second.first);
 			ids_.push_back(it.second.second);
 			track_cnt_.push_back(it.first);
-			cv::circle(mask_,it.second.first.min_feat)
+			cv::circle(mask_,it.second.first, min_feature_dis_,0,-1);
 
 		}
 	}
