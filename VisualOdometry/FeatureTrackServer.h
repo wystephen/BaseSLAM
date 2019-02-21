@@ -78,7 +78,7 @@ public:
 	/**
 	 * @brief  hyper parameters
 	 */
-	int max_features_ = 2000;
+	int max_features_ = 500;
 	double min_feature_dis_ = 5.0;
 	/////////////////////////////////////////////
 
