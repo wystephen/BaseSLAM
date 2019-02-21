@@ -7,7 +7,7 @@
 
 FeatureTrackServer::FeatureTrackServer() {
 	out_file_stream_.open("/home/steve/temp/feature_track_server_out.txt");
-	if(!out_file_stream_.is_open()){
+	if (!out_file_stream_.is_open()) {
 		std::cout << "out_file_stream_ not openned!" << std::endl;
 	}
 	out_file_stream_ << "BEGIN" << std::endl;
@@ -114,6 +114,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	}
 
+	// update here.
 	prev_img_ = cur_img_;
 	pre_pts_ = cur_pts_;
 	prev_un_pts_ = cur_un_pts_;
@@ -208,29 +209,29 @@ bool FeatureTrackServer::setMask() {
 	// prefer to keep features that tracked for long time.
 	std::vector<std::pair<int, std::pair<cv::Point2f, int >>> cnt_pts_id;
 
-	for( uint i(0);i<forw_pts_.size();++i){
-		cnt_pts_id.push_back(std::make_pair(track_cnt_[i],std::make_pair(forw_pts_[i],ids_[i])));
+	for (uint i(0); i < forw_pts_.size(); ++i) {
+		cnt_pts_id.push_back(std::make_pair(track_cnt_[i], std::make_pair(forw_pts_[i], ids_[i])));
 	}
 
 	std::sort(
 			cnt_pts_id.begin(),
 			cnt_pts_id.end(),
-			[](const std::pair<int, std::pair<cv::Point2f,int>> &a,
-				const std::pair<int, std::pair<cv::Point2f,int>> &b	){
+			[](const std::pair<int, std::pair<cv::Point2f, int>> &a,
+			   const std::pair<int, std::pair<cv::Point2f, int>> &b) {
 				return a.first > b.first;
 			}
-			);
+	);
 
 	forw_pts_.clear();
 	ids_.clear();
 	track_cnt_.clear();
 
-	for(auto &it:cnt_pts_id){
-		if(mask_.at<uchar>(it.second.first)==255){
+	for (auto &it:cnt_pts_id) {
+		if (mask_.at<uchar>(it.second.first) == 255) {
 			forw_pts_.push_back(it.second.first);
 			ids_.push_back(it.second.second);
 			track_cnt_.push_back(it.first);
-			cv::circle(mask_,it.second.first, min_feature_dis_,0,-1);
+			cv::circle(mask_, it.second.first, min_feature_dis_, 0, -1);
 
 		}
 	}
