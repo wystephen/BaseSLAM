@@ -74,7 +74,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	// PUB_THIS_FRAME
 	if (true) {
-		rejectWithF();
+		rejectWithFRANSAC();
 		setMask();
 
 		//find new
@@ -147,7 +147,7 @@ bool FeatureTrackServer::isInImage(cv::Point2f &pt) {
 }
 
 
-bool FeatureTrackServer::rejectWithF() {
+bool FeatureTrackServer::rejectWithFRANSAC() {
 	if (cam_mat_.empty() && dist_coeff_.empty()) {
 		std::cout << "cam_mat_ or dist_coeff_ with some problem(may be empty()" << std::endl;
 	}

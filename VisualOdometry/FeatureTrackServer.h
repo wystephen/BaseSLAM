@@ -34,7 +34,7 @@ public:
 	 * @brief reject error pairs based on RANSAC-based method to estimate fundemental matrix.
 	 * @return
 	 */
-	bool rejectWithF();
+	bool rejectWithFRANSAC();
 
 	bool undistortedPoints();
 
