@@ -81,12 +81,19 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 			if (mask_.size() != forw_img_.size()) {
 				printf("wrong mask size");
 			}
-			cv::goodFeaturesToTrack(forw_img_,
-			                        n_pts_,
-			                        max_features_ - forw_pts_.size(),
-			                        0.01,
-			                        min_feature_dis_,
-			                        mask_);
+
+			if (mask_.rows == forw_img_.rows && mask_.cols == forw_img_.cols) {
+				cv::goodFeaturesToTrack(forw_img_,
+				                        n_pts_,
+				                        max_features_ - forw_pts_.size(),
+				                        0.01,
+				                        min_feature_dis_,
+				                        mask_);
+
+			} else {
+				std::cout << "mask_.size not same to forw_img_, previous is:" << mask_.size
+				          << " last is:" << forw_img_.size << std::endl;
+			}
 
 
 		} else {
@@ -187,7 +194,38 @@ bool FeatureTrackServer::rejectWithF() {
 }
 
 bool FeatureTrackServer::setMask() {
+	// set mask
+	mask_ = cv::Mat(forw_img_.rows, forw_img_.cols, CV_8UC1, cv::Scalar(255));
 
+	// prefer to keep features that tracked for long time.
+	std::vector<std::pair<int, std::pair<cv::Point2f, int >>> cnt_pts_id;
+
+	for( uint i(0);i<forw_pts_.size();++i){
+		cnt_pts_id.push_back(std::make_pair(track_cnt_[i],std::make_pair(forw_pts_[i],ids_[i])));
+	}
+
+	std::sort(
+			cnt_pts_id.begin(),
+			cnt_pts_id.end(),
+			[](const std::pair<int, std::pair<cv::Point2f,int>> &a,
+				const std::pair<int, std::pair<cv::Point2f,int>> &b	){
+				return a.first > b.first;
+			}
+			);
+
+	forw_pts_.clear();
+	ids_.clear();
+	track_cnt_.clear();
+
+	for(auto &it:cnt_pts_id){
+		if(mask_.at<uchar>(it.second.first)==255){
+			forw_pts_.push_back(it.second.first);
+			ids_.push_back(it.second.second);
+			track_cnt_.push_back(it.first);
+			cv::circle(mask_,it.second.first.min_feat)
+
+		}
+	}
 
 
 }
