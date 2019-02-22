@@ -47,12 +47,18 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		cv::calcOpticalFlowPyrLK(cur_img_, forw_img_, cur_pts_, forw_pts_, status, err, cv::Size(21, 21), 3);
 
 		int un_valid_cnt = 0;
+		int long_term_cnt = 0;
 		for (int i = 0; i < status.size(); ++i) {
 			if (status[i] == 0) {
 				un_valid_cnt++;
 			}
+			if(track_cnt_[i] >10){
+				long_term_cnt++;
+			}
 		}
-		std::cout << "un valid cnt:" << un_valid_cnt << std::endl;
+		std::cout << "long_term_cnt:" << long_term_cnt
+		<< "un valid cnt:" << un_valid_cnt << "total point:" << status.size() <<  std::endl;
+
 
 		for (int i = 0; i < int(forw_pts_.size()); ++i) {
 			if (status[i] && !isInImage(forw_pts_[i])) {
