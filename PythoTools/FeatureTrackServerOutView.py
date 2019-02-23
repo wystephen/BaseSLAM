@@ -15,8 +15,11 @@ if __name__ == '__main__':
 
 
 	for line_str in out_file:
-		print(line_str)
+		# print(line_str)
 		if 'track_cnt:' in line_str:
+			valid_str = line_str[11:-2]
+			# print('valid str:',valid_str)
+			print('valid num len:', len(valid_str.split(',')))
 
 
 
