@@ -147,7 +147,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::cvtColor(forw_img_, col_mat, cv::COLOR_GRAY2BGR);
 	for (int i = 0; i < forw_pts_.size(); ++i) {
 		if (track_cnt_[i] > 1) {
-			cv::circle(col_mat, forw_pts_[i], track_cnt_[i], cv::Scalar(0, 200, 200));
+			cv::circle(col_mat, forw_pts_[i],(track_cnt_[i]), cv::Scalar(0, 200, 200));
 		} else {
 			cv::circle(col_mat, forw_pts_[i], 1, cv::Scalar(200, 100, 0));
 		}
