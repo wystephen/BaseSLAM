@@ -83,7 +83,8 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		rejectWithFRANSAC();
 		setMask();
 
-		//find new
+		//find new features
+		/// TODO: try grid feature extraction.
 		int n_max_cnt = max_features_ - static_cast<int>(forw_pts_.size());//??? the reason for using static cast
 		if (n_max_cnt > 0) {
 			if (mask_.empty()) {
@@ -119,6 +120,17 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 
 	}
+
+	out_file_stream_ << "track_cnt:{" ;
+	for(int i=0;i<forw_pts_.size();++i){
+
+		out_file_stream_ << track_cnt_[i] ;
+		if(i< forw_pts_.size()-1){
+			out_file_stream_ << ",";
+
+		}
+	}
+	out_file_stream_ << "}" << std::endl;
 
 	// update here.
 	prev_img_ = cur_img_;
