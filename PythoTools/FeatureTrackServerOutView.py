@@ -10,6 +10,7 @@ if __name__ == '__main__':
 	out_file = open('/home/steve/temp/feature_track_server_out.txt', 'r')
 
 	track_cnt_buf = array('i')
+	blur_score_buf = array('f')
 
 	frame_id = 0
 
@@ -37,6 +38,10 @@ if __name__ == '__main__':
 					track_cnt_buf.append(cur_cnt_num)
 					cur_cnt = int(num_list[i])
 					cur_cnt_num = 1
+		if 'blur_score' in line_str:
+			# print(line_str[12:-2])
+			blur_score_buf.append(float(line_str[12:-2]))
+
 
 	t = np.frombuffer(track_cnt_buf, dtype=np.int32).reshape([-1, 3])
 	print('index:', np.max(t[:,0]))
@@ -45,8 +50,10 @@ if __name__ == '__main__':
 	for i in range(t.shape[0]):
 		dis_img[t[i,0]-1,t[i,1]-1] = t[i,2]
 
+	blur_score = np.frombuffer(blur_score_buf,dtype = np.float32).reshape([-1,1])
+
 	plt.figure()
-	plt.imshow(dis_img)
+	plt.imshow(dis_img.transpose())
 
 	plt.figure()
 
@@ -56,8 +63,14 @@ if __name__ == '__main__':
 	plt.grid()
 
 	plt.figure()
+	plt.subplot(211)
 	plt.title('lossed feature')
 	plt.plot(dis_img[:,1])
+	plt.grid()
+
+	plt.subplot(212)
+	plt.title('blur score')
+	plt.plot(blur_score[:,0])
 	plt.grid()
 
 

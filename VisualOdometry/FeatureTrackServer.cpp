@@ -26,9 +26,15 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	cur_frame_id_++;
 
+
 	// constraint limited histgram Equalization (easy to track feature).
 	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
 	clahe->apply(_img, img);
+
+
+
+	double blur_score = blur_evaluate(img);
+
 
 	if (forw_img_.empty()) {
 		// initial feature tracking server.
@@ -131,6 +137,9 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		}
 	}
 	out_file_stream_ << "}" << std::endl;
+
+	out_file_stream_ << "blur_score:{"
+	<<blur_score<<"}" << std::endl;
 
 	// update here.
 	prev_img_ = cur_img_;

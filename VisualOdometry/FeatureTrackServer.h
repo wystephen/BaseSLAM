@@ -77,6 +77,8 @@ public:
 	// auxiliary mat
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
+	std::vector<
+
 
 
 	//camera parameters
@@ -123,5 +125,17 @@ void reduceVector(std::vector<VecType> &v, std::vector<uchar> status) {
 	v.resize(j);
 }
 
+
+/**
+ * @brief
+ * @param img Gray image only
+ * @return
+ */
+float blur_evaluate(cv::Mat &img){
+	cv::Mat img_laplacian;
+	cv::Laplacian(img,img_laplacian,CV_8UC1);
+	return cv::mean(img_laplacian)[0];
+
+}
 
 #endif //BASESLAM_FEATURE_TRACKING_SERVER_H
