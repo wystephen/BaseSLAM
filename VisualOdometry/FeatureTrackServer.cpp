@@ -30,7 +30,17 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	// constraint limited histgram Equalization (easy to track feature).
 	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
 	clahe->apply(_img, img);
-
+	std::vector<cv::Mat> tmp_img_pyr;
+	cv::buildOpticalFlowPyramid(
+			img,
+			tmp_img_pyr,
+			cv::Size(pyr_patch_size_, pyr_patch_size_),
+			pyr_levels_,
+			true,
+			cv::BorderTypes::BORDER_REFLECT101,
+			cv::BorderTypes::BORDER_CONSTANT,
+			false
+	);
 
 
 	double blur_score = blur_evaluate(img);
@@ -39,8 +49,15 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	if (forw_img_.empty()) {
 		// initial feature tracking server.
 		prev_img_ = cur_img_ = forw_img_ = img;
+
+		prev_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
+		cur_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
+		forw_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
+
 	} else {
 		forw_img_ = img;
+		forw_img_pyr_.clear();
+		forw_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
 	}
 
 	forw_pts_.clear();
@@ -50,7 +67,12 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		std::vector<float> err;
 
 		//      change LK optical flow
-		cv::calcOpticalFlowPyrLK(cur_img_, forw_img_, cur_pts_, forw_pts_, status, err, cv::Size(21, 21), 3);
+//		cv::calcOpticalFlowPyrLK(cur_img_, forw_img_, cur_pts_, forw_pts_, status, err, cv::Size(21, 21), 3);
+		cv::calcOpticalFlowPyrLK(cur_img_pyr_,forw_img_pyr_,
+				cur_pts_,forw_pts_,
+				status,err,
+				cv::Size(pyr_patch_size_,pyr_patch_size_),
+				pyr_levels_);
 
 		int un_valid_cnt = 0;
 		int long_term_cnt = 0;
@@ -58,12 +80,12 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 			if (status[i] == 0) {
 				un_valid_cnt++;
 			}
-			if(track_cnt_[i] >10){
+			if (track_cnt_[i] > 10) {
 				long_term_cnt++;
 			}
 		}
 		std::cout << "long_term_cnt:" << long_term_cnt
-		<< "un valid cnt:" << un_valid_cnt << "total point:" << status.size() <<  std::endl;
+		          << "un valid cnt:" << un_valid_cnt << "total point:" << status.size() << std::endl;
 
 
 		for (int i = 0; i < int(forw_pts_.size()); ++i) {
@@ -127,11 +149,11 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	}
 
-	out_file_stream_ << "track_cnt:{" ;
-	for(int i=0;i<forw_pts_.size();++i){
+	out_file_stream_ << "track_cnt:{";
+	for (int i = 0; i < forw_pts_.size(); ++i) {
 
-		out_file_stream_ << track_cnt_[i] ;
-		if(i< forw_pts_.size()-1){
+		out_file_stream_ << track_cnt_[i];
+		if (i < forw_pts_.size() - 1) {
 			out_file_stream_ << ",";
 
 		}
@@ -139,7 +161,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	out_file_stream_ << "}" << std::endl;
 
 	out_file_stream_ << "blur_score:{"
-	<<blur_score<<"}" << std::endl;
+	                 << blur_score << "}" << std::endl;
 
 	// update here.
 	prev_img_ = cur_img_;
@@ -147,6 +169,9 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	prev_un_pts_ = cur_un_pts_;
 	cur_img_ = forw_img_;
 	cur_pts_ = forw_pts_;
+
+	prev_img_pyr_.swap(cur_img_pyr_);
+	cur_img_pyr_.swap(forw_img_pyr_);
 
 	undistortedPoints();
 
@@ -156,7 +181,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::cvtColor(forw_img_, col_mat, cv::COLOR_GRAY2BGR);
 	for (int i = 0; i < forw_pts_.size(); ++i) {
 		if (track_cnt_[i] > 1) {
-			cv::circle(col_mat, forw_pts_[i],(track_cnt_[i]), cv::Scalar(0, 200, 200));
+			cv::circle(col_mat, forw_pts_[i], (track_cnt_[i]), cv::Scalar(0, 200, 200));
 		} else {
 			cv::circle(col_mat, forw_pts_[i], 1, cv::Scalar(200, 100, 0));
 		}

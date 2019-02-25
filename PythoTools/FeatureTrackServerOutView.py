@@ -32,8 +32,8 @@ if __name__ == '__main__':
 				if (not (int(num_list[i]) == cur_cnt)) or \
 						(i == len(num_list) - 1):
 					track_cnt_buf.append(frame_id)
-					# if cur_cnt > 30:
-					# 	cur_cnt = 30
+					# if cur_cnt > 80:
+					# 	cur_cnt = 80
 					track_cnt_buf.append(cur_cnt)
 					track_cnt_buf.append(cur_cnt_num)
 					cur_cnt = int(num_list[i])
@@ -53,7 +53,9 @@ if __name__ == '__main__':
 	blur_score = np.frombuffer(blur_score_buf,dtype = np.float32).reshape([-1,1])
 
 	plt.figure()
-	plt.imshow(dis_img.transpose())
+	plt.imshow(dis_img.transpose(),cmap='ocean_r')
+	plt.colorbar()
+	plt.tight_layout()
 
 	plt.figure()
 

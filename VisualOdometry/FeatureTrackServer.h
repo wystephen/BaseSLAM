@@ -77,7 +77,7 @@ public:
 	// auxiliary mat
 	cv::Mat mask_;
 	cv::Mat prev_img_, cur_img_, forw_img_;
-	std::vector<
+	std::vector<cv::Mat> prev_img_pyr_, cur_img_pyr_, forw_img_pyr_;
 
 
 
@@ -90,6 +90,10 @@ public:
 	 */
 	int max_features_ = 500;
 	int min_feature_dis_ = 5;// pixel
+
+	int pyr_patch_size_ = 10;
+	int pyr_levels_ = 5;
+
 
 	bool debug_flag_ = true; // for debug
 	std::ofstream out_file_stream_;// output file.
