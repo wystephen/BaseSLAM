@@ -20,7 +20,7 @@ if __name__ == '__main__':
 			frame_id += 1
 			valid_str = line_str[11:-2]
 			# print('valid str:',valid_str)
-			print('valid num len:', len(valid_str.split(',')))
+			# print('valid num len:', len(valid_str.split(',')))
 			cur_cnt = int(valid_str.split(',')[0])
 			cur_cnt_num = 1
 			num_list = valid_str.split(',')

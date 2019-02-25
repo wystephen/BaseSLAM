@@ -34,6 +34,7 @@ int main(){
 
 		cv::cvtColor(left_img,left_img,cv::COLOR_BGR2GRAY);
 
+		if(i%3==0)
 		featureTrackServer.addNewFrame(left_img);
 
 		cv::imshow("left_src",left_img);

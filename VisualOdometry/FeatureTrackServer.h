@@ -88,8 +88,8 @@ public:
 	/**
 	 * @brief  hyper parameters
 	 */
-	int max_features_ = 500;
-	int min_feature_dis_ = 5;// pixel
+	int max_features_ = 200;
+	int min_feature_dis_ = 15;// pixel
 
 	int pyr_patch_size_ = 10;
 	int pyr_levels_ = 5;

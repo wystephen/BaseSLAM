@@ -74,31 +74,34 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 				cv::Size(pyr_patch_size_,pyr_patch_size_),
 				pyr_levels_);
 
-		int un_valid_cnt = 0;
-		int long_term_cnt = 0;
-		for (int i = 0; i < status.size(); ++i) {
-			if (status[i] == 0) {
-				un_valid_cnt++;
-			}
-			if (track_cnt_[i] > 10) {
-				long_term_cnt++;
-			}
-		}
-		std::cout << "long_term_cnt:" << long_term_cnt
-		          << "un valid cnt:" << un_valid_cnt << "total point:" << status.size() << std::endl;
+//		int un_valid_cnt = 0;
+//		int long_term_cnt = 0;
+//		for (int i = 0; i < status.size(); ++i) {
+//			if (status[i] == 0) {
+//				un_valid_cnt++;
+//			}
+//			if (track_cnt_[i] > 10) {
+//				long_term_cnt++;
+//			}
+//		}
+//		std::cout << "long_term_cnt:" << long_term_cnt
+//		          << "un valid cnt:" << un_valid_cnt << "total point:" << status.size() << std::endl;
 
 
 		for (int i = 0; i < int(forw_pts_.size()); ++i) {
 			if (status[i] && !isInImage(forw_pts_[i])) {
 				status[i] = 0;
 			}
-			reduceVector<cv::Point2f>(pre_pts_, status);
-			reduceVector<cv::Point2f>(cur_pts_, status);
-			reduceVector<cv::Point2f>(forw_pts_, status);
-			reduceVector<cv::Point2f>(cur_un_pts_, status);
-			reduceVector<int>(ids_, status);
-			reduceVector<int>(track_cnt_, status);
+
 		}
+
+		//Corrected
+		reduceVector<cv::Point2f>(pre_pts_, status);
+		reduceVector<cv::Point2f>(cur_pts_, status);
+		reduceVector<cv::Point2f>(forw_pts_, status);
+		reduceVector<cv::Point2f>(cur_un_pts_, status);
+		reduceVector<int>(ids_, status);
+		reduceVector<int>(track_cnt_, status);
 	}
 
 	//update counter for tracking.
@@ -149,8 +152,13 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	}
 
+	int lossed_cnt = 0;
+
 	out_file_stream_ << "track_cnt:{";
 	for (int i = 0; i < forw_pts_.size(); ++i) {
+		if(track_cnt_[i] == 1){
+			lossed_cnt++;
+		}
 
 		out_file_stream_ << track_cnt_[i];
 		if (i < forw_pts_.size() - 1) {
@@ -164,6 +172,10 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	                 << blur_score << "}" << std::endl;
 
 	// update here.
+//	if()
+
+
+//	if(lossed_cnt<200|| cur_frame_id_<10){
 	prev_img_ = cur_img_;
 	pre_pts_ = cur_pts_;
 	prev_un_pts_ = cur_un_pts_;
@@ -173,6 +185,8 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	prev_img_pyr_.swap(cur_img_pyr_);
 	cur_img_pyr_.swap(forw_img_pyr_);
 
+//	}
+
 	undistortedPoints();
 
 
@@ -181,7 +195,8 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 	cv::cvtColor(forw_img_, col_mat, cv::COLOR_GRAY2BGR);
 	for (int i = 0; i < forw_pts_.size(); ++i) {
 		if (track_cnt_[i] > 1) {
-			cv::circle(col_mat, forw_pts_[i], (track_cnt_[i]), cv::Scalar(0, 200, 200));
+//			cv::circle(col_mat, forw_pts_[i], (track_cnt_[i]), cv::Scalar(0, 200, 200));
+			cv::circle(col_mat, forw_pts_[i], 3, cv::Scalar(250, 20, 20));
 		} else {
 			cv::circle(col_mat, forw_pts_[i], 1, cv::Scalar(200, 100, 0));
 		}
