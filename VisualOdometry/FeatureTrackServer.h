@@ -23,6 +23,11 @@ public:
 
 	~FeatureTrackServer();
 
+	/**
+	 * @brief Add new frame for extraction features.
+	 * @param _img
+	 * @return
+	 */
 	bool addNewFrame(cv::Mat &_img);
 
 	/**
@@ -39,6 +44,10 @@ public:
 
 	bool undistortedPoints();
 
+	/**
+	 * @brief add points to forw_pts_.
+	 * @return
+	 */
 	bool addPoints2forw() {
 		if (n_pts_.size() > 0) {
 			for (auto &p:n_pts_) {

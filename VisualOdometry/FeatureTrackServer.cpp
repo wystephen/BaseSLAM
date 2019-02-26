@@ -51,14 +51,14 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 		// initial feature tracking server.
 		prev_img_ = cur_img_ = forw_img_ = img;
 
-		prev_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
-		cur_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
-		forw_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
+		prev_img_pyr_.assign(tmp_img_pyr.begin(), tmp_img_pyr.end());
+		cur_img_pyr_.assign(tmp_img_pyr.begin(), tmp_img_pyr.end());
+		forw_img_pyr_.assign(tmp_img_pyr.begin(), tmp_img_pyr.end());
 
 	} else {
 		forw_img_ = img;
 		forw_img_pyr_.clear();
-		forw_img_pyr_.assign(tmp_img_pyr.begin(),tmp_img_pyr.end());
+		forw_img_pyr_.assign(tmp_img_pyr.begin(), tmp_img_pyr.end());
 	}
 
 	forw_pts_.clear();
@@ -69,11 +69,11 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 		//      change LK optical flow
 //		cv::calcOpticalFlowPyrLK(cur_img_, forw_img_, cur_pts_, forw_pts_, status, err, cv::Size(21, 21), 3);
-		cv::calcOpticalFlowPyrLK(cur_img_pyr_,forw_img_pyr_,
-				cur_pts_,forw_pts_,
-				status,err,
-				cv::Size(pyr_patch_size_,pyr_patch_size_),
-				pyr_levels_);
+		cv::calcOpticalFlowPyrLK(cur_img_pyr_, forw_img_pyr_,
+		                         cur_pts_, forw_pts_,
+		                         status, err,
+		                         cv::Size(pyr_patch_size_, pyr_patch_size_),
+		                         pyr_levels_);
 
 //		int un_valid_cnt = 0;
 //		int long_term_cnt = 0;
@@ -157,7 +157,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 
 	out_file_stream_ << "track_cnt:{";
 	for (int i = 0; i < forw_pts_.size(); ++i) {
-		if(track_cnt_[i] == 1){
+		if (track_cnt_[i] == 1) {
 			lossed_cnt++;
 		}
 
