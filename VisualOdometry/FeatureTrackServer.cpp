@@ -303,7 +303,6 @@ bool FeatureTrackServer::setMask() {
 		}
 	}
 
-
 }
 
 bool FeatureTrackServer::undistortedPoints() {
