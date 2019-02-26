@@ -39,6 +39,7 @@ bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
 			true,
 			cv::BorderTypes::BORDER_REFLECT101,
 			cv::BorderTypes::BORDER_CONSTANT,
+
 			false
 	);
 
