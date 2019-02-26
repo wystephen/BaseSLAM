@@ -22,9 +22,9 @@ FeatureTrackServer::~FeatureTrackServer() {
 
 
 bool FeatureTrackServer::addNewFrame(cv::Mat &_img) {
-	cv::Mat img;
+	cv::Mat img;//save img.
 
-	cur_frame_id_++;
+	cur_frame_id_++;// update frame id.
 
 
 	// constraint limited histgram Equalization (easy to track feature).
