@@ -116,10 +116,6 @@ public:
 	long curr_feature_id_ = 0; // offset
 	int cur_frame_id_ = 0; // id of readed img
 
-
-
-
-
 };
 
 /**
