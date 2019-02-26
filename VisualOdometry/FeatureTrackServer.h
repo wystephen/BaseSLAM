@@ -139,7 +139,7 @@ void reduceVector(std::vector<VecType> &v, std::vector<uchar> status) {
 
 /**
  * @brief
- * @param img Gray image only
+ * @param img Gray image(CV_8UC1) only
  * @return
  */
 float blur_evaluate(cv::Mat &img){
